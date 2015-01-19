@@ -14,22 +14,12 @@
   font-weight: normal
   font-style: normal
 
-//
-// App-wide Styles
-//
-
-.browsehappy
-    background #ccc
-    color #000
-    margin 0.2em 0
-    padding 0.2em 0
-
-// Responsive: Portrait tablets and up
-@media screen and (min-width: 768px)
-    .container
-        max-width 730px
-
-// Component styles are injected through grunt
-// injector
 @import 'main/main.styl';
-// endinjector
+
+//Foundation overwrites
+
+.row-with-padding {
+  grid-row()
+  padding-top:30px
+}
+
