@@ -8,7 +8,7 @@ angular.module('pokerestimateApp')
   $scope.sessionId = $routeParams.id;
 
   $scope.username = 'asd';
-  $scope.socket.emit('joinSession', {username: $scope.username, session: $scope.sessionId});
+  $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId});
 
   $scope.socket.on('descriptionUpdated', function(description){
     $scope.description = description;
@@ -19,7 +19,7 @@ angular.module('pokerestimateApp')
   });
 
   $scope.updateDescription = function(){
-    $scope.socket.emit('updateDescription', $scope.description);
+    $scope.socket.emit('updateDescription', {id: $scope.sessionId, description: $scope.description});
   }
 
   $scope.clearValues = function(){
