@@ -1,19 +1,14 @@
-header#banner.hero-unit
-  .container
-    h1 Welcome to PE
-
+include ../templates/header.jade
 .container
   .main-content
     .row-with-padding
       .large-2.large-centered.columns
-        button.large.button.radius(ng-click="startSession()") Start a session
-
-        //-form(novalidate name="loginForm" ng-submit="join()")
-        //-  input(type="text" ng-model="sessionId" placeholder="Enter session id")
-          //-label.error Error
-          //-input.error(type="text")
-          //-small.error Invalid Entry
-          //-button.large.button.radius(type="submit") Join a session
-footer.footer
-  .container
-    p I am a footer
+        input(type="text" ng-model="username" placeholder="Enter a username")
+        button.medium.button.radius(ng-click="startSession()") Start a session
+      hr
+    .row-with-padding
+      .large-2.large-centered.columns
+        input(type="text" ng-model="username_" placeholder="Enter a username")
+        input(type="text" ng-model="sessionId" placeholder="Enter a session id")
+        button.medium.button.radius(ng-click="join()") Join a session
+include ../templates/footer.jade
