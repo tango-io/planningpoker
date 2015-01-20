@@ -5,7 +5,6 @@ angular.module('pokerestimateApp')
       //socket.syncUpdates('thing', $scope.awesomeThings);
       //socket.unsyncUpdates('thing');
       $scope.startSession = function(){
-        console.log("_haisdhasd", socket.socket);
-        socket.socket.emit('newSession', 'Xaid')
+        socket.socket.emit('newSession', 'Xaid');
       };
   });
