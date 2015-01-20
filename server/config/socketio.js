@@ -5,6 +5,7 @@
 'use strict';
 
 var config = require('./environment');
+var bcrypt = require('bcrypt');
 
 // When the user disconnects.. perform this
 function onDisconnect(socket) {
@@ -14,24 +15,19 @@ function onDisconnect(socket) {
 function onConnect(socket) {
   // When the client emits 'info', this listens and executes
   socket.on('info', function (data) {
-    console.log("hereeeeeeeeeeeeeeeee");
-    console.info('[%s] %s', socket.address, JSON.stringify(data, null, 2));
+    console.log("hereeeeeeeeeeeeeeeee");;
+    //console.info('[%s] %s', socket.address, JSON.stringify(data, null, 2));
   });
 
   // Insert sockets below
   require('../api/thing/thing.socket').register(socket);
 }
 
-module.exports = function (socketio) {
-  // socket.io (v1.x.x) is powered by debug.
-  // In order to see all the debug output, set DEBUG (in server/config/local.env.js) to including the desired scope.
-  //
-  // ex: DEBUG: "http*,socket.io:socket"
+var rooms = {};
 
+module.exports = function (socketio) {
   // We can authenticate socket.io users and access their token through socket.handshake.decoded_token
-  //
   // 1. You will need to send the token in `client/components/socket/socket.service.js`
-  //
   // 2. Require authentication here:
   // socketio.use(require('socketio-jwt').authorize({
   //   secret: config.secrets.session,
@@ -45,14 +41,23 @@ module.exports = function (socketio) {
 
     socket.connectedAt = new Date();
 
+    socket.on('newSession', function (data) {
+      var roomId = bcrypt.hashSync(new Date().toString(), 1);
+      socket.join(roomId);
+      rooms[roomId] = rooms[roomId] || [];
+      rooms[roomId].push({username: data, socketId: socket.id});
+    });
+
     // Call onDisconnect.
     socket.on('disconnect', function () {
       onDisconnect(socket);
-      console.info('[%s] DISCONNECTED', socket.address);
+    console.log("disconnected");
+      //console.info('[%s] DISCONNECTED', socket.address);
     });
 
     // Call onConnect.
     onConnect(socket);
-    console.info('[%s] CONNECTED', socket.address);
+    console.log("connected");
+    //console.info('[%s] CONNECTED', socket.address);
   });
 };
