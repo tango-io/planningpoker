@@ -1,10 +1,13 @@
 'use strict';
 
 angular.module('pokerestimateApp')
-  .controller('MainCtrl', function ($scope, $http, socket) {
-      //socket.syncUpdates('thing', $scope.awesomeThings);
-      //socket.unsyncUpdates('thing');
-      $scope.startSession = function(){
-        socket.socket.emit('newSession', 'Xaid');
-      };
+.controller('MainCtrl', function ($scope, $http, socket, $location) {
+
+  $scope.startSession = function(){
+    socket.socket.emit('newSession', $scope.username);
+  };
+
+  socket.socket.on('sessionCreated', function(sessionId){
+    $location.path('/sessions/' + sessionId);
   });
+});
