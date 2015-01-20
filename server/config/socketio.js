@@ -35,12 +35,24 @@ module.exports = function (socketio) {
 
     socket.connectedAt = new Date();
 
+    socket.on('updateDescription', function (data) {
+      socketio.to(data.id).emit('descriptionUpdated', data.description);
+    });
+
     socket.on('newSession', function (data) {
       var roomId = bcrypt.hashSync(new Date().toString(), 1);
       socket.join(roomId);
       rooms[roomId] = rooms[roomId] || [];
       rooms[roomId].push({username: data, socketId: socket.id});
       socket.emit('sessionCreated', roomId);
+      socket.emit('updateUsers', rooms[roomId]);
+    });
+
+    socket.on('joinSession', function (data) {
+      socket.join(data.id);
+      rooms[data.id] = rooms[data.id] || [];
+      rooms[data.id].push({username: data.username, socketId: socket.id});
+      socketio.to(data.id).emit('updateUsers', rooms[data.roomId]);
     });
 
     // Call onDisconnect.
