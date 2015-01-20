@@ -16,6 +16,7 @@ angular.module('pokerestimateApp')
 
   $scope.socket.on('updateUsers', function(users){
     $scope.users = users;
+    $scope.currentUser = _.findWhere($scope.users, {username: $scope.username});
   });
 
   $scope.updateDescription = function(){
@@ -30,5 +31,6 @@ angular.module('pokerestimateApp')
 
   $scope.setVote = function(vote){
     $scope.vote = vote;
+    $scope.currentUser.vote = vote;
   };
 });

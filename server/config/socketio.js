@@ -45,14 +45,15 @@ module.exports = function (socketio) {
       rooms[roomId] = rooms[roomId] || [];
       rooms[roomId].push({username: data, socketId: socket.id});
       socket.emit('sessionCreated', roomId);
-      socket.emit('updateUsers', rooms[roomId]);
+      socket.emit('updateUsers', rooms[id]);
     });
 
     socket.on('joinSession', function (data) {
+      console.log("_________d", data);
       socket.join(data.id);
       rooms[data.id] = rooms[data.id] || [];
       rooms[data.id].push({username: data.username, socketId: socket.id});
-      socketio.to(data.id).emit('updateUsers', rooms[data.roomId]);
+      socketio.to(data.id).emit('updateUsers', rooms[data.id]);
     });
 
     // Call onDisconnect.
