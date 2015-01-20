@@ -13,12 +13,6 @@ function onDisconnect(socket) {
 
 // When the user connects.. perform this
 function onConnect(socket) {
-  // When the client emits 'info', this listens and executes
-  socket.on('info', function (data) {
-    console.log("hereeeeeeeeeeeeeeeee");;
-    //console.info('[%s] %s', socket.address, JSON.stringify(data, null, 2));
-  });
-
   // Insert sockets below
   require('../api/thing/thing.socket').register(socket);
 }
@@ -46,18 +40,16 @@ module.exports = function (socketio) {
       socket.join(roomId);
       rooms[roomId] = rooms[roomId] || [];
       rooms[roomId].push({username: data, socketId: socket.id});
+      socket.emit('sessionCreated', roomId);
     });
 
     // Call onDisconnect.
     socket.on('disconnect', function () {
       onDisconnect(socket);
-    console.log("disconnected");
-      //console.info('[%s] DISCONNECTED', socket.address);
+      console.log("disconnected");
     });
 
     // Call onConnect.
     onConnect(socket);
-    console.log("connected");
-    //console.info('[%s] CONNECTED', socket.address);
   });
 };
