@@ -8,9 +8,22 @@ include ../templates/header.jade
             h5 Your username: {{username}}
             label Story description
             textarea(ng-model="description" ng-keyup="updateDescription()")
-          .large-4.columns
-            a.medium.button Clear Votes
-            a.medium.button Show Votes
+          .large-4.columns(ng-show="points")
+            h5  Statics
+            h3.success(ng-show="consensus") Consensus!!!
+            table
+              thead
+                tr
+                  th Points
+                  th Votes
+              tbody
+                tr(ng-repeat="(point, votes) in points")
+                  td {{point}}
+                  td {{votes.length}}
+        .row
+          .large-12.columns
+            button.medium.button Clear Votes
+            button.medium.button(ng-click="revealVotes()") Show Votes
         .row-with-padding
           .large-12.large-centered.columns
             .button-bar

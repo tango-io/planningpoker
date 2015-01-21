@@ -18,6 +18,7 @@ function onConnect(socket) {
   require('../api/thing/thing.socket').register(socket);
 }
 
+//var rooms = { users:[], votes: []};
 var rooms = {};
 
 module.exports = function (socketio) {
@@ -51,28 +52,40 @@ module.exports = function (socketio) {
 
     socket.on('joinSession', function (data) {
       socket.join(data.id);
-      rooms[data.id] = rooms[data.id] || [];
-      rooms[data.id].push({username: data.username, socketId: socket.id});
+      rooms[data.id] = rooms[data.id] || {users: [], votes: {}};
+      rooms[data.id].users.push({username: data.username, socketId: socket.id});
       socket.emit('joinedSession', socket.id);
-      socketio.to(data.id).emit('updateUsers', {users: rooms[data.id]});
+      socketio.to(data.id).emit('updateUsers', {users: rooms[data.id].users});
     });
 
     socket.on('vote', function (data) {
-      var user = _.findWhere(rooms[data.id], {socketId: data.userId});
+      var user = _.findWhere(rooms[data.id].users, {socketId: data.userId});
       user.voted = true;
-      socket.broadcast.to(data.id).emit('updateUsers', {users: rooms[data.id], id: socket.id});
+      rooms[data.id].votes[data.userId] = data.vote;
+
+      if(rooms[data.id].revealed){
+        socketio.to(data.id).emit('updateVotes', rooms[data.id].votes);
+      }
+
+      socket.broadcast.to(data.id).emit('updateUsers', {users: rooms[data.id].users, id: socket.id});
+    });
+
+    socket.on('revealVotes', function (data) {
+      var votes = rooms[data.id].votes;
+      socketio.to(data.id).emit('updateVotes', votes);
+      rooms[data.id].revealed = true;
     });
 
     // Call onDisconnect.
     socket.on('disconnect', function () {
 
       var roomId = _.findKey(rooms, function(room){
-        return _.findWhere(room, {socketId: socket.id});
+        return _.findWhere(room.users, {socketId: socket.id});
       });
 
       if(roomId){
-        rooms[roomId] = _.reject(rooms[roomId], {socketId: socket.id});
-        socket.emit('updateUsers', rooms[roomId]);
+        rooms[roomId].users = _.reject(rooms[roomId].users, {socketId: socket.id});
+        socket.emit('updateUsers', rooms[roomId].users);
       }
       onDisconnect(socket);
     });
