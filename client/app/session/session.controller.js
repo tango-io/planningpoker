@@ -27,6 +27,8 @@ angular.module('pokerestimateApp')
 
     $scope.socket.on('updateVotes', function(votes){
       $scope.votes = votes;
+      $scope.points = _.groupBy(votes);
+      $scope.consensus = _.keys($scope.points).length == 1 ? true : false;
     });
   };
 
