@@ -24,3 +24,8 @@ angular.module('pokerestimateApp', [
 
     //$locationProvider.html5Mode(true);
   });
+
+
+function safeApply(scope, fn) {
+    (scope.$$phase || scope.$root.$$phase) ? fn() : scope.$apply(fn);
+}
