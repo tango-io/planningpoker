@@ -27,9 +27,9 @@ include ../templates/header.jade
                   th Points
               tbody
                 tr(ng-repeat="user in users")
-                 td(ng-class="{active: user.socketId == currentUser.id}") {{user.username}}
-                 td(ng-class="{active: user.socketId == currentUser.id}")
+                 td(ng-class="{active: user.socketId == id}") {{user.username}}
+                 td(ng-class="{active: user.socketId == id}")
                    i.fa.fa-check(ng-show="user.voted")
-                 td(ng-class="{active: user.socketId == currentUser.id}") {{votes[user.username]}}
+                 td(ng-class="{active: user.socketId == id}") {{votes[user.socketId]}}
 
 include ../templates/footer.jade
