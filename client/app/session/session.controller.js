@@ -7,7 +7,7 @@ angular.module('pokerestimateApp')
   $scope.voteValues = [0,1,2,3,5,8,13];
   $scope.sessionId = $routeParams.id;
 
-  $scope.username = 'asd';
+  $scope.username = 'asd' + _.random(10);
   $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId});
 
   $scope.socket.on('descriptionUpdated', function(description){
@@ -32,5 +32,6 @@ angular.module('pokerestimateApp')
   $scope.setVote = function(vote){
     $scope.vote = vote;
     $scope.currentUser.vote = vote;
+    $scope.socket.emit('vote', {id:$scope.sessionId, user:$scope.currentUser});
   };
 });

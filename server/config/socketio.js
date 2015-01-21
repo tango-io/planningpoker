@@ -6,6 +6,7 @@
 
 var config = require('./environment');
 var bcrypt = require('bcrypt');
+var _ = require('lodash');
 
 // When the user disconnects.. perform this
 function onDisconnect(socket) {
@@ -49,10 +50,17 @@ module.exports = function (socketio) {
     });
 
     socket.on('joinSession', function (data) {
-      console.log("_________d", data);
       socket.join(data.id);
       rooms[data.id] = rooms[data.id] || [];
       rooms[data.id].push({username: data.username, socketId: socket.id});
+      socketio.to(data.id).emit('updateUsers', rooms[data.id]);
+    });
+
+    socket.on('vote', function (data) {
+      var user = _.findWhere(rooms[data.id], {username: data.user.username});
+      console.log("__________ user", user);
+      user.vote = data.user.vote;
+      console.log("__________ users", rooms[data.id]);
       socketio.to(data.id).emit('updateUsers', rooms[data.id]);
     });
 
