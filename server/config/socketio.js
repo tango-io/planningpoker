@@ -58,9 +58,9 @@ module.exports = function (socketio) {
     });
 
     socket.on('vote', function (data) {
-      var user = _.findWhere(rooms[data.id], {socketId: socket.id});
+      var user = _.findWhere(rooms[data.id], {socketId: data.userId});
       user.voted = true;
-      socket.broadcast.to(data.id).emit('updateUsers', rooms[data.id]);
+      socket.broadcast.to(data.id).emit('updateUsers', {users: rooms[data.id], id: socket.id});
     });
 
     // Call onDisconnect.
