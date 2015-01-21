@@ -40,32 +40,41 @@ module.exports = function (socketio) {
       socketio.to(data.id).emit('descriptionUpdated', data.description);
     });
 
-    socket.on('newSession', function (data) {
-      var roomId = bcrypt.hashSync(new Date().toString(), 1);
-      socket.join(roomId);
-      rooms[roomId] = rooms[roomId] || [];
-      rooms[roomId].push({username: data, socketId: socket.id});
-      socket.emit('sessionCreated', roomId);
-      socket.emit('updateUsers', rooms[roomId]);
-    });
+    //socket.on('newSession', function (data) {
+    //  var roomId = bcrypt.hashSync(new Date().toString(), 1);
+    //  socket.join(roomId);
+    //  rooms[roomId] = rooms[roomId] || [];
+    //  rooms[roomId].push({username: data, socketId: socket.id});
+    //  socket.emit('sessionCreated', roomId);
+    //  socket.emit('updateUsers', rooms[roomId]);
+    //});
 
     socket.on('joinSession', function (data) {
       socket.join(data.id);
       rooms[data.id] = rooms[data.id] || [];
       rooms[data.id].push({username: data.username, socketId: socket.id});
-      socketio.to(data.id).emit('updateUsers', rooms[data.id]);
+      socket.emit('joinedSession', socket.id);
+      socketio.to(data.id).emit('updateUsers', {users: rooms[data.id]});
     });
 
     socket.on('vote', function (data) {
-      var user = _.findWhere(rooms[data.id], {username: data.user.username});
+      var user = _.findWhere(rooms[data.id], {socketId: socket.id});
       user.voted = true;
       socket.broadcast.to(data.id).emit('updateUsers', rooms[data.id]);
     });
 
     // Call onDisconnect.
     socket.on('disconnect', function () {
+
+      var roomId = _.findKey(rooms, function(room){
+        return _.findWhere(room, {socketId: socket.id});
+      });
+
+      if(roomId){
+        rooms[roomId] = _.reject(rooms[roomId], {socketId: socket.id});
+        socket.emit('updateUsers', rooms[roomId]);
+      }
       onDisconnect(socket);
-      console.log("disconnected");
     });
 
     // Call onConnect.
