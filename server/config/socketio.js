@@ -46,7 +46,7 @@ module.exports = function (socketio) {
       rooms[roomId] = rooms[roomId] || [];
       rooms[roomId].push({username: data, socketId: socket.id});
       socket.emit('sessionCreated', roomId);
-      socket.emit('updateUsers', rooms[id]);
+      socket.emit('updateUsers', rooms[roomId]);
     });
 
     socket.on('joinSession', function (data) {
@@ -58,10 +58,8 @@ module.exports = function (socketio) {
 
     socket.on('vote', function (data) {
       var user = _.findWhere(rooms[data.id], {username: data.user.username});
-      console.log("__________ user", user);
-      user.vote = data.user.vote;
-      console.log("__________ users", rooms[data.id]);
-      socketio.to(data.id).emit('updateUsers', rooms[data.id]);
+      user.voted = true;
+      socket.broadcast.to(data.id).emit('updateUsers', rooms[data.id]);
     });
 
     // Call onDisconnect.
