@@ -39,6 +39,6 @@ angular.module('pokerestimateApp')
   $scope.setVote = function(vote){
     $scope.currentUser.voted = true;
     $scope.votes[$scope.id] = vote;
-    //$scope.socket.emit('vote', {id:$scope.sessionId, user:$scope.currentUser.id});
+    $scope.socket.emit('vote', {id:$scope.sessionId, userId: $scope.id});
   };
 });
