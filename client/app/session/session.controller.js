@@ -24,10 +24,18 @@ angular.module('pokerestimateApp')
     $scope.socket.on('descriptionUpdated', function(description){
       $scope.description = description;
     });
+
+    $scope.socket.on('updateVotes', function(votes){
+      $scope.votes = votes;
+    });
   };
 
   $scope.updateDescription = function(){
     $scope.socket.emit('updateDescription', {id: $scope.sessionId, description: $scope.description});
+  };
+
+  $scope.revealVotes = function(){
+    $scope.socket.emit('revealVotes', {id: $scope.sessionId});
   };
 
   //$scope.clearValues = function(){
@@ -39,6 +47,6 @@ angular.module('pokerestimateApp')
   $scope.setVote = function(vote){
     $scope.currentUser.voted = true;
     $scope.votes[$scope.id] = vote;
-    $scope.socket.emit('vote', {id:$scope.sessionId, userId: $scope.id});
+    $scope.socket.emit('vote', {id:$scope.sessionId, userId: $scope.id, vote:vote});
   };
 });
