@@ -41,19 +41,24 @@ module.exports = function (socketio) {
       socketio.to(data.id).emit('descriptionUpdated', data.description);
     });
 
-    //socket.on('newSession', function (data) {
-    //  var roomId = bcrypt.hashSync(new Date().toString(), 1);
-    //  socket.join(roomId);
-    //  rooms[roomId] = rooms[roomId] || [];
-    //  rooms[roomId].push({username: data, socketId: socket.id});
-    //  socket.emit('sessionCreated', roomId);
-    //  socket.emit('updateUsers', rooms[roomId]);
-    //});
+    socket.on('newSession', function (data) {
+      console.log("shii");
+      var roomid = bcrypt.hashSync(new Date().toString(), 1);
+      socket.join(roomid);
+
+      rooms[data.id] = rooms[data.id] || {users: [], votes: {}};
+      rooms[data.id].users.push({username: data.username, socketId: socket.id});
+
+      socket.emit('sessionCreated', roomid);
+      socket.emit('updateUsers', rooms[roomid]);
+    });
 
     socket.on('joinSession', function (data) {
       socket.join(data.id);
+
       rooms[data.id] = rooms[data.id] || {users: [], votes: {}};
       rooms[data.id].users.push({username: data.username, socketId: socket.id});
+
       socket.emit('joinedSession', socket.id);
       socketio.to(data.id).emit('updateUsers', {users: rooms[data.id].users});
     });

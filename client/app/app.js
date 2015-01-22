@@ -17,9 +17,6 @@ angular.module('pokerestimateApp', [
       .when('/sessions/:id', {
         templateUrl: 'app/session/session.html',
         controller: 'SessionCtrl'
-      })
-      .otherwise({
-        redirectTo: '/'
       });
 
     //$locationProvider.html5Mode(true);

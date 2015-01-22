@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('pokerestimateApp')
-.controller('SessionCtrl', function (socket, $scope, $routeParams) {
+.controller('SessionCtrl', function (socket, $scope, $routeParams, userService) {
 
   $scope.init = function(){
     $scope.socket = socket.socket;
-    $scope.username = 'asd' + _.random(20);
+    $scope.username = userService.getUser().username;
     $scope.voteValues = [0,1,2,3,5,8,13];
     $scope.sessionId = $routeParams.id;
     $scope.votes = {};
