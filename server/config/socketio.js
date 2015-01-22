@@ -42,7 +42,6 @@ module.exports = function (socketio) {
     });
 
     socket.on('newSession', function (data) {
-      console.log("shii");
       var roomid = bcrypt.hashSync(new Date().toString(), 1);
       socket.join(roomid);
 
