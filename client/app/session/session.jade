@@ -22,7 +22,7 @@ include ../templates/header.jade
                   td {{votes.length}}
         .row
           .large-12.columns
-            button.medium.button Clear Votes
+            button.medium.button(ng-click="clearVotes()") Clear Votes
             button.medium.button(ng-click="revealVotes()") Show Votes
         .row-with-padding
           .large-12.large-centered.columns

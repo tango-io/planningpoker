@@ -66,16 +66,21 @@ module.exports = function (socketio) {
       if(rooms[data.id].revealed){
         socketio.to(data.id).emit('updateVotes', rooms[data.id].votes);
       }
-
       socket.broadcast.to(data.id).emit('updateUsers', {users: rooms[data.id].users, id: socket.id});
     });
 
     socket.on('revealVotes', function (data) {
       var votes = rooms[data.id].votes;
-      socketio.to(data.id).emit('updateVotes', votes);
       rooms[data.id].revealed = true;
+      socketio.to(data.id).emit('updateVotes', votes);
     });
 
+    socket.on('clearSession', function (data) {
+      rooms[data.id].users = _.map(rooms[data.id].users, function(u){ u.voted = false; return u;});
+      rooms[data.id].votes = {};
+      rooms[data.id].revealed = false;
+      socket.broadcast.to(data.id).emit('clearVotes');
+    });
     // Call onDisconnect.
     socket.on('disconnect', function () {
 
