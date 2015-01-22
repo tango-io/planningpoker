@@ -8,18 +8,16 @@ angular.module('pokerestimateApp', [
   'btford.socket-io',
   'mm.foundation'
 ])
-  .config(function ($routeProvider, $locationProvider) {
-    $routeProvider
-      .when('/', {
-        templateUrl: 'app/main/main.html',
-        controller: 'MainCtrl'
-      })
-      .when('/sessions/:id', {
-        templateUrl: 'app/session/session.html'
-      });
-
-    //$locationProvider.html5Mode(true);
+.config(function ($routeProvider) {
+  $routeProvider
+  .when('/', {
+    templateUrl: 'app/main/main.html',
+    controller: 'MainCtrl'
+  })
+  .when('/sessions/:id', {
+    templateUrl: 'app/session/session.html'
   });
+});
 
 
 function safeApply(scope, fn) {
