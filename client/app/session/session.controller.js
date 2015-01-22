@@ -3,22 +3,21 @@
 angular.module('pokerestimateApp')
 .controller('SessionCtrl', function (socket, $scope, $routeParams, $modal, userService) {
   $scope.init = function(){
+    $scope.socket = socket.socket;
+    $scope.voteValues = [0,1,2,3,5,8,13];
+    $scope.sessionId = $routeParams.id;
+    $scope.votes = {};
+    $scope.currentUser = {};
     $scope.username = userService.getUser().username;
+
     if($scope.username){
+     $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId});
     }else{
       var modalInstance = $modal.open({templateUrl: 'app/templates/modals/username.html'});
       modalInstance.result.then(function (username) {
         $scope.username = username;
         $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId});
       });
-    }
-    $scope.socket = socket.socket;
-    $scope.voteValues = [0,1,2,3,5,8,13];
-    $scope.sessionId = $routeParams.id;
-    $scope.votes = {};
-    $scope.currentUser = {};
-    if($scope.username){
-     $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId});
     }
 
     $scope.socket.on('joinedSession', function(data){

@@ -53,16 +53,6 @@ module.exports = function (socketio) {
       socket.emit('updateUsers', rooms[roomid]);
     });
 
-    socket.on('joinSession_', function (data) {
-      socket.join(data.id);
-
-      rooms[data.id] = rooms[data.id] || {users: [], votes: {}};
-      rooms[data.id].users.push({username: data.username, socketId: socket.id});
-
-      socket.emit('sessionJoined', data.id);
-      socketio.to(data.id).emit('updateUsers', {users: rooms[data.id].users});
-    });
-
     socket.on('joinSession', function (data) {
       socket.join(data.id);
 
