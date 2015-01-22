@@ -36,9 +36,10 @@ angular.module('pokerestimateApp')
     });
 
     $scope.socket.on('updateVotes', function(votes){
+      $scope.showVotes = _.isEmpty(votes) ? false : true;
       $scope.votes = votes;
       $scope.points = _.groupBy(votes);
-      $scope.consensus = _.keys($scope.points).length == 1 ? true : false;
+      $scope.consensus = _.keys($scope.points).length == 1 && _.keys(votes).length > 1 ? true : false;
     });
 
     $scope.socket.on('clearVotes', $scope.clearSession);
@@ -63,11 +64,14 @@ angular.module('pokerestimateApp')
     $scope.points = false;
     $scope.users  = _.map($scope.users, function(u){ u.voted = false; return u;});
     $scope.votes = {};
+    $scope.showVotes = false;
   };
 
   $scope.setVote = function(vote){
-    $scope.currentUser.voted = true;
-    $scope.votes[$scope.id] = vote;
-    $scope.socket.emit('vote', {id:$scope.sessionId, userId: $scope.id, vote:vote});
+    if(!$scope.showVotes){
+      $scope.currentUser.voted = true;
+      $scope.votes[$scope.id] = vote;
+      $scope.socket.emit('vote', {id:$scope.sessionId, userId: $scope.id, vote:vote});
+    }
   };
 });
