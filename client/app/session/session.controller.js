@@ -18,11 +18,12 @@ angular.module('pokerestimateApp')
     $scope.votes = {};
     $scope.currentUser = {};
     if($scope.username){
-      $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId});
+     $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId});
     }
 
-    $scope.socket.on('joinedSession', function(id){
-      $scope.id  = id;
+    $scope.socket.on('joinedSession', function(data){
+      $scope.id  = data.id;
+      $scope.description = data.description;
     });
 
     $scope.socket.on('updateUsers', function(data){
