@@ -68,9 +68,18 @@ module.exports = function (socketio) {
       user.voted = true;
       rooms[data.id].votes[data.userId] = data.vote;
 
+      var numVotes = _.groupBy(rooms[data.id].users, 'voted').true.length;
+
+      if(numVotes ==  rooms[data.id].users.length){
+        rooms[data.id].revealed = true;
+      }else{
+        rooms[data.id].revealed = false;
+      }
+
       if(rooms[data.id].revealed){
         socketio.to(data.id).emit('updateVotes', rooms[data.id].votes);
       }
+
       socket.broadcast.to(data.id).emit('updateUsers', {users: rooms[data.id].users, id: socket.id});
     });
 
@@ -86,9 +95,9 @@ module.exports = function (socketio) {
       rooms[data.id].revealed = false;
       socket.broadcast.to(data.id).emit('clearVotes');
     });
+
     // Call onDisconnect.
     socket.on('disconnect', function () {
-
       var roomId = _.findKey(rooms, function(room){
         return _.findWhere(room.users, {socketId: socket.id});
       });
@@ -96,6 +105,7 @@ module.exports = function (socketio) {
       if(roomId){
         rooms[roomId].users = _.reject(rooms[roomId].users, {socketId: socket.id});
         socket.broadcast.to(roomId).emit('updateUsers', {users: rooms[roomId].users, id: socket.id});
+        delete rooms[roomId].votes[socket.id];
       }
       onDisconnect(socket);
     });
