@@ -21,15 +21,15 @@ include ../templates/header.jade
                   td {{point}}
                   td {{votes.length}}
         .row
-          .large-12.columns
-            button.medium.button(ng-click="clearVotes()") Clear Votes
-            button.medium.button(ng-click="revealVotes()") Show Votes
+          .large-6.columns
+            button.small.button(ng-click="clearVotes()") Clear Votes
+            button.small.button(ng-click="revealVotes()") Show Votes
         .row-with-padding
           .large-12.large-centered.columns
             .button-bar
               ul.button-group
                 li(ng-repeat="vote in voteValues")
-                  button.small.button(href="#" ng-click="setVote(vote)") {{vote}}
+                  button.tiny.button(href="#" ng-click="setVote(vote)") {{vote}}
         .row
           .large-12.large-centered.columns
             table
@@ -44,5 +44,12 @@ include ../templates/header.jade
                  td(ng-class="{active: user.socketId == id}")
                    i.fa.fa-check(ng-show="user.voted")
                  td(ng-class="{active: user.socketId == id}") {{votes[user.socketId]}}
+        hr
+        .row
+          .large-12.large-centered.columns
+            h5 Share this link with your team:
+            a(ng-href="url") {{url}}
+            h5 Or session Id :
+            a(ng-href="url") {{sessionId}}
 
 include ../templates/footer.jade

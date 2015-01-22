@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('pokerestimateApp')
-.controller('SessionCtrl', function (socket, $scope, $routeParams, $modal, userService) {
+.controller('SessionCtrl', function (socket, $scope, $location, $routeParams, $modal, userService) {
   $scope.init = function(){
+    $scope.url = $location.$$absUrl;
     $scope.socket = socket.socket;
     $scope.voteValues = [0,1,2,3,5,8,13];
     $scope.sessionId = $routeParams.id;
