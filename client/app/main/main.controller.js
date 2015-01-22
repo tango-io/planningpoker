@@ -17,7 +17,7 @@ angular.module('pokerestimateApp')
   });
 
   $scope.joinSession = function(){
-    if($scope.username && $scope.sessionId){
+    if($scope.username_ && $scope.sessionId){
       userService.setUser({username: $scope.username_});
       $location.path('/sessions/' + $scope.sessionId);
     }else{
