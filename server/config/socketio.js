@@ -95,7 +95,7 @@ module.exports = function (socketio) {
 
       if(roomId){
         rooms[roomId].users = _.reject(rooms[roomId].users, {socketId: socket.id});
-        socket.emit('updateUsers', rooms[roomId].users);
+        socket.broadcast.to(roomId).emit('updateUsers', {users: rooms[roomId].users, id: socket.id});
       }
       onDisconnect(socket);
     });
