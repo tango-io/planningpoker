@@ -38,7 +38,7 @@ module.exports = function (socketio) {
     socket.connectedAt = new Date();
 
     socket.on('updateDescription', function (data) {
-      socketio.to(data.id).emit('descriptionUpdated', data.description);
+      socket.broadcast.to(data.id).emit('descriptionUpdated', data.description);
     });
 
     socket.on('newSession', function (data) {
