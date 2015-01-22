@@ -31,6 +31,10 @@ angular.module('pokerestimateApp')
       $scope.currentUser = _.findWhere(data.users, {socketId: $scope.id});
     });
 
+    $scope.socket.on('hideVotes', function(data){
+      $scope.showVotes = false;
+    });
+
     $scope.socket.on('descriptionUpdated', function(description){
       $scope.description = description;
     });

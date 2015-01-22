@@ -61,8 +61,8 @@ module.exports = function (socketio) {
 
       socket.emit('joinedSession', {id: socket.id, description: rooms[data.id].description});
       rooms[data.id].revealed = false;
-      socketio.to(data.id).emit('updateVotes', rooms[data.id].votes);
       socketio.to(data.id).emit('updateUsers', {users: rooms[data.id].users});
+      socketio.to(data.id).emit('hideVotes');
     });
 
     socket.on('vote', function (data) {
@@ -106,8 +106,9 @@ module.exports = function (socketio) {
 
       if(roomId){
         rooms[roomId].users = _.reject(rooms[roomId].users, {socketId: socket.id});
-        socket.broadcast.to(roomId).emit('updateUsers', {users: rooms[roomId].users, id: socket.id});
         delete rooms[roomId].votes[socket.id];
+        socket.broadcast.to(roomId).emit('updateUsers', {users: rooms[roomId].users, id: socket.id});
+        socket.broadcast.to(roomId).emit('updateVotes', rooms[roomId].votes);
       }
       onDisconnect(socket);
     });
