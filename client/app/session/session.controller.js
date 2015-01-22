@@ -38,7 +38,7 @@ angular.module('pokerestimateApp')
     $scope.socket.on('updateVotes', function(votes){
       $scope.votes = votes;
       $scope.points = _.groupBy(votes);
-      $scope.consensus = _.keys($scope.points).length == 1 ? true : false;
+      $scope.consensus = _.keys($scope.points).length == 1 && _.keys(votes).length > 1 ? true : false;
     });
 
     $scope.socket.on('clearVotes', $scope.clearSession);
