@@ -60,6 +60,8 @@ module.exports = function (socketio) {
       rooms[data.id].users.push({username: data.username, socketId: socket.id});
 
       socket.emit('joinedSession', {id: socket.id, description: rooms[data.id].description});
+      rooms[data.id].revealed = false;
+      socketio.to(data.id).emit('updateVotes', rooms[data.id].votes);
       socketio.to(data.id).emit('updateUsers', {users: rooms[data.id].users});
     });
 
