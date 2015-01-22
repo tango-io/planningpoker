@@ -30,6 +30,8 @@ angular.module('pokerestimateApp')
       $scope.points = _.groupBy(votes);
       $scope.consensus = _.keys($scope.points).length == 1 ? true : false;
     });
+
+    $scope.socket.on('clearVotes', $scope.clearSession);
   };
 
   $scope.updateDescription = function(){
@@ -40,11 +42,18 @@ angular.module('pokerestimateApp')
     $scope.socket.emit('revealVotes', {id: $scope.sessionId});
   };
 
-  //$scope.clearValues = function(){
-  //  $scope.voteValues = [];
-  //  $scope.storyDescription = "";
-  //  //$scope.players = _.map($scope.players, function(player){ return _.omit(player, 'vote', 'voted'); });
-  //};
+  $scope.clearVotes = function(){
+    $scope.clearSession();
+    $scope.socket.emit('clearSession', {id: $scope.sessionId});
+  };
+
+  $scope.clearSession = function(){
+    $scope.description = "";
+    $scope.consensus = false;
+    $scope.points = false;
+    $scope.users  = _.map($scope.users, function(u){ u.voted = false; return u;});
+    $scope.votes = {};
+  };
 
   $scope.setVote = function(vote){
     $scope.currentUser.voted = true;
