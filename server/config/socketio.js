@@ -5,7 +5,7 @@
 'use strict';
 
 var config = require('./environment');
-var bcrypt = require('bcrypt');
+var uuid = require('node-uuid');
 var _ = require('lodash');
 
 // When the user disconnects.. perform this
@@ -42,7 +42,7 @@ module.exports = function (socketio) {
     });
 
     socket.on('newSession', function (data) {
-      var roomid = bcrypt.hashSync(new Date().toString(), 1);
+      var roomid = uuid.v1();
       socket.join(roomid);
 
       rooms[data.id] = rooms[data.id] || {users: [], votes: {}};

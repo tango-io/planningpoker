@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "main": "server/app.js",
   "dependencies": {
-    "bcrypt": "^0.8.1",
     "body-parser": "~1.5.0",
     "composable-middleware": "^0.3.0",
     "compression": "~1.0.1",
@@ -17,6 +16,7 @@
     "method-override": "~1.0.0",
     "mongoose": "~3.8.8",
     "morgan": "~1.0.0",
+    "node-uuid": "^1.4.2",
     "serve-favicon": "~2.0.1",
     "socket.io": "^1.0.6",
     "socket.io-client": "^1.0.6",
