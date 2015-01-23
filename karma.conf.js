@@ -31,7 +31,8 @@ module.exports = function(config) {
       'client/components/**/*.jade',
       'client/app/**/*.html',
       'client/components/**/*.html',
-      "bower_components/angular-socket.io-mock.js"
+      //"bower_components/angular-socket.io-mock.js"
+      'node_modules/socket.io-client/socket.io.js',
     ],
 
     preprocessors: {
