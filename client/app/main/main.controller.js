@@ -2,17 +2,21 @@
 
 angular.module('pokerestimateApp')
 .controller('MainCtrl', function ($scope, $http, socket, $location, userService) {
+  $scope.init = function(){
+    userService.setUser({username: null});
+    $scope.username = "";
+  };
 
   $scope.startSession = function(){
     if($scope.username){
-    socket.socket.emit('newSession', $scope.username);
+      userService.setUser({username: $scope.username});
+      socket.socket.emit('newSession');
     }else{
       $scope.submitted = true;
     }
   };
 
   socket.socket.on('sessionCreated', function(sessionId){
-    userService.setUser({username: $scope.username});
     $location.path('/sessions/' + sessionId);
   });
 
