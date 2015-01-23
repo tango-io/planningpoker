@@ -6,9 +6,17 @@
 'use strict';
 
 var MainPage = function() {
-  this.heroEl = element(by.css('.hero-unit'));
-  this.h1El = this.heroEl.element(by.css('h1'));
-  this.imgEl = this.heroEl.element(by.css('img'));
+  this.container = element(by.css('.main-content'));
+  this.form = this.container.element(by.css('form[name="startSessionForm"]'));
+  this.usernameInput = this.container.element(by.model('username'));
+
+  this.usernameError = this.form.element(by.css('span.error'))
+  this.startBtn = this.form.element(by.css('button'));
+
+
+  this.usernameInput_ = this.container.element(by.model('username'));
+  this.sessionIdInput = this.container.element(by.model('sessionId'));
+  this.joinBtn = this.container.element(by.css('form[name="joinSessionForm"] button'));
 };
 
 module.exports = new MainPage();
