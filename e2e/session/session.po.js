@@ -25,12 +25,18 @@ var MainPage = function() {
   this.sessionError = element.all(by.css('form[name="joinSessionForm"] span.error')).last();;
 
 
-
-
   this.usernameText = element(by.css('h5.ng-binding'));;
+
   this.userList = element.all(by.repeater('user in users'));
   this.userRow = element(by.repeater('user in users').row(0));
+
   this.shareLink = element.all(by.css('.share a')).first();
+  this.numbers = element(by.repeater('vote in voteValues').row(0));
+
+
+  this.statics = element(by.css('.statics'));
+  this.staticsList = element.all(by.repeater('(point, votes) in points'));
+  this.staticsRow = element(by.repeater('(point, votes) in points').row(0));
 };
 
 module.exports = new MainPage();

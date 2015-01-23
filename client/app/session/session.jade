@@ -8,7 +8,7 @@ include ../templates/header.jade
             h5 Your username: {{username}}
             label Story description
             textarea(ng-model="description" ng-keyup="updateDescription()")
-          .large-4.columns(ng-show="showVotes")
+          .large-4.columns.statics(ng-show="showVotes")
             h5  Statics
             h3.success(ng-show="consensus") Consensus!!!
             table
