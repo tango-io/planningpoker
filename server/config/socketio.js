@@ -15,7 +15,6 @@ function onDisconnect(socket) {
 // When the user connects.. perform this
 function onConnect(socket) {
   // Insert sockets below
-  require('../api/thing/thing.socket').register(socket);
 }
 
 //var rooms = { users:[], votes: []};
@@ -44,7 +43,7 @@ module.exports = function (socketio) {
 
     socket.on('newSession', function () {
       var roomid = uuid.v1();
-      rooms[data.id] = {users: [], votes: {}};
+      rooms[roomid] = {users: [], votes: {}};
       socket.emit('sessionCreated', roomid);
     });
 
