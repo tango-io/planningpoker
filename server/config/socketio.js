@@ -44,17 +44,21 @@ module.exports = function (socketio) {
 
     socket.on('newSession', function () {
       var roomid = uuid.v1();
+      rooms[data.id] = {users: [], votes: {}};
       socket.emit('sessionCreated', roomid);
     });
 
     socket.on('joinSession', function (data) {
+      if(rooms[data.id]){
       socket.join(data.id);
-      rooms[data.id] = rooms[data.id] || {users: [], votes: {}};
       rooms[data.id].users.push({username: data.username, socketId: socket.id});
       socket.emit('joinedSession', {id: socket.id, description: rooms[data.id].description});
 
       socketio.to(data.id).emit('hideVotes');
       socketio.to(data.id).emit('updateUsers', {users: rooms[data.id].users});
+      }else{
+        socket.emit('errorMsg', {message: "Session does not exist"});
+      }
     });
 
     socket.on('vote', function (data) {

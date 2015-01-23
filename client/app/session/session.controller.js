@@ -47,6 +47,13 @@ angular.module('pokerestimateApp')
     });
 
     $scope.socket.on('clearVotes', $scope.clearSession);
+
+    $scope.socket.on('errorMsg', function(){
+      var modalInstance = $modal.open({templateUrl: 'app/templates/modals/error.html', keyboard:false});
+      modalInstance.result.then(function (username) {
+        $location.path("/");
+      });
+    });
   };
 
   $scope.updateDescription = function(){
