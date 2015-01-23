@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pokerestimateApp')
-.controller('SessionCtrl', function (socket, $scope, $location, $routeParams, $modal, userService) {
+.controller('SessionCtrl', function (socket, $scope, $location, $routeParams, $modal, userService, $rootScope) {
   $scope.init = function(){
     $scope.url = $location.$$absUrl;
     $scope.socket = socket.socket;
@@ -78,4 +78,8 @@ angular.module('pokerestimateApp')
       $scope.socket.emit('vote', {id:$scope.sessionId, userId: $scope.id, vote:vote});
     }
   };
+
+  $scope.$on('$locationChangeStart', function (event, next, current) {
+    $scope.socket.emit('leaveSession');
+  });
 });

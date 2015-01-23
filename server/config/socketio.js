@@ -90,6 +90,19 @@ module.exports = function (socketio) {
       socket.broadcast.to(data.id).emit('clearVotes');
     });
 
+    socket.on('leaveSession', function () {
+      var roomId = _.findKey(rooms, function(room){
+        return _.findWhere(room.users, {socketId: socket.id});
+      });
+
+      if(roomId){
+        rooms[roomId].users = _.reject(rooms[roomId].users, {socketId: socket.id});
+        delete rooms[roomId].votes[socket.id];
+        socket.broadcast.to(roomId).emit('updateUsers', {users: rooms[roomId].users, id: socket.id});
+        socket.broadcast.to(roomId).emit('updateVotes', rooms[roomId].votes);
+      }
+    });
+
     // Call onDisconnect.
     socket.on('disconnect', function () {
       var roomId = _.findKey(rooms, function(room){
