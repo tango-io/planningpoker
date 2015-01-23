@@ -45,11 +45,11 @@ include ../templates/header.jade
                    i.fa.fa-check(ng-show="user.voted")
                  td(ng-class="{active: user.socketId == id}") {{votes[user.socketId]}}
         hr
-        .row
+        .row.share
           .large-12.large-centered.columns
             h5 Share this link with your team:
-            a(ng-href="{{url}} ") {{url}}
+            a(ng-href="{{url}}") {{url}}
             h5 Or session Id :
-            a(ng-href="{{url}} ") {{sessionId}}
+            a(ng-href="{{url}}") {{sessionId}}
 
 include ../templates/footer.jade

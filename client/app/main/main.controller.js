@@ -2,6 +2,7 @@
 
 angular.module('pokerestimateApp')
 .controller('MainCtrl', function ($scope, $http, socket, $location, userService) {
+
   $scope.init = function(){
     userService.setUser({username: null});
     $scope.username = "";
