@@ -1,8 +1,8 @@
 include ../templates/header.jade
 .container(ng-controller="SessionCtrl" ng-init="init()")
   .main-content
-    .row-with-padding
-      .large-8.large-centered.columns
+    .row.row-with-padding
+      .large-10.large-centered.columns
         .row
           .large-8.columns
             h5 Your username: {{username}}
@@ -24,7 +24,7 @@ include ../templates/header.jade
           .large-6.columns
             button.small.button(ng-click="clearVotes()") Clear Votes
             button.small.button(ng-click="revealVotes()") Show Votes
-        .row-with-padding
+        .row.row-with-padding
           .large-12.large-centered.columns
             .button-bar
               ul.button-group
