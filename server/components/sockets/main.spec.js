@@ -17,6 +17,7 @@ describe('sockets', function() {
   options ={
     transports: ['websocket'],
     'force new connection': true
+    path: '/socket.io-client'
   };
 
   beforeEach(function (done) {
@@ -27,7 +28,6 @@ describe('sockets', function() {
 
   it('emits an event when session is created', function(done) {
     var client = io.connect(url, options);
-    this.timeout(10000);
 
     client.on('connect', function(data){
         console.log("________________", sessionID);
