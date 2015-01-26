@@ -1,14 +1,14 @@
 include ../templates/header.jade
 .container(ng-init="init()")
   .main-content
-    .row-with-padding
+    .row.row-with-padding
       .large-2.large-centered.columns
         form(name="startSessionForm" ng-submit="startSession()" novalidate)
           input(type="text" name="username" ng-model="username" placeholder="Enter a username" required)
           span.error(ng-show="submitted && startSessionForm.$invalid") Please enter a username
           button.medium.button.radius(type="submit") Start a session
       hr
-    .row-with-padding
+    .row.row-with-padding
       .large-2.large-centered.columns
         form(name="joinSessionForm" ng-submit="joinSession()" novalidate)
           input(type="text" name="username" ng-model="username_" placeholder="Enter a username" required)
