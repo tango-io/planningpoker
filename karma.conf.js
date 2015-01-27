@@ -22,16 +22,9 @@ module.exports = function(config) {
       'client/bower_components/angular-socket-io/socket.js',
       'client/bower_components/angular-foundation/mm-foundation.js',
       'client/app/app.js',
-      'client/app/app.coffee',
       'client/app/**/*.js',
-      'client/app/**/*.coffee',
       'client/components/**/*.js',
-      'client/components/**/*.coffee',
       'client/app/**/*.jade',
-      'client/components/**/*.jade',
-      'client/app/**/*.html',
-      'client/components/**/*.html',
-      //"bower_components/angular-socket.io-mock.js"
       'node_modules/socket.io-client/socket.io.js',
     ],
 
