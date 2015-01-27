@@ -5,7 +5,11 @@ angular.module('socketMock', [])
     return {
       socket: {
         connect: function() {},
-        on: function() {},
+        on: function(event, cb) {
+          if(event == 'sessionCreated'){
+            return cb('sessionId');
+          }
+        },
         emit: function() {
         },
         receive: function() {}

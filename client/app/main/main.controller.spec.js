@@ -51,13 +51,11 @@ describe('Controller: MainCtrl', function () {
      expect(socket.socket.emit).toHaveBeenCalledWith('newSession');
   }));
 
-  //it('redirects to session:id on session created', inject(function ($location) {
-  //  console.log("aksdjad", $location.path());
-  //  scope.username = "tester";
-  //  scope.startSession();
-  //  console.log("aksdjad", $location.path());
-
-  //}));
+  it('redirects to session:id on session created', inject(function ($location) {
+    scope.username = "tester";
+    scope.startSession();
+    expect($location.path()).toBe('/sessions/sessionId')
+  }));
 
   it('does not join a session without username or session id', inject(function (userService, socket) {
     spyOn(socket.socket, 'emit');
@@ -80,6 +78,10 @@ describe('Controller: MainCtrl', function () {
     expect(userService.getUser().username).toBe("tester");
   }));
 
-  //it('reditects to session/:id when user joins a session', inject(function () {
-  //}));
+  it('reditects to session/:id when user joins a session', inject(function ($location) {
+    scope.username_ = "tester";
+    scope.sessionId = "some-1231";
+    scope.joinSession();
+    expect($location.path()).toBe('/sessions/some-1231')
+  }));
 });
