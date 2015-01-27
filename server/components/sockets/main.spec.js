@@ -129,91 +129,77 @@ describe('sockets', function() {
     });
   });
 
-  //it('emits to reveal votes when all clients has voted', function(done) {
-  //  client1.emit('newSession');
+  it('emits to reveal votes when all clients has voted', function(done) {
+    client1.emit('newSession');
 
-  //  client1.on('sessionCreated', function(id){
+    client1.on('sessionCreated', function(id){
 
-  //    client1.emit('joinSession', {id: id, username: 'Tester'});
-  //    client2.emit('joinSession', {id: id, username: 'Another tester'});
+      client1.emit('joinSession', {id: id, username: 'Tester'});
+      client2.emit('joinSession', {id: id, username: 'Another tester'});
 
-  //    client1.emit('vote', {id: id, userId: client1.id, vote: 4 });
-  //    client2.emit('vote', {id: id, userId: client2.id, vote: 5 });
+      client1.emit('vote', {id: id, userId: client1.id, vote: 4 });
+      client2.emit('vote', {id: id, userId: client2.id, vote: 5 });
 
-  //    client2.on('updateVotes', function(data){
-  //      data[client1.id].should.be.exactly(4);
-  //      data[client2.id].should.be.exactly(5);
-  //      done();
-  //    })
-  //  });
-  //});
+      client2.on('updateVotes', function(data){
+        data[client1.id].should.be.exactly(4);
+        data[client2.id].should.be.exactly(5);
+        done();
+      })
+    });
+  });
 
-  //it('emits clear votes after clearing a session', function(done) {
-  //  client1.emit('newSession');
-  //  client1.on('sessionCreated', function(id){
+  it('emits clear votes after clearing a session', function(done) {
+    client1.emit('newSession');
+    client1.on('sessionCreated', function(id){
 
-  //    client1.emit('joinSession', {id: id, username: 'Tester'});
-  //    client2.emit('joinSession', {id: id, username: 'Another tester'});
+      client1.emit('joinSession', {id: id, username: 'Tester'});
+      client2.emit('joinSession', {id: id, username: 'Another tester'});
 
-  //    client1.emit('clearSession', {id: id});
+      client1.emit('clearSession', {id: id});
 
-  //    client2.on('clearVotes', function(data){
-  //      done();
-  //    })
-  //  });
-  //});
+      client2.on('clearVotes', function(data){
+        done();
+      })
+    });
+  });
 
-  //function startSessions(cb){
-  //  client1.emit('newSession');
-  //  client1.on('sessionCreated', function(id){
+  it('updates users after a client leaves', function(done) {
+    client1.emit('newSession');
+    client1.on('sessionCreated', function(id){
 
-  //    client1.emit('joinSession', {id: id, username: 'Tester'});
+      client1.emit('joinSession', {id: id, username: 'Tester'});
 
-  //    client1.on('updateUsers', function(data){
-  //      client2.emit('joinSession', {id: id, username: 'Another tester'});
-  //      client1.on('updateUsers', function(data){
-  //        return cb();
-  //      });
-  //    });
-  //  };
+      client1.once('updateUsers', function(data){
+        client2.emit('joinSession', {id: id, username: 'Another tester'});
 
-  //it('updates users after a client leaves', function(done) {
-  //  client1.emit('newSession');
-  //  client1.on('sessionCreated', function(id){
+        client1.once('updateUsers', function(data){
+          client2.emit('leaveSession', {id: id, username: 'Another tester'});
 
-  //    client1.emit('joinSession', {id: id, username: 'Tester'});
+          client1.once('updateUsers', function(data){
+            data.users.length.should.be.exactly(1);
+            done();
+          });
+        });
+      });
+    });
+  });
 
-  //    client1.on('updateUsers', function(data){
-  //      client2.emit('joinSession', {id: id, username: 'Another tester'});
-  //      client1.on('updateUsers', function(data){
-  //        client2.emit('leaveSession', {id: id, username: 'Another tester'});
+  it('updates votes after a client leaves', function(done) {
+    client1.emit('newSession');
+    client1.on('sessionCreated', function(id){
 
-  //        client1.on('updateUsers', function(data){
-  //          console.log("____________", data);
-  //          data.users.length.should.be.exactly(1);
-  //          done();
-  //        });
-  //      });
-  //    });
-  //  });
-  //});
+      client1.emit('joinSession', {id: id, username: 'Tester'});
+      client2.emit('joinSession', {id: id, username: 'Another tester'});
 
-  //it('updates votes after a client leaves', function(done) {
-  //  client1.emit('newSession');
-  //  client1.on('sessionCreated', function(id){
+      client2.emit('vote', {id: id, userId: client2.id, vote: 5 });
 
-  //    client1.emit('joinSession', {id: id, username: 'Tester'});
-  //    client2.emit('joinSession', {id: id, username: 'Another tester'});
+      client2.emit('leaveSession', {id: id, username: 'Another tester'});
 
-  //    client2.emit('vote', {id: id, userId: client2.id, vote: 5 });
-
-  //    client2.emit('leaveSession', {id: id, username: 'Another tester'});
-
-  //    client1.on('updateVotes', function(data){
-  //      var votesLength = _.keys(data).length
-  //      votesLength.should.be.exactly(0);
-  //      done();
-  //    });
-  //  });
-  //});
+      client1.on('updateVotes', function(data){
+        var votesLength = _.keys(data).length
+        votesLength.should.be.exactly(0);
+        done();
+      });
+    });
+  });
 });
