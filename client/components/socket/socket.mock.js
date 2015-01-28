@@ -6,8 +6,24 @@ angular.module('socketMock', [])
       socket: {
         connect: function() {},
         on: function(event, cb) {
-          if(event == 'sessionCreated'){
-            return cb('sessionId');
+          switch(event){
+            case 'sessionCreated':
+              return cb('sessionId');
+              break;
+            case 'joinedSession':
+              return cb({id: 'sessionId', description:'this is a description'});
+              break;
+            case 'updateUsers':
+              return cb({users: [{username: 'sample', socketId: 'socketId'}] });
+              break;
+            case 'descriptionUpdated':
+              return cb('description is updated');
+              break;
+            case 'updateVotes':
+              return cb({socketId: 4});
+              break;
+            default:
+              return cb();
           }
         },
         emit: function() {
