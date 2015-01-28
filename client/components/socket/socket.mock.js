@@ -20,7 +20,7 @@ angular.module('socketMock', [])
               return cb('description is updated');
               break;
             case 'updateVotes':
-              return cb({socketId: 4});
+              return cb({});
               break;
             default:
               return cb();

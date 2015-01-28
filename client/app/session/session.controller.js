@@ -8,7 +8,6 @@ angular.module('pokerestimateApp')
     $scope.voteValues = [0,1,2,3,5,8,13];
     $scope.sessionId = $routeParams.id;
     $scope.votes = {};
-    $scope.currentUser = {};
     $scope.username = userService.getUser().username;
 
     if($scope.username){
@@ -20,6 +19,12 @@ angular.module('pokerestimateApp')
         $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId});
       });
     }
+
+    $scope.socket.on('clearVotes', $scope.clearSession);
+
+    $scope.socket.on('descriptionUpdated', function(description){
+      $scope.description = description;
+    });
 
     $scope.socket.on('joinedSession', function(data){
       $scope.id  = data.id;
@@ -35,18 +40,12 @@ angular.module('pokerestimateApp')
       $scope.showVotes = false;
     });
 
-    $scope.socket.on('descriptionUpdated', function(description){
-      $scope.description = description;
-    });
-
     $scope.socket.on('updateVotes', function(votes){
       $scope.showVotes = _.isEmpty(votes) ? false : true;
       $scope.votes = votes;
       $scope.points = _.groupBy(votes);
       $scope.consensus = _.keys($scope.points).length == 1 && _.keys(votes).length > 1 ? true : false;
     });
-
-    $scope.socket.on('clearVotes', $scope.clearSession);
 
     $scope.socket.on('errorMsg', function(){
       var modalInstance = $modal.open({templateUrl: 'app/templates/modals/error.html', keyboard:false});
