@@ -3,6 +3,7 @@
 angular.module('pokerestimateApp')
   .factory('userService', function (){
     var user = {};
+    var voteValues = [];
 
       return {
         getUser: function(){
@@ -10,6 +11,12 @@ angular.module('pokerestimateApp')
         },
         setUser: function(usr){
           user = usr;
+        },
+        getVoteValues: function(){
+          return voteValues;
+        },
+        setVoteValues: function(votes){
+          voteValues = votes;
         }
       }
   });

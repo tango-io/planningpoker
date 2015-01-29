@@ -18,7 +18,8 @@ angular.module('pokerestimateApp')
   };
 
   socket.socket.on('sessionCreated', function(sessionId){
-    $location.path('/sessions/' + sessionId);
+    //$location.path('/sessions/' + sessionId);
+    $location.path('/voteValues/' + sessionId);
   });
 
   $scope.joinSession = function(){
