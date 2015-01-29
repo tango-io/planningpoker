@@ -4,7 +4,7 @@ include ../templates/header.jade
     .row.row-with-padding
       .large-10.large-centered.columns
         .row
-          .large-4.columns.large-centered
+          .large-5.columns.large-centered
             table
               thead
                 tr
@@ -12,13 +12,16 @@ include ../templates/header.jade
                   th Value
                   th
               tbody
-                tr(ng-repeat="(label, value) in voteValues")
+                tr(ng-repeat="vote in voteValues")
                   td
-                    input(type="text" value="{{label}}")
+                    input(type="text" ng-model="vote.label")
                   td
-                    input(type="text" value="{{value}}")
+                    input(type="text" ng-model="vote.value")
                   td
                     button.btn.tiny
-                      i.fa.fa-trash
+                      i.fa.fa-trash(ng-click="removeValue(vote.value)")
+        .row
+          .large-2.columns.large-offset-8
+            Button(ng-click="go()") Go ->
 
 include ../templates/footer.jade
