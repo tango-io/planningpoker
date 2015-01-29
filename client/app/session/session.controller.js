@@ -22,44 +22,46 @@ angular.module('pokerestimateApp')
     }
 
     $scope.socket.on('clearVotes', $scope.clearSession);
-    $scope.socket.on('descriptionUpdated', function(description){ onDescriptionUpdated});
-    $scope.socket.on('joinedSession', function(data){ onJoinedSession(data)});
-    $scope.socket.on('updateUsers', function(data){ onUpdateUsers(data)});
-    $scope.socket.on('hideVotes', function(){ onHideVotes()});
-    $scope.socket.on('updateVotes', function(votes){ onUpdateVotes(votes)});
-    $scope.socket.on('errorMsg', function(){ onError() });
+    $scope.socket.on('descriptionUpdated', function(description){ $scope.listeners.onDescriptionUpdated(description)});
+    $scope.socket.on('joinedSession', function(data){ $scope.listeners.onJoinedSession(data)});
+    $scope.socket.on('updateUsers', function(data){ $scope.listeners.onUpdateUsers(data)});
+    $scope.socket.on('hideVotes', function(){ $scope.listeners.onHideVotes()});
+    $scope.socket.on('updateVotes', function(votes){ $scope.listeners.onUpdateVotes(votes)});
+    $scope.socket.on('errorMsg', function(){ $scope.listeners.onError() });
   };
 
-  function onDescriptionUpdated(data){
-    $scope.description = description;
-  };
+  $scope.listeners = {
+    onDescriptionUpdated: function(description){
+      $scope.description = description;
+    },
 
-  function onJoinedSession(data){
-    $scope.id  = data.id;
-    $scope.description = data.description;
-  };
+    onJoinedSession: function (data){
+      $scope.id  = data.id;
+      $scope.description = data.description;
+    },
 
-  function onUpdateUsers(data){
-    $scope.users = data.users;
-    $scope.currentUser = _.findWhere(data.users, {socketId: $scope.id});
-  };
+    onUpdateUsers:  function (data){
+      $scope.users = data.users;
+      $scope.currentUser = _.findWhere(data.users, {socketId: $scope.id});
+    },
 
-  function onError(){
-    var modalInstance = $modal.open({templateUrl: 'app/templates/modals/error.html', keyboard:false});
-    modalInstance.result.then(function (username) {
-      $location.path("/");
-    });
-  };
+    onError: function(){
+      var modalInstance = $modal.open({templateUrl: 'app/templates/modals/error.html', keyboard:false});
+      modalInstance.result.then(function (username) {
+        $location.path("/");
+      });
+    },
 
-  function onHideVotes(){
-    $scope.showVotes = false;
-  };
+    onHideVotes: function(){
+      $scope.showVotes = false;
+    },
 
-  function onUpdateVotes(votes){
-    $scope.showVotes = _.isEmpty(votes) ? false : true;
-    $scope.votes = votes;
-    $scope.points = _.groupBy(votes);
-    $scope.consensus = _.keys($scope.points).length == 1 && _.keys(votes).length > 1 ? true : false;
+    onUpdateVotes: function(votes){
+      $scope.showVotes = _.isEmpty(votes) ? false : true;
+      $scope.votes = votes;
+      $scope.points = _.groupBy(votes);
+      $scope.consensus = _.keys($scope.points).length == 1 && _.keys(votes).length > 1 ? true : false;
+    }
   };
 
   $scope.updateDescription = function(){
