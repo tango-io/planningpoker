@@ -20,7 +20,7 @@ describe('Controller: SessionCtrl', function () {
 
   describe('Sessions controller', function(){
 
-    iit('initialize variables on calling init', inject(function ($location, socket, userService, $routeParams) {
+    it('initialize variables on calling init', inject(function ($location, socket, userService, $routeParams) {
       $location.path('/sessions/sessionId');
       scope.init();
       expect(scope.url).toEqual($location.$$absUrl + "sessions/sessionId");
@@ -31,7 +31,7 @@ describe('Controller: SessionCtrl', function () {
       expect(scope.votes).toEqual({});
     }));
 
-    it('sets the listener for socket events', inject(function (socket, userService, $routeParams) {
+    it('sets the listener for socket events', inject(function () {
       spyOn(scope, 'clearSession');
       spyOn(scope.listeners, 'onDescriptionUpdated');
       spyOn(scope.listeners, 'onJoinedSession');
@@ -48,13 +48,13 @@ describe('Controller: SessionCtrl', function () {
       expect(scope.listeners.onError).toHaveBeenCalled();
     }));
 
-    it('emits join session if user has a username', inject(function ($location, socket, userService, $routeParams) {
+    it('emits join session if user has a username', inject(function (socket) {
       spyOn(socket.socket, 'emit');
       scope.init();
       expect(socket.socket.emit).not.toHaveBeenCalledWith('joinSession');
     }));
 
-    it('sets username and emits session id after setting username in modal', inject(function ($location, socket, userService, $routeParams, $modal) {
+    it('sets username and emits session id after setting username in modal', inject(function ($modal) {
       var fakeResponse = {
         result: {
           then: function(cb) {
@@ -73,54 +73,54 @@ describe('Controller: SessionCtrl', function () {
       expect(scope.listeners.onJoinedSession).toHaveBeenCalled();
     }));
 
-    it('sets id and description on joinedSession function', inject(function ($location, socket, userService, $routeParams) {
+    it('sets id and description on joinedSession function', inject(function () {
       scope.listeners.onDescriptionUpdated("Updated description");
       expect(scope.description).toEqual('Updated description');
     }));
 
-    it('sets description and id on joined session function', inject(function ($location, socket, userService, $routeParams) {
+    it('sets description and id on joined session function', inject(function () {
       scope.listeners.onJoinedSession({id: 1, description: "This is a description"});
       expect(scope.description).toEqual('This is a description');
       expect(scope.id).toEqual(1);
     }));
 
-    it('sets users and current user, and users list on updateUsers function', inject(function ($location, socket, userService, $routeParams) {
+    it('sets users and current user, and users list on updateUsers function', inject(function () {
       scope.id = 1;
       scope.listeners.onUpdateUsers({users:[{socketId: 1, username: 'Daenerys'}, {socketId: 2, username: 'Drogo'}]});
       expect(scope.currentUser.username).toEqual('Daenerys');
       expect(scope.users).toEqual([{socketId: 1, username: 'Daenerys'}, {socketId: 2, username: 'Drogo'}]);
     }));
 
-    it('sets show votes to false on hideVotes function', inject(function ($location, socket, userService, $routeParams) {
+    it('sets show votes to false on hideVotes function', inject(function () {
       scope.listeners.onHideVotes();
       expect(scope.showVotes).toEqual(false);
     }));
 
-    it('update votes on updateVotes function', inject(function ($location, socket, userService, $routeParams) {
+    it('update votes on updateVotes function', inject(function () {
       scope.listeners.onUpdateVotes({socketId: 4});
       expect(scope.showVotes).toEqual(true);
       expect(scope.votes).toEqual({socketId: 4});
       expect(scope.consensus).toEqual(false);
     }));
 
-    it('does not show votes if votes are empty', inject(function ($location, socket, userService, $routeParams) {
+    it('does not show votes if votes are empty', inject(function () {
       scope.listeners.onUpdateVotes({});
       expect(scope.showVotes).toEqual(false);
     }));
 
-    it('does not show consensus if there is only one vote or votes does not match', inject(function ($location, socket, userService, $routeParams) {
+    it('does not show consensus if there is only one vote or votes does not match', inject(function () {
       scope.listeners.onUpdateVotes({socketId: 3});
       expect(scope.consensus).toEqual(false);
       scope.listeners.onUpdateVotes({socketId: 4, otherSocketId: 3, anotherSocketId: 3});
       expect(scope.consensus).toEqual(false);
     }));
 
-    it('shows consensus if there is all votes matches', inject(function ($location, socket, userService, $routeParams) {
+    it('shows consensus if there is all votes matches', inject(function ($location) {
       scope.listeners.onUpdateVotes({socketId: 3, otherSocketId: 3, anotherSocketId: 3});
       expect(scope.consensus).toEqual(true);
     }));
 
-    it('opens modal and redirects to home on errorMsg function', inject(function ($location, socket, userService, $routeParams, $modal) {
+    it('opens modal and redirects to home on errorMsg function', inject(function ($location, $modal) {
       var fakeResponse = $modal.open();
 
       spyOn($modal, 'open').andReturn(fakeResponse);
@@ -130,7 +130,7 @@ describe('Controller: SessionCtrl', function () {
       expect($location.path()).toBe('/');
     }));
 
-    it('it clears variables related to session in clear session function', inject(function ($location, socket, userService, $routeParams) {
+    it('it clears variables related to session in clear session function', inject(function () {
       scope.description = "some description";
       scope.consensus = true;
       scope.points = true;
@@ -148,7 +148,7 @@ describe('Controller: SessionCtrl', function () {
       expect(scope.showVotes).toEqual(false);
     }));
 
-    it('it sets votes values  and emit vote event in set vote function', inject(function ($location, socket, userService, $routeParams) {
+    it('it sets votes values  and emit vote event in set vote function', inject(function (socket) {
       spyOn(socket.socket, 'emit');
       scope.init();
       scope.id = 'socketId';
@@ -164,13 +164,13 @@ describe('Controller: SessionCtrl', function () {
       expect(socket.socket.emit).toHaveBeenCalledWith('vote', {id: 'sessionId', userId: 'socketId', vote:4});
     }));
 
-    it('does not emit vote if show votes is true ', inject(function ($location, socket, userService, $routeParams) {
+    it('does not emit vote if show votes is true ', inject(function (socket) {
       spyOn(socket.socket, 'emit');
       scope.showVotes = true;
       expect(socket.socket.emit).not.toHaveBeenCalled();
     }));
 
-    it('emits leave session if location.patch changes', inject(function ($location, socket, userService, $routeParams) {
+    it('emits leave session if location.patch changes', inject(function ($location, socket) {
       spyOn(socket.socket, 'emit');
       $location.path('/')
       expect(socket.socket.emit).not.toHaveBeenCalledWith('leaveSession');
