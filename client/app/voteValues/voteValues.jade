@@ -1,0 +1,19 @@
+include ../templates/header.jade
+.container(ng-controller="VoteValuesCtrl" ng-init="init()")
+  .main-content
+    .row.row-with-padding
+      .large-10.large-centered.columns
+        h1 Holiii
+        .row
+          .large-8.columns
+            table
+              thead
+                tr
+                  th Label
+                  th Value
+              tbody
+                tr(ng-repeat="(label, value) in voteValues")
+                  td {{label}}
+                  td {{value}}
+
+include ../templates/footer.jade
