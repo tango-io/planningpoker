@@ -38,6 +38,7 @@ angular.module('pokerestimateApp')
     onJoinedSession: function (data){
       $scope.id  = data.id;
       $scope.description = data.description;
+      $scope.voteValues = data.voteValues;
     },
 
     onUpdateUsers:  function (data){

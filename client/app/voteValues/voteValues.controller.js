@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pokerestimateApp')
-  .controller('VoteValuesCtrl', function ($scope, $routeParams, userService, $location) {
+  .controller('VoteValuesCtrl', function ($scope, $routeParams, userService, $location, socket) {
     $scope.init = function(){
       $scope.voteValues = [
         {label: 0, value: 0},
@@ -16,8 +16,13 @@ angular.module('pokerestimateApp')
 
     $scope.go = function(){
      userService.setVoteValues($scope.voteValues);
-     $location.path('/sessions/' + $routeParams.id);
+     socket.socket.emit('newSession', $scope.voteValues);
     };
+
+    socket.socket.on('sessionCreated', function(sessionId){
+     $location.path('/sessions/' + sessionId);
+    });
+
 
     $scope.removeValue = function(value){
       $scope.voteValues = _.reject($scope.voteValues, {value: value});
