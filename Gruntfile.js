@@ -648,12 +648,24 @@ module.exports = function (grunt) {
       ]);
     }
 
+    else if (target === 'integration') {
+      return grunt.task.run([
+        'clean:server',
+        'injector:stylus',
+        'concurrent:test',
+        'injector',
+        'wiredep',
+        'autoprefixer',
+        'protractor'
+      ]);
+    }
+
     else if (target === 'e2e') {
       return grunt.task.run([
         'clean:server',
         'env:all',
         'env:test',
-        'injector:stylus', 
+        'injector:stylus',
         'concurrent:test',
         'injector',
         'wiredep',
@@ -665,7 +677,8 @@ module.exports = function (grunt) {
 
     else grunt.task.run([
       'test:server',
-      'test:client'
+      'test:client',
+      'test:integration'
     ]);
   });
 

@@ -46,6 +46,7 @@ function onVote(io, socket, data) {
 
   var numVotes = _.groupBy(rooms[data.id].users, 'voted').true.length;
 
+  //if all user has voted
   if(numVotes ==  rooms[data.id].users.length){
     rooms[data.id].revealed = true;
   }else{
@@ -56,31 +57,31 @@ function onVote(io, socket, data) {
     io.to(data.id).emit('updateVotes', rooms[data.id].votes);
   }
 
-  socket.broadcast.to(data.id).emit('updateUsers', {users: rooms[data.id].users, id: socket.id});
+  socket.broadcast.to(data.id).emit('updateUsers', {users: rooms[data.id].users});
 };
 
 function onRevealVotes(io, socket, data){
-  var votes = rooms[data.id].votes;
   rooms[data.id].revealed = true;
-  io.to(data.id).emit('updateVotes', votes);
+  io.to(data.id).emit('updateVotes', rooms[data.id].votes);
 };
 
 function onClearSession(socket, data){
   rooms[data.id].users = _.map(rooms[data.id].users, function(u){ u.voted = false; return u;});
   rooms[data.id].votes = {};
-  rooms[data.id].revealed = false;
   socket.broadcast.to(data.id).emit('clearVotes');
 };
 
-function onLeaveSession(socket, data){
+function onLeaveSession(socket){
   var roomId = _.findKey(rooms, function(room){
     return _.findWhere(room.users, {socketId: socket.id});
   });
 
-  if(roomId){
+  if(roomId && rooms[roomId].users.length > 1){
     rooms[roomId].users = _.reject(rooms[roomId].users, {socketId: socket.id});
     delete rooms[roomId].votes[socket.id];
-    socket.broadcast.to(roomId).emit('updateUsers', {users: rooms[roomId].users, id: socket.id});
+    socket.broadcast.to(roomId).emit('updateUsers', {users: rooms[roomId].users});
     socket.broadcast.to(roomId).emit('updateVotes', rooms[roomId].votes);
+  }else{
+    delete rooms[roomId];
   }
 };

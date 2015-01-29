@@ -21,39 +21,47 @@ angular.module('pokerestimateApp')
       });
     }
 
-    $scope.socket.on('joinedSession', function(data){
+    $scope.socket.on('clearVotes', $scope.clearSession);
+    $scope.socket.on('descriptionUpdated', function(description){ $scope.listeners.onDescriptionUpdated(description)});
+    $scope.socket.on('joinedSession', function(data){ $scope.listeners.onJoinedSession(data)});
+    $scope.socket.on('updateUsers', function(data){ $scope.listeners.onUpdateUsers(data)});
+    $scope.socket.on('hideVotes', function(){ $scope.listeners.onHideVotes()});
+    $scope.socket.on('updateVotes', function(votes){ $scope.listeners.onUpdateVotes(votes)});
+    $scope.socket.on('errorMsg', function(){ $scope.listeners.onError() });
+  };
+
+  $scope.listeners = {
+    onDescriptionUpdated: function(description){
+      $scope.description = description;
+    },
+
+    onJoinedSession: function (data){
       $scope.id  = data.id;
       $scope.description = data.description;
-    });
+    },
 
-    $scope.socket.on('updateUsers', function(data){
+    onUpdateUsers:  function (data){
       $scope.users = data.users;
       $scope.currentUser = _.findWhere(data.users, {socketId: $scope.id});
-    });
+    },
 
-    $scope.socket.on('hideVotes', function(data){
-      $scope.showVotes = false;
-    });
-
-    $scope.socket.on('descriptionUpdated', function(description){
-      $scope.description = description;
-    });
-
-    $scope.socket.on('updateVotes', function(votes){
-      $scope.showVotes = _.isEmpty(votes) ? false : true;
-      $scope.votes = votes;
-      $scope.points = _.groupBy(votes);
-      $scope.consensus = _.keys($scope.points).length == 1 && _.keys(votes).length > 1 ? true : false;
-    });
-
-    $scope.socket.on('clearVotes', $scope.clearSession);
-
-    $scope.socket.on('errorMsg', function(){
+    onError: function(){
       var modalInstance = $modal.open({templateUrl: 'app/templates/modals/error.html', keyboard:false});
       modalInstance.result.then(function (username) {
         $location.path("/");
       });
-    });
+    },
+
+    onHideVotes: function(){
+      $scope.showVotes = false;
+    },
+
+    onUpdateVotes: function(votes){
+      $scope.showVotes = _.isEmpty(votes) ? false : true;
+      $scope.votes = votes;
+      $scope.points = _.groupBy(votes);
+      $scope.consensus = _.keys($scope.points).length == 1 && _.keys(votes).length > 1 ? true : false;
+    }
   };
 
   $scope.updateDescription = function(){
