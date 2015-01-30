@@ -43,4 +43,11 @@ describe('voteValues View', function() {
     expect(page.voteList.count()).toBe(6);
   });
 
+  it('s able to add vote values for a session', function() {
+    expect(page.voteList.count()).toBe(7);
+    page.newVoteLabel.sendKeys('new label')
+    page.newVoteValue.sendKeys(9)
+    page.voteAddBtn.click();
+    expect(page.voteList.count()).toBe(8);
+  });
 });

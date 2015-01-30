@@ -51,8 +51,16 @@ describe('Controller: VoteValuesCtrl', function () {
     expect(scope.voteValues.length).toBe(6);
   }));
 
+  it('add values from votes list', inject(function ($location) {
+    scope.init();
+    expect(scope.voteValues.length).toBe(7);
+    scope.addValue({label:"this one", value:"4"});
+    expect(scope.voteValues.length).toBe(8);
+  }));
+
   it('redirects to session:id on redirect to session function', inject(function ($location) {
     scope.redirectToSession('sessionId');
     expect($location.path()).toMatch('/sessions/sessionId');
   }));
+
 });

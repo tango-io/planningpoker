@@ -18,6 +18,10 @@ var MainPage = function() {
   this.voteListFirstValue = element(by.css('tr:first-child td:nth-child(2) input'));
   this.voteListFirstBtn = element(by.css('tr:first-child td:last-child button'));
 
+  this.newVoteLabel = element(by.css('tr:last-child td:first-child input'));
+  this.newVoteValue = element(by.css('tr:last-child td:nth-child(2) input'));
+  this.voteAddBtn = element(by.css('tr:last-child td:last-child button'));
+
   this.voteListFirst = element(by.css('ul.button-group li:first-child button'));
   this.votesFirst = element(by.css('tr[ng-repeat="user in users"] td:last-child'));
 
