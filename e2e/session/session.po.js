@@ -27,8 +27,13 @@ var MainPage = function() {
 
   this.descriptionInput = element(by.model('description'));
 
+  this.usernameInput_ = this.container.element(by.model('username_'));
+  this.sessionIdInput = this.container.element(by.model('sessionId'));
+  this.joinBtn = this.container.element(by.css('form[name="joinSessionForm"] button'));
+
   this.clearBtn = element(by.buttonText('Clear Votes'));
   this.showBtn = element(by.buttonText('Show Votes'));
+  this.goBtn = element(by.buttonText('Go ->'));
 
   this.modal = element(by.css('.reveal-modal'));
   this.usernameModalInput = this.modal.element(by.model('username'));
