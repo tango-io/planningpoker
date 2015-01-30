@@ -28,4 +28,9 @@ angular.module('pokerestimateApp')
     $scope.removeValue = function(value){
       $scope.voteValues = _.reject($scope.voteValues, {value: value});
     };
+
+    $scope.addValue = function(value){
+      $scope.voteValues.push(value);
+      $scope.newVote = {};
+    };
   });

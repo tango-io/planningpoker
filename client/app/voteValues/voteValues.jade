@@ -20,6 +20,14 @@ include ../templates/header.jade
                   td
                     button.btn.tiny
                       i.fa.fa-trash(ng-click="removeValue(vote.value)")
+                tr
+                  td
+                    input(type="text" ng-model="newVote.label")
+                  td
+                    input(type="text" ng-model="newVote.value")
+                  td
+                    button.btn.tiny
+                      i.fa.fa-plus(ng-click="addValue(newVote)")
         .row
           .large-2.columns.large-offset-8
             Button(ng-click="go()") Go ->
