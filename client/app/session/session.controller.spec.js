@@ -1,6 +1,6 @@
 'use strict';
 
-ddescribe('Controller: SessionCtrl', function () {
+describe('Controller: SessionCtrl', function () {
 
   // load the controller's module
   beforeEach(module('pokerestimateApp'));
