@@ -1,13 +1,13 @@
 'use strict';
 
-describe('Controller: SessionCtrl', function () {
+ddescribe('Controller: SessionCtrl', function () {
 
   // load the controller's module
   beforeEach(module('pokerestimateApp'));
   beforeEach(module('socketMock'));
   beforeEach(module('modalMock'));
 
-  var SessionCtrl, scope, $modal, fakeModal;
+  var SessionCtrl, scope, $modal;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function (_socket_, _userService_, $location, $controller, $rootScope, $routeParams, $modal) {
@@ -16,16 +16,27 @@ describe('Controller: SessionCtrl', function () {
     SessionCtrl = $controller('SessionCtrl', {
       $scope: scope,
     });
+
   }));
 
   describe('Sessions controller', function(){
 
     it('initialize variables on calling init', inject(function ($location, socket, userService, $routeParams) {
+      var  defaultValues = [
+        {label: 0, value: 0},
+        {label: 1, value: 1},
+        {label: 2, value: 2},
+        {label: 3, value: 3},
+        {label: 5, value: 5},
+        {label: 8, value: 8},
+        {label: 13, value: 13}
+      ];
+
       $location.path('/sessions/sessionId');
       scope.init();
       expect(scope.url).toEqual($location.$$absUrl + "sessions/sessionId");
       expect(scope.socket).toEqual(socket.socket);
-      expect(scope.voteValues).toEqual([0,1,2,3,5,8,13]);
+      expect(scope.voteValues).toEqual(defaultValues);
       expect(scope.sessionId).toEqual($routeParams.id);
       expect(scope.username).toEqual(userService.getUser().username);
       expect(scope.votes).toEqual({});
