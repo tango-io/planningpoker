@@ -12,6 +12,8 @@ angular.module('pokerestimateApp')
         {label: 8, value: 8},
         {label: 13, value: 13}
       ];
+
+      socket.socket.on('sessionCreated', function(sessionId){ $scope.redirectToSession(sessionId)});
     };
 
     $scope.go = function(){
@@ -19,10 +21,9 @@ angular.module('pokerestimateApp')
      socket.socket.emit('newSession', $scope.voteValues);
     };
 
-    socket.socket.on('sessionCreated', function(sessionId){
+    $scope.redirectToSession = function(sessionId){
      $location.path('/sessions/' + sessionId);
-    });
-
+    };
 
     $scope.removeValue = function(value){
       $scope.voteValues = _.reject($scope.voteValues, {value: value});
