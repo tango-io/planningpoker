@@ -1,6 +1,6 @@
 'use strict';
 
-ddescribe('Service: userService', function () {
+describe('Service: userService', function () {
 
   // load the service's module
   beforeEach(module('pokerestimateApp'));

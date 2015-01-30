@@ -1,6 +1,6 @@
 var config = require('../../server/config/local.env');
 
-ddescribe('voteValues View', function() {
+describe('voteValues View', function() {
   var page;
 
   beforeEach(function() {

@@ -46,9 +46,9 @@ describe('Controller: VoteValuesCtrl', function () {
 
   it('remove values from list', inject(function ($location) {
     scope.init();
-    expect(scope.voteValues.lenght).toBe(7);
+    expect(scope.voteValues.length).toBe(7);
     scope.removeValue(0);
-    expect(scope.voteValues.lenght).toBe(6);
+    expect(scope.voteValues.length).toBe(6);
   }));
 
   it('redirects to session:id on redirect to session function', inject(function ($location) {
