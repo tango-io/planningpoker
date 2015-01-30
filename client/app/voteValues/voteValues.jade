@@ -1,0 +1,35 @@
+include ../templates/header.jade
+.container(ng-controller="VoteValuesCtrl" ng-init="init()")
+  .main-content.vote-values-container
+    .row.row-with-padding
+      .large-10.large-centered.columns
+        .row
+          .large-5.columns.large-centered
+            table
+              thead
+                tr
+                  th Label
+                  th Value
+                  th
+              tbody
+                tr(ng-repeat="vote in voteValues")
+                  td
+                    input(type="text" ng-model="vote.label")
+                  td
+                    input(type="text" ng-model="vote.value")
+                  td
+                    button.btn.tiny
+                      i.fa.fa-trash(ng-click="removeValue(vote.value)")
+                tr
+                  td
+                    input(type="text" ng-model="newVote.label")
+                  td
+                    input(type="text" ng-model="newVote.value")
+                  td
+                    button.btn.tiny
+                      i.fa.fa-plus(ng-click="addValue(newVote)")
+        .row
+          .large-2.columns.large-offset-8
+            Button(ng-click="go()") Go ->
+
+include ../templates/footer.jade

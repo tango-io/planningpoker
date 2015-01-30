@@ -4,6 +4,7 @@ var config = require('../../server/config/local.env');
 
 describe('Session View', function() {
   var page;
+  var id;
 
   beforeEach(function() {
     page = require('./session.po');
@@ -12,7 +13,11 @@ describe('Session View', function() {
 
     page.usernameInput.sendKeys('Arya');
     page.startBtn.click();
-    expect(browser.getCurrentUrl()).toMatch('#/sessions/');
+    page.goBtn.click();
+    browser.getCurrentUrl().then(function(url){
+      id = url.split('/')[5];
+      expect(url).toMatch('#/sessions/');
+    });
   });
 
   it('s able to show data after entering a session', function() {
@@ -49,18 +54,31 @@ describe('Session View', function() {
   });
 
   it('s able to modify description', function() {
-    browser.getCurrentUrl().then(function(url){
-      expect(page.descriptionInput.getAttribute('value')).toEqual("");
-      page.descriptionInput.sendKeys('This is an story');
-      //not sure how to test this...
-      expect(page.descriptionInput.getAttribute('value')).toEqual("This is an story");
-    });
+    expect(page.descriptionInput.getAttribute('value')).toEqual("");
+    page.descriptionInput.sendKeys('This is an story');
+
+    browser.driver.executeScript('window.open();');
+    var appWindow = browser.getWindowHandle();
+    browser.getAllWindowHandles().then(function (handles) {
+      var newWindowHandle = handles[1];
+      browser.switchTo(newWindowHandle).window(newWindowHandle).then(function () {
+        browser.driver.executeScript('window.focus();');
+          browser.get('/');
+
+          page.usernameInput_.sendKeys('Cersei');
+          page.sessionIdInput.sendKeys(id);
+          page.joinBtn.click();
+          expect(page.descriptionInput.getAttribute('value')).toEqual("This is an story");
+          browser.driver.close().then(function () {
+            browser.switchTo().window(appWindow);
+          });
+        });
+      });
   });
 
   it('s should prompt username request if user does not have', function(){
     browser.getCurrentUrl().then(function(url){
       browser.get(url);
-      browser.sleep(3000);
       expect(page.usernameModalInput.isDisplayed()).toBe(true);
       page.usernameModalInput.sendKeys('Cersei');
       page.modalBtn.click();

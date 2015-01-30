@@ -5,7 +5,7 @@ angular.module('pokerestimateApp')
   $scope.init = function(){
     $scope.url = $location.$$absUrl;
     $scope.socket = socket.socket;
-    $scope.voteValues = [0,1,2,3,5,8,13];
+    $scope.voteValues = userService.getVoteValues();
     $scope.sessionId = $routeParams.id;
     $scope.votes = {};
     $scope.currentUser = {};
@@ -38,6 +38,7 @@ angular.module('pokerestimateApp')
     onJoinedSession: function (data){
       $scope.id  = data.id;
       $scope.description = data.description;
+      $scope.voteValues = data.voteValues;
     },
 
     onUpdateUsers:  function (data){

@@ -5,7 +5,7 @@ var _ = require('lodash');
 var rooms = {};
 
 exports.register = function(socket, io) {
-  socket.on('newSession', function(){ onNewSession(socket);});
+  socket.on('newSession', function(data){ onNewSession(socket, data);});
   socket.on('joinSession', function(data){ onJoinSession(io, socket, data);});
   socket.on('updateDescription', function(data){ updateDescription(socket, data);});
   socket.on('vote', function(data){ onVote(io, socket, data);});
@@ -15,9 +15,9 @@ exports.register = function(socket, io) {
   socket.on('disconnect', function(data){onLeaveSession(socket);});
 };
 
-function onNewSession(socket) {
+function onNewSession(socket, data) {
   var roomid = uuid.v1();
-  rooms[roomid] = {users: [], votes: {}};
+  rooms[roomid] = {users: [], votes: {}, voteValues: data};
   socket.emit('sessionCreated', roomid);
 };
 
@@ -25,7 +25,7 @@ function onJoinSession(io, socket, data) {
   if(rooms[data.id]){
     socket.join(data.id);
     rooms[data.id].users.push({username: data.username, socketId: socket.id});
-    socket.emit('joinedSession', {id: socket.id, description: rooms[data.id].description});
+    socket.emit('joinedSession', {id: socket.id, description: rooms[data.id].description, voteValues: rooms[data.id].voteValues});
 
     io.to(data.id).emit('hideVotes');
     io.to(data.id).emit('updateUsers', {users: rooms[data.id].users});

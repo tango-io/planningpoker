@@ -16,6 +16,9 @@ angular.module('pokerestimateApp', [
   })
   .when('/sessions/:id', {
     templateUrl: 'app/session/session.html'
+  })
+  .when('/voteValues', {
+    templateUrl: 'app/voteValues/voteValues.html'
   });
 });
 

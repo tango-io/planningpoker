@@ -16,4 +16,11 @@ describe('Service: userService', function () {
     expect(userService.getUser()).toBe('tester');
   });
 
+  it('sets and get voteValues', function () {
+    userService.setVoteValues([{label: 'Easy', value: '0'}]);
+    expect(userService.getVoteValues().length).toBe(1);
+    expect(userService.getVoteValues()[0].label).toBe('Easy');
+    expect(userService.getVoteValues()[0].value).toBe('0');
+  });
+
 });

@@ -29,7 +29,7 @@ include ../templates/header.jade
             .button-bar
               ul.button-group
                 li(ng-repeat="vote in voteValues")
-                  button.tiny.button(href="#" ng-click="setVote(vote)" ng-disabled="showVotes") {{vote}}
+                  button.tiny.button(href="#" ng-click="setVote(vote.value)" ng-disabled="showVotes") {{vote.label}}
         .row
           .large-12.large-centered.columns
             table

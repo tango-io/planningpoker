@@ -12,20 +12,18 @@ var MainPage = function() {
   this.usernameInput = this.container.element(by.model('username'));
   this.startBtn = this.form.element(by.css('button'));
 
-  this.usernameText = element(by.css('h5.ng-binding'));;
+  //this.voteListRow = element(by.repeater('vote in voteValues').row(0).column('vote.value'));
+  this.voteList = element.all(by.repeater('vote in voteValues'));
+  this.voteListFirstLabel = element(by.css('tr:first-child td:first-child input'));
+  this.voteListFirstValue = element(by.css('tr:first-child td:nth-child(2) input'));
+  this.voteListFirstBtn = element(by.css('tr:first-child td:last-child button'));
 
-  this.userList = element.all(by.repeater('user in users'));
-  this.userRow = element(by.repeater('user in users').row(0));
+  this.newVoteLabel = element(by.css('tr:last-child td:first-child input'));
+  this.newVoteValue = element(by.css('tr:last-child td:nth-child(2) input'));
+  this.voteAddBtn = element(by.css('tr:last-child td:last-child button'));
 
-  this.shareLink = element.all(by.css('.share a')).first();
-  this.numbers = element(by.repeater('vote in voteValues').row(0));
-  this.number = element(by.repeater('vote in voteValues').row(0).column('vote'));
-
-  this.statics = element(by.css('.statics'));
-  this.staticsList = element.all(by.repeater('(point, votes) in points'));
-  this.staticsRow = element(by.repeater('(point, votes) in points').row(0));
-
-  this.descriptionInput = element(by.model('description'));
+  this.voteListFirst = element(by.css('ul.button-group li:first-child button'));
+  this.votesFirst = element(by.css('tr[ng-repeat="user in users"] td:last-child'));
 
   this.usernameInput_ = this.container.element(by.model('username_'));
   this.sessionIdInput = this.container.element(by.model('sessionId'));

@@ -16,6 +16,7 @@ var MainPage = function() {
   this.modal = element(by.css('.reveal-modal h3'));
   this.modalBtn = element(by.css('.reveal-modal button'));
 
+  this.goBtn = element(by.buttonText('Go ->'));
 
   this.usernameInput_ = this.container.element(by.model('username_'));
   this.sessionIdInput = this.container.element(by.model('sessionId'));
