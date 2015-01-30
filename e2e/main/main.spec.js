@@ -33,6 +33,7 @@ describe('Main View', function() {
       expect(id).toMatch(/^.{8}-.{4}-.{4}-.{4}-.{12}/);
 
       browser.driver.executeScript('window.open();');
+      var appWindow = browser.getWindowHandle();
       browser.getAllWindowHandles().then(function (handles) {
         var newWindowHandle = handles[1];
         browser.switchTo(newWindowHandle).window(newWindowHandle).then(function () {
@@ -45,6 +46,9 @@ describe('Main View', function() {
           browser.getCurrentUrl().then(function(path){
             expect(path).toBe(config.DOMAIN +'/#/sessions/' + id);
             expect(page.modal.isPresent()).toBe(false);
+            browser.driver.close().then(function () {
+              browser.switchTo().window(appWindow);
+            });
           });
         });
       });

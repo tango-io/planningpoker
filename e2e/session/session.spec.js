@@ -2,7 +2,7 @@
 
 var config = require('../../server/config/local.env');
 
-ddescribe('Session View', function() {
+describe('Session View', function() {
   var page;
   var id;
 
@@ -58,6 +58,7 @@ ddescribe('Session View', function() {
     page.descriptionInput.sendKeys('This is an story');
 
     browser.driver.executeScript('window.open();');
+    var appWindow = browser.getWindowHandle();
     browser.getAllWindowHandles().then(function (handles) {
       var newWindowHandle = handles[1];
       browser.switchTo(newWindowHandle).window(newWindowHandle).then(function () {
@@ -67,8 +68,10 @@ ddescribe('Session View', function() {
           page.usernameInput_.sendKeys('Cersei');
           page.sessionIdInput.sendKeys(id);
           page.joinBtn.click();
-
           expect(page.descriptionInput.getAttribute('value')).toEqual("This is an story");
+          browser.driver.close().then(function () {
+            browser.switchTo().window(appWindow);
+          });
         });
       });
   });
