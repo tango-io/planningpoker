@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pokerestimateApp')
-.controller('MainCtrl', function ($scope, $http, socket, $location, userService) {
+.controller('MainCtrl', function ($scope, $location, userService) {
 
   $scope.init = function(){
     userService.setUser({username: ""});

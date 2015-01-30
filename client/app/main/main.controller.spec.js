@@ -24,10 +24,8 @@ describe('Controller: MainCtrl', function () {
     expect(userService.getUser().username).toBe("");
   }));
 
-  it('does not start a session without username', inject(function (userService, socket) {
-    spyOn(socket.socket, 'emit');
+  it('does not go to vote values page without username', inject(function (userService) {
     scope.startSession();
-    expect(socket.socket.emit).not.toHaveBeenCalledWith('newSession');
     expect(userService.getUser().username).toBe(undefined);
     expect(userService.getUser().username).toBe(undefined);
   }));
@@ -43,17 +41,10 @@ describe('Controller: MainCtrl', function () {
     expect(userService.getUser().username).toBe("tester");
   }));
 
-  it('emits new session in start session', inject(function (socket) {
-    spyOn(socket.socket, 'emit');
+  it('goes to vote values start session', inject(function ($location) {
     scope.username = "tester";
     scope.startSession();
-     expect(socket.socket.emit).toHaveBeenCalledWith('newSession');
-  }));
-
-  it('redirects to session:id on session created', inject(function ($location) {
-    scope.username = "tester";
-    scope.startSession();
-    expect($location.path()).toBe('/sessions/sessionId')
+     expect($location.path()).toBe('/voteValues');
   }));
 
   it('does not join a session without username or session id', inject(function (userService, socket) {
