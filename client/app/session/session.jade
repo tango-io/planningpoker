@@ -20,11 +20,11 @@ include ../templates/header.jade
                 tr(ng-repeat="(point, votes) in points")
                   td {{point}}
                   td {{votes.length}}
-        .row
+        .row(hide-for="observer")
           .large-6.columns
             button.small.button(ng-click="clearVotes()") Clear Votes
             button.small.button(ng-click="revealVotes()") Show Votes
-        .row.row-with-padding
+        .row.row-with-padding(hide-for="observer")
           .large-12.large-centered.columns
             .button-bar
               ul.button-group
