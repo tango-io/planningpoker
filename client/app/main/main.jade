@@ -6,14 +6,24 @@ include ../templates/header.jade
         form(name="startSessionForm" ng-submit="startSession()" novalidate)
           input(type="text" name="username" ng-model="username" placeholder="Enter a username" required)
           span.error(ng-show="submitted && startSessionForm.$invalid") Please enter a username
-          button.medium.button.radius(type="submit") Start a session
+          button.medium.button.radius(type="submit") Start session
       hr
     .row.row-with-padding
-      .large-2.large-centered.columns
+      .large-4.large-centered.columns
         form(name="joinSessionForm" ng-submit="joinSession()" novalidate)
           input(type="text" name="username" ng-model="username_" placeholder="Enter a username" required)
           span.error(ng-show="submitted_ && joinSessionForm.username.$invalid") Please enter a username
           input(type="text" name="sessionId" ng-model="sessionId" placeholder="Enter a session id" required)
           span.error(ng-show="submitted_ && joinSessionForm.sessionId.$invalid") Please enter a session id
-          button.medium.button.radius(type="submit") Join a session
+    .row
+      .large-4.large-centered.columns
+        .row.collapse
+          .large-8.columns
+            select
+              option(value="player") Player
+              option(value="observer") Observer
+          .large-4.columns
+            a.button.postfix(href='#') Join
+
+          //-button.medium.button.radius(type="submit") Join a session
 include ../templates/footer.jade
