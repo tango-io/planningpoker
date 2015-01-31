@@ -24,8 +24,8 @@ function onNewSession(socket, data) {
 function onJoinSession(io, socket, data) {
   if(rooms[data.id]){
     socket.join(data.id);
-    rooms[data.id].users.push({username: data.username, socketId: socket.id});
-    socket.emit('joinedSession', {id: socket.id, description: rooms[data.id].description, voteValues: rooms[data.id].voteValues});
+    rooms[data.id].users.push({username: data.username, userType: data.userType, socketId: socket.id});
+    socket.emit('joinedSession', {id: socket.id, userType: data.userType, description: rooms[data.id].description, voteValues: rooms[data.id].voteValues});
 
     io.to(data.id).emit('hideVotes');
     io.to(data.id).emit('updateUsers', {users: rooms[data.id].users});

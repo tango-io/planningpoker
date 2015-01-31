@@ -6,6 +6,7 @@ angular.module('pokerestimateApp')
   $scope.init = function(){
     userService.setUser({username: ""});
     $scope.username = "";
+    $scope.userType = "player";
   };
 
   $scope.startSession = function(){
@@ -19,7 +20,7 @@ angular.module('pokerestimateApp')
 
   $scope.joinSession = function(){
     if($scope.username_ && $scope.sessionId){
-      userService.setUser({username: $scope.username_});
+      userService.setUser({username: $scope.username_, userType: $scope.userType});
       $location.path('/sessions/' + $scope.sessionId);
     }else{
       $scope.submitted_ = true;
