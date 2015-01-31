@@ -11,7 +11,7 @@ angular.module('pokerestimateApp')
 
   $scope.startSession = function(){
     if($scope.username){
-      userService.setUser({username: $scope.username});
+      userService.setUser({username: $scope.username, userType: $scope.userType});
       $location.path('/voteValues');
     }else{
       $scope.submitted = true;
