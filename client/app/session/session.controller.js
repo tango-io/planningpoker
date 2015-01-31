@@ -15,7 +15,8 @@ angular.module('pokerestimateApp')
     if($scope.username){
      $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId, userType: $scope.userType});
     }else{
-      var modalInstance = $modal.open({templateUrl: 'app/templates/modals/username.html', keyboard:false});
+      $scope.userType = "player";
+      var modalInstance = $modal.open({templateUrl: 'app/templates/modals/username.html', keyboard:false, scope: this});
       modalInstance.result.then(function (username) {
         $scope.username = username;
         $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId});
