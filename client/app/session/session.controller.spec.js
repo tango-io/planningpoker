@@ -6,6 +6,7 @@ describe('Controller: SessionCtrl', function () {
   beforeEach(module('pokerestimateApp'));
   beforeEach(module('socketMock'));
   beforeEach(module('modalMock'));
+  beforeEach(module('userServiceMock'));
 
   var SessionCtrl, scope, $modal;
 
@@ -90,11 +91,14 @@ describe('Controller: SessionCtrl', function () {
       expect(scope.id).toEqual(1);
     }));
 
-    it('sets users and current user, and users list on updateUsers function', inject(function () {
+    it('sets players, observers and current user, and users list on updateUsers function', inject(function () {
       scope.id = 1;
-      scope.listeners.onUpdateUsers({players:[{socketId: 1, username: 'Daenerys'}, {socketId: 2, username: 'Drogo'}], observers: []});
+      scope.listeners.onUpdateUsers({players:[{socketId: 1, username: 'Daenerys'}, {socketId: 2, username: 'Drogo'}], observers: [{socketId: 4, username: 'Viserys'}]});
       expect(scope.currentUser.username).toEqual('Daenerys');
       expect(scope.players).toEqual([{socketId: 1, username: 'Daenerys'}, {socketId: 2, username: 'Drogo'}]);
+      expect(scope.observers).toEqual([{socketId: 4, username: 'Viserys'}]);
+      scope.listeners.onUpdateUsers({observers:[{socketId: 1, username: 'Daenerys'}, {socketId: 2, username: 'Drogo'}], players: [{socketId: 4, username: 'Viserys'}]});
+      expect(scope.currentUser.username).toEqual('Daenerys');
     }));
 
     it('sets show votes to false on hideVotes function', inject(function () {
