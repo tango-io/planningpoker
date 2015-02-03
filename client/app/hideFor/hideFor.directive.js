@@ -1,5 +1,4 @@
 'use strict';
-console.log("yep");
 
 angular.module('pokerestimateApp')
 .directive('hideFor', ['userService', 'removeElement', function (userService, removeElement) {

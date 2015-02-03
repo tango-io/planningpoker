@@ -1,8 +1,7 @@
 'use strict';
 
-describe('Directive: hideFor', function () {
+ddescribe('Directive: hideFor', function () {
 
-  // load the directive's module
   beforeEach(module('pokerestimateApp'));
 
   var element,
@@ -12,9 +11,17 @@ describe('Directive: hideFor', function () {
     scope = $rootScope.$new();
   }));
 
-  it('should make hidden element visible', inject(function ($compile) {
-    element = angular.element('<hide-for></hide-for>');
+  it('removes an element from certain types of users', inject(function ($compile, userService) {
+    userService.setUser({userType: 'observer'});
+    element = angular.element('<div><div hide-for="observer"></div></div>');
     element = $compile(element)(scope);
-    expect(element.text()).toBe('this is the hideFor directive');
+    expect(element.html()).toBe('');
+  }));
+
+  it('does not removes an element from certain types of users', inject(function ($compile, userService) {
+    userService.setUser({userType: 'player'});
+    element = angular.element('<div><div hide-for="observer"></div></div>');
+    element = $compile(element)(scope);
+    expect(element.html()).toBe('<div hide-for="observer"></div>');
   }));
 });
