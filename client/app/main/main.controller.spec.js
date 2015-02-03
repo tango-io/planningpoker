@@ -5,6 +5,7 @@ describe('Controller: MainCtrl', function () {
   // load the controller's module
   beforeEach(module('pokerestimateApp'));
   beforeEach(module('socketMock'));
+  beforeEach(module('userServiceMock'));
 
   var MainCtrl,
       scope;
@@ -18,16 +19,20 @@ describe('Controller: MainCtrl', function () {
     });
   }));
 
-  it('clears usernames on initializer', inject(function (userService) {
+  it('initialize variables', inject(function (userService) {
+    spyOn(userService, 'setUser');
     scope.init();
+    expect(userService.setUser).toHaveBeenCalledWith({ username : '' });
     expect(scope.username).toBe("");
-    expect(userService.getUser().username).toBe("");
+    expect(scope.userType).toBe("player");
+    expect(scope.userType_).toBe("player");
   }));
 
-  it('does not go to vote values page without username', inject(function (userService) {
+  it('does not go to vote values page without username', inject(function (userService, $location) {
+    spyOn(userService, 'setUser');
     scope.startSession();
-    expect(userService.getUser().username).toBe(undefined);
-    expect(userService.getUser().username).toBe(undefined);
+    expect(userService.setUser).not.toHaveBeenCalledWith();
+     expect($location.path()).toBe('');
   }));
 
   it('sets submitted to true when starts a session without username', inject(function () {
@@ -35,10 +40,19 @@ describe('Controller: MainCtrl', function () {
     expect(scope.submitted).toBe(true);
   }));
 
-  it('sets username in service before start session', inject(function (userService) {
+  it('calls sets username function in service before start session', inject(function (userService) {
+    spyOn(userService, 'setUser');
     scope.username = "tester";
     scope.startSession();
-    expect(userService.getUser().username).toBe("tester");
+    expect(userService.setUser).toHaveBeenCalledWith({ username : 'tester', userType : undefined });
+  }));
+
+  it('sets userType in service before start session', inject(function (userService) {
+    spyOn(userService, 'setUser');
+    scope.userType = "observer";
+    scope.username = "tester";
+    scope.startSession();
+    expect(userService.setUser).toHaveBeenCalledWith({ username : 'tester', userType : 'observer' });
   }));
 
   it('goes to vote values start session', inject(function ($location) {
@@ -49,10 +63,11 @@ describe('Controller: MainCtrl', function () {
 
   it('does not join a session without username or session id', inject(function (userService, socket) {
     spyOn(socket.socket, 'emit');
+    spyOn(userService, 'setUser');
     scope.startSession();
-    expect(userService.getUser().username).toBe(undefined)
+    expect(userService.setUser).not.toHaveBeenCalledWith();
     scope.username_ = "tester";
-    expect(userService.getUser().username).toBe(undefined);
+    expect(userService.setUser).not.toHaveBeenCalledWith();
     expect(socket.socket.emit).not.toHaveBeenCalledWith('joinSession');
   }));
 
@@ -62,10 +77,20 @@ describe('Controller: MainCtrl', function () {
   }));
 
   it('sets username in service before join session', inject(function (userService) {
+    spyOn(userService, 'setUser');
     scope.username_ = "tester";
     scope.sessionId = "some-1231";
     scope.joinSession();
-    expect(userService.getUser().username).toBe("tester");
+    expect(userService.setUser).toHaveBeenCalledWith({ username : 'tester', userType : undefined });
+  }));
+
+  it('sets userType_ in service before join session', inject(function (userService) {
+    spyOn(userService, 'setUser');
+    scope.userType_ = "player";
+    scope.username_ = "Tester";
+    scope.sessionId = "some-1231";
+    scope.joinSession();
+    expect(userService.setUser).toHaveBeenCalledWith( { username : 'Tester', userType : 'player' });
   }));
 
   it('reditects to session/:id when user joins a session', inject(function ($location) {

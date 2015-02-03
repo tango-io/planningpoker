@@ -1,6 +1,6 @@
 'use strict';
 
-ddescribe('Directive: hideFor', function () {
+describe('Directive: hideFor', function () {
 
   beforeEach(module('pokerestimateApp'));
 
