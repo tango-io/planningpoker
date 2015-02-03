@@ -6,7 +6,7 @@ include ../templates/header.jade
         form(name="startSessionForm" novalidate)
           input(type="text" name="username" ng-model="username" placeholder="Enter a username" required)
           span.error(ng-show="submitted && startSessionForm.$invalid") Please enter a username
-    .row
+    .row.start
       .large-4.large-centered.columns
         .row.collapse
           .large-8.columns
@@ -23,7 +23,7 @@ include ../templates/header.jade
           span.error(ng-show="submitted_ && joinSessionForm.username.$invalid") Please enter a username
           input(type="text" name="sessionId" ng-model="sessionId" placeholder="Enter a session id" required)
           span.error(ng-show="submitted_ && joinSessionForm.sessionId.$invalid") Please enter a session id
-    .row
+    .row.join
       .large-4.large-centered.columns
         .row.collapse
           .large-8.columns

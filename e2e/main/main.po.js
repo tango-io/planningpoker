@@ -24,6 +24,9 @@ var MainPage = function() {
 
   this.usernameError_ = element.all(by.css('form[name="joinSessionForm"] span.error')).first();
   this.sessionError = element.all(by.css('form[name="joinSessionForm"] span.error')).last();;
+
+  this.playersList = element.all(by.repeater('player in players'));
+  this.observersList = element.all(by.repeater('observer in observers'));
 };
 
 module.exports = new MainPage();
