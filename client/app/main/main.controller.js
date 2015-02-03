@@ -7,6 +7,7 @@ angular.module('pokerestimateApp')
     userService.setUser({username: ""});
     $scope.username = "";
     $scope.userType = "player";
+    $scope.userType_ = "player";
   };
 
   $scope.startSession = function(){
