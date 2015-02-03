@@ -39,11 +39,11 @@ include ../templates/header.jade
                   th Voted
                   th Points
               tbody
-                tr(ng-repeat="user in users")
-                 td(ng-class="{active: user.socketId == id}") {{user.username}}
-                 td(ng-class="{active: user.socketId == id}")
-                   i.fa.fa-check(ng-show="user.voted")
-                 td(ng-class="{active: user.socketId == id}") {{votes[user.socketId]}}
+                tr(ng-repeat="player in players")
+                 td(ng-class="{active: player.socketId == id}") {{player.username}}
+                 td(ng-class="{active: player.socketId == id}")
+                   i.fa.fa-check(ng-show="player.voted")
+                 td(ng-class="{active: player.socketId == id}") {{votes[player.socketId]}}
         hr
         .row.share
           .large-12.large-centered.columns
