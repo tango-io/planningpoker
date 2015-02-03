@@ -44,8 +44,9 @@ angular.module('pokerestimateApp')
     },
 
     onUpdateUsers:  function (data){
-      $scope.users = data.users;
-      $scope.currentUser = _.findWhere(data.users, {socketId: $scope.id});
+      $scope.players = data.players;
+      $scope.observers = data.observers;
+      $scope.currentUser = _.findWhere(_.join(data.players, data.observers), {socketId: $scope.id});
     },
 
     onError: function(){
@@ -84,7 +85,7 @@ angular.module('pokerestimateApp')
     $scope.description = "";
     $scope.consensus = false;
     $scope.points = false;
-    $scope.users  = _.map($scope.users, function(u){ u.voted = false; return u;});
+    $scope.players  = _.map($scope.players, function(u){ u.voted = false; return u;});
     $scope.votes = {};
     $scope.showVotes = false;
   };
