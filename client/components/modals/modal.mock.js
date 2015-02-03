@@ -11,6 +11,23 @@ angular.module('modalMock', [])
           }
         },
       }
+    },
+
+    fakeResponses: {
+      open: {
+        result: {
+          then: function(cb) {
+            return cb({username: 'tester', userType: 'observer'});
+          }
+        }
+      },
+      cleanOpen:{
+        result: {
+          then: function(cb) {
+            return cb({username: undefined, dataType: undefined});
+          }
+        }
+      }
     }
   };
 });

@@ -17,11 +17,13 @@ describe('Controller: SessionCtrl', function () {
       $scope: scope,
     });
 
+    spyOn($modal, 'open').andReturn($modal.fakeResponses.cleanOpen);
+
   }));
 
   describe('Sessions controller', function(){
 
-    it('initialize variables on calling init', inject(function ($location, socket, userService, $routeParams) {
+    it('initialize variables on calling init', inject(function ($location, socket, userService, $routeParams, $modal) {
       var  defaultValues = [
         {label: 0, value: 0},
         {label: 1, value: 1},
@@ -39,6 +41,7 @@ describe('Controller: SessionCtrl', function () {
       expect(scope.voteValues).toEqual(defaultValues);
       expect(scope.sessionId).toEqual($routeParams.id);
       expect(scope.username).toEqual(userService.getUser().username);
+      expect(scope.userType).toEqual(userService.getUser().userType);
       expect(scope.votes).toEqual({});
     }));
 
@@ -66,21 +69,13 @@ describe('Controller: SessionCtrl', function () {
     }));
 
     it('sets username and emits session id after setting username in modal', inject(function ($modal) {
-      var fakeResponse = {
-        result: {
-          then: function(cb) {
-            return cb('tester');
-          }
-        }
-      };
-
-      spyOn($modal, 'open').andReturn(fakeResponse);
+      $modal.open.andReturn($modal.fakeResponses.open);
       spyOn(scope.listeners, 'onJoinedSession');
-
       scope.init();
 
       expect($modal.open).toHaveBeenCalled();
-      expect(scope.username).toBe('tester')
+      expect(scope.username).toBe('tester');
+      expect(scope.userType).toBe('observer');
       expect(scope.listeners.onJoinedSession).toHaveBeenCalled();
     }));
 
@@ -97,9 +92,9 @@ describe('Controller: SessionCtrl', function () {
 
     it('sets users and current user, and users list on updateUsers function', inject(function () {
       scope.id = 1;
-      scope.listeners.onUpdateUsers({users:[{socketId: 1, username: 'Daenerys'}, {socketId: 2, username: 'Drogo'}]});
+      scope.listeners.onUpdateUsers({players:[{socketId: 1, username: 'Daenerys'}, {socketId: 2, username: 'Drogo'}], observers: []});
       expect(scope.currentUser.username).toEqual('Daenerys');
-      expect(scope.users).toEqual([{socketId: 1, username: 'Daenerys'}, {socketId: 2, username: 'Drogo'}]);
+      expect(scope.players).toEqual([{socketId: 1, username: 'Daenerys'}, {socketId: 2, username: 'Drogo'}]);
     }));
 
     it('sets show votes to false on hideVotes function', inject(function () {
@@ -133,8 +128,7 @@ describe('Controller: SessionCtrl', function () {
 
     it('opens modal and redirects to home on errorMsg function', inject(function ($location, $modal) {
       var fakeResponse = $modal.open();
-
-      spyOn($modal, 'open').andReturn(fakeResponse);
+      $modal.open.andReturn(fakeResponse);
       scope.listeners.onError();
 
       expect($modal.open).toHaveBeenCalled();
@@ -145,7 +139,7 @@ describe('Controller: SessionCtrl', function () {
       scope.description = "some description";
       scope.consensus = true;
       scope.points = true;
-      scope.users = [{socketId: 'socketId', username: 'tester', voted:true}];
+      scope.players = [{socketId: 'socketId', username: 'tester', voted:true}];
       scope.votes = {socketId: 4};
       scope.showVotes = true;
 
@@ -154,7 +148,7 @@ describe('Controller: SessionCtrl', function () {
       expect(scope.description).toEqual("");
       expect(scope.consensus).toEqual(false);
       expect(scope.points).toEqual(false);
-      expect(scope.users[0].voted).toEqual(false);
+      expect(scope.players[0].voted).toEqual(false);
       expect(scope.votes).toEqual({});
       expect(scope.showVotes).toEqual(false);
     }));
