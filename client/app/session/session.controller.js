@@ -17,9 +17,9 @@ angular.module('pokerestimateApp')
     }else{
       $scope.userType = "player";
       var modalInstance = $modal.open({templateUrl: 'app/templates/modals/username.html', keyboard:false, scope: this});
-      modalInstance.result.then(function (username) {
-        $scope.username = username;
-        $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId});
+      modalInstance.result.then(function (data) {
+        $scope.username = data.username;
+        $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId, userType: data.userType});
       });
     }
 
@@ -46,7 +46,7 @@ angular.module('pokerestimateApp')
     onUpdateUsers:  function (data){
       $scope.players = data.players;
       $scope.observers = data.observers;
-      $scope.currentUser = _.findWhere(_.join(data.players, data.observers), {socketId: $scope.id});
+      $scope.currentUser = _.findWhere(_.union(data.players, data.observers), {socketId: $scope.id});
     },
 
     onError: function(){

@@ -30,8 +30,9 @@ include ../templates/header.jade
               ul.button-group
                 li(ng-repeat="vote in voteValues")
                   button.tiny.button(href="#" ng-click="setVote(vote.value)" ng-disabled="showVotes") {{vote.label}}
-        .row
+        .row(ng-show="players.length")
           .large-12.large-centered.columns
+            h5 Players
             table
               thead
                 tr
@@ -44,6 +45,16 @@ include ../templates/header.jade
                  td(ng-class="{active: player.socketId == id}")
                    i.fa.fa-check(ng-show="player.voted")
                  td(ng-class="{active: player.socketId == id}") {{votes[player.socketId]}}
+        .row(ng-show="observers.length")
+          .large-12.large-centered.columns
+            h5 Observers
+            table
+              thead
+                tr
+                  th Name
+              tbody
+                tr(ng-repeat="observer in observers")
+                 td(ng-class="{active: observer.socketId == id}") {{observer.username}}
         hr
         .row.share
           .large-12.large-centered.columns

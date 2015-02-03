@@ -25,7 +25,7 @@ function onJoinSession(io, socket, data) {
   if(rooms[data.id]){
     socket.join(data.id);
     if(data.userType == 'player'){
-      rooms[data.id].players.push({username: data.username, userType: data.userType, socketId: socket.id});
+      rooms[data.id].players.push({username: data.username, userType: 'player', socketId: socket.id});
     }else{
       rooms[data.id].observers.push({username: data.username, userType: data.userType, socketId: socket.id});
     }
