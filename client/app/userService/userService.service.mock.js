@@ -1,22 +1,27 @@
 'use strict';
 
 angular.module('userServiceMock', [])
-  .factory('userService', function (){
-    var user = {};
-    var voteValues = [];
+.factory('userService', function (){
+  var user = {};
+  var voteValues = [];
 
-      return {
-        getUser: function(){
-          return user;
-        },
-        setUser: function(usr){
-          user = usr;
-        },
-        getVoteValues: function(){
-          return voteValues;
-        },
-        setVoteValues: function(votes){
-          voteValues = votes;
-        }
+  return {
+    getUser: function(){
+      return user;
+    },
+    setUser: function(usr){
+      user = usr;
+    },
+    getVoteValues: function(){
+      return voteValues;
+    },
+    setVoteValues: function(votes){
+      voteValues = votes;
+    },
+    fakeResponses:{
+      getFakeUser: function(){
+        return {username: 'tester', userType:'observer'};
       }
-  });
+    }
+  };
+});

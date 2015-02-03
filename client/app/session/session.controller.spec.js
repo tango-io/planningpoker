@@ -36,13 +36,16 @@ describe('Controller: SessionCtrl', function () {
       ];
 
       $location.path('/sessions/sessionId');
+      spyOn(userService, 'getUser').andReturn(userService.fakeResponses.getFakeUser());
       scope.init();
       expect(scope.url).toEqual($location.$$absUrl + "sessions/sessionId");
       expect(scope.socket).toEqual(socket.socket);
       expect(scope.voteValues).toEqual(defaultValues);
       expect(scope.sessionId).toEqual($routeParams.id);
-      expect(scope.username).toEqual(userService.getUser().username);
-      expect(scope.userType).toEqual(userService.getUser().userType);
+      expect(scope.sessionId).toEqual($routeParams.id);
+      expect(userService.getUser).toHaveBeenCalled();
+      expect(scope.username).toEqual(userService.fakeResponses.getFakeUser().username);
+      expect(scope.userType).toEqual(userService.fakeResponses.getFakeUser().userType);
       expect(scope.votes).toEqual({});
     }));
 
