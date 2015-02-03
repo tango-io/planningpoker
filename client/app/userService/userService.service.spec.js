@@ -11,9 +11,11 @@ describe('Service: userService', function () {
     userService = _userService_;
   }));
 
-  it('sets and get user', function () {
-    userService.setUser('tester');
-    expect(userService.getUser()).toBe('tester');
+  it('sets and get user attributes', function () {
+    userService.setUser({username: 'tester'});
+    expect(userService.getUser().username).toBe('tester');
+    userService.setUser({username: 'tester', userType: 'player'});
+    expect(userService.getUser().userType).toBe('player');
   });
 
   it('sets and get voteValues', function () {
