@@ -10,12 +10,12 @@ var MainPage = function() {
   this.form = this.container.element(by.css('form[name="startSessionForm"]'));
 
   this.usernameInput = this.container.element(by.model('username'));
-  this.startBtn = this.form.element(by.css('button'));
+  this.startBtn = element(by.buttonText('Start'));
 
   this.usernameText = element(by.css('h5.ng-binding'));;
 
-  this.userList = element.all(by.repeater('user in users'));
-  this.userRow = element(by.repeater('user in users').row(0));
+  this.userList = element.all(by.repeater('player in players'));
+  this.userRow = element(by.repeater('player in players').row(0));
 
   this.shareLink = element.all(by.css('.share a')).first();
   this.numbers = element(by.repeater('vote in voteValues').row(0));
@@ -29,7 +29,7 @@ var MainPage = function() {
 
   this.usernameInput_ = this.container.element(by.model('username_'));
   this.sessionIdInput = this.container.element(by.model('sessionId'));
-  this.joinBtn = this.container.element(by.css('form[name="joinSessionForm"] button'));
+  this.joinBtn = element(by.buttonText('Join'));
 
   this.clearBtn = element(by.buttonText('Clear Votes'));
   this.showBtn = element(by.buttonText('Show Votes'));
