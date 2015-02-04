@@ -10,7 +10,9 @@ angular.module('pokerestimateApp')
         {label: 3, value: 3},
         {label: 5, value: 5},
         {label: 8, value: 8},
-        {label: 13, value: 13}
+        {label: 13, value: 13},
+        {label: ':/', value: '?'},
+        {label: 'Break', value: 'need a break'}
       ];
 
       socket.socket.on('sessionCreated', function(sessionId){ $scope.redirectToSession(sessionId)});
