@@ -23,16 +23,20 @@ function onNewSession(socket, data) {
 
 function onJoinSession(io, socket, data) {
   if(rooms[data.id]){
-    socket.join(data.id);
-    if(data.userType == 'player'){
-      rooms[data.id].players.push({username: data.username, userType: 'player', socketId: socket.id});
-    }else{
-      rooms[data.id].observers.push({username: data.username, userType: data.userType, socketId: socket.id});
-    }
-    socket.emit('joinedSession', {id: socket.id, userType: data.userType, description: rooms[data.id].description, voteValues: rooms[data.id].voteValues});
+    if(data.username && data.userType){
+      socket.join(data.id);
+      if(data.userType == 'player'){
+        rooms[data.id].players.push({username: data.username, userType: 'player', socketId: socket.id});
+      }else{
+        rooms[data.id].observers.push({username: data.username, userType: data.userType, socketId: socket.id});
+      }
+      socket.emit('joinedSession', {id: socket.id, userType: data.userType, description: rooms[data.id].description, voteValues: rooms[data.id].voteValues});
 
-    io.to(data.id).emit('hideVotes');
-    io.to(data.id).emit('updateUsers', {players: rooms[data.id].players, observers: rooms[data.id].observers});
+      io.to(data.id).emit('hideVotes');
+      io.to(data.id).emit('updateUsers', {players: rooms[data.id].players, observers: rooms[data.id].observers});
+    }else{
+      socket.emit('errorMsg', {message: "Missing information"});
+    }
   }else{
     socket.emit('errorMsg', {message: "Session does not exist"});
   }

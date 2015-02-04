@@ -57,14 +57,50 @@ describe('sockets', function() {
     });
   });
 
+  it('emits an error if client does not send correct information', function(done) {
+    client1.on('sessionCreated', function(sessionId){
+      client2.emit('joinSession', {id:sessionId, username: 'tester'});
+
+      client2.on('errorMsg', function(data){
+        data.message.should.be.exactly("Missing information");
+        done();
+      });
+    });
+
+    client1.emit('newSession');
+  });
+
+  it('saves players and observers', function(done) {
+    client1.on('sessionCreated', function(sessionId){
+      client1.emit('joinSession', {id: sessionId, username:'player1', userType: 'player'});
+      client2.emit('joinSession', {id: sessionId, username:'observer1', userType: 'observer'});
+
+      client2.on('updateUsers', function(data){
+        data.players[0].username.should.be.exactly('player1');
+        data.observers[0].username.should.be.exactly('observer1');
+        done();
+      });
+    });
+    client1.emit('newSession');
+  });
+
+  it('sends observers and players list', function(done) {
+    client1.emit('joinSession', {id:'not-existing-id'});
+
+    client1.on('errorMsg', function(data){
+      data.message.should.be.exactly("Session does not exist")
+      done();
+    });
+  });
+
   it('emits hide votes when user joins in a session', function(done) {
     client1.emit('newSession');
     client1.on('sessionCreated', function(id){
 
-      client1.emit('joinSession', {id: id, username: 'Tester'});
+      client1.emit('joinSession', {id: id, username: 'Tester', userType: 'player'});
 
       client1.on('updateUsers', function(){
-        client2.emit('joinSession', {id: id, username: 'Another tester'});
+        client2.emit('joinSession', {id: id, username: 'Another tester', userType: 'player'});
 
         client1.on('hideVotes', function(data){
           done();
@@ -138,8 +174,6 @@ describe('sockets', function() {
 
       client1.emit('vote', {id: id, userId: client1.id, vote: 4 });
       client2.emit('vote', {id: id, userId: client2.id, vote: 5 });
-
-      this.timeout(3000);
 
       client2.once('updateVotes', function(data){
           data[client1.id].should.be.exactly(4);
