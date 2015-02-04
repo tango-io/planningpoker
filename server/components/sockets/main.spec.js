@@ -77,15 +77,14 @@ describe('sockets', function() {
     client1.emit('newSession');
     client1.on('sessionCreated', function(id){
 
-      client1.emit('joinSession', {id: id, username: 'Tester'});
+      client1.emit('joinSession', {id: id, username: 'Tester', userType: 'player'});
 
       client1.on('updateUsers', function(data){
 
-        client2.emit('joinSession', {id: id, username: 'Another tester'});
-
+        client2.emit('joinSession', {id: id, username: 'Another tester', userType: 'player'});
         client1.on('updateUsers', function(data){
-          data.users[0].username.should.be.exactly('Tester');
-          data.users[1].username.should.be.exactly('Another tester');
+          data.players[0].username.should.be.exactly('Tester');
+          data.players[1].username.should.be.exactly('Another tester');
           done();
         })
       });
@@ -97,8 +96,8 @@ describe('sockets', function() {
 
     client1.on('sessionCreated', function(id){
 
-      client1.emit('joinSession', {id: id, username: 'Tester'});
-      client2.emit('joinSession', {id: id, username: 'Another tester'});
+      client1.emit('joinSession', {id: id, username: 'Tester', userType: 'player'});
+      client2.emit('joinSession', {id: id, username: 'Another tester', userType: 'player'});
 
       client1.emit('updateDescription', {id: id, description: 'Hello'});
       client2.on('descriptionUpdated', function(data){
@@ -111,17 +110,17 @@ describe('sockets', function() {
   it('updates vote flag when a user votes', function(done) {
     client1.emit('newSession');
     client1.on('sessionCreated', function(id){
-      client1.emit('joinSession', {id: id, username: 'Tester'});
+      client1.emit('joinSession', {id: id, username: 'Tester', userType:'player'});
 
       client1.once('updateUsers', function(data){
-        client2.emit('joinSession', {id: id, username: 'Another tester'});
+        client2.emit('joinSession', {id: id, username: 'Another tester', userType: 'player'});
 
         client2.once('updateUsers', function(data){
 
           client1.emit('vote', {id: id, userId: client1.id, vote: 3 });
 
           client2.once('updateUsers', function(data){
-            data.users[0].voted.should.be.ok;
+            data.players[0].voted.should.be.ok;
             done();
           });
         });
@@ -134,26 +133,28 @@ describe('sockets', function() {
 
     client1.on('sessionCreated', function(id){
 
-      client1.emit('joinSession', {id: id, username: 'Tester'});
-      client2.emit('joinSession', {id: id, username: 'Another tester'});
+      client1.emit('joinSession', {id: id, username: 'Tester', userType: 'player'});
+      client2.emit('joinSession', {id: id, username: 'Another tester', userType: 'player'});
 
       client1.emit('vote', {id: id, userId: client1.id, vote: 4 });
       client2.emit('vote', {id: id, userId: client2.id, vote: 5 });
 
-      client2.on('updateVotes', function(data){
-        data[client1.id].should.be.exactly(4);
-        data[client2.id].should.be.exactly(5);
-        done();
-      })
-    });
+      this.timeout(3000);
+
+      client2.once('updateVotes', function(data){
+          data[client1.id].should.be.exactly(4);
+          data[client2.id].should.be.exactly(5);
+          done();
+      });
+    }.bind(this));
   });
 
   it('emits clear votes after clearing a session', function(done) {
     client1.emit('newSession');
     client1.on('sessionCreated', function(id){
 
-      client1.emit('joinSession', {id: id, username: 'Tester'});
-      client2.emit('joinSession', {id: id, username: 'Another tester'});
+      client1.emit('joinSession', {id: id, username: 'Tester', userType: 'player'});
+      client2.emit('joinSession', {id: id, username: 'Another tester', userType:'player'});
 
       client1.emit('clearSession', {id: id});
 
@@ -167,16 +168,16 @@ describe('sockets', function() {
     client1.emit('newSession');
     client1.on('sessionCreated', function(id){
 
-      client1.emit('joinSession', {id: id, username: 'Tester'});
+      client1.emit('joinSession', {id: id, username: 'Tester', userType: 'player'});
 
       client1.once('updateUsers', function(data){
-        client2.emit('joinSession', {id: id, username: 'Another tester'});
+        client2.emit('joinSession', {id: id, username: 'Another tester', userType: 'player'});
 
         client1.once('updateUsers', function(data){
-          client2.emit('leaveSession', {id: id, username: 'Another tester'});
+          client2.emit('leaveSession', {id: id, username: 'Another tester', userType: 'player'});
 
           client1.once('updateUsers', function(data){
-            data.users.length.should.be.exactly(1);
+            data.players.length.should.be.exactly(1);
             done();
           });
         });
@@ -188,12 +189,12 @@ describe('sockets', function() {
     client1.emit('newSession');
     client1.on('sessionCreated', function(id){
 
-      client1.emit('joinSession', {id: id, username: 'Tester'});
-      client2.emit('joinSession', {id: id, username: 'Another tester'});
+      client1.emit('joinSession', {id: id, username: 'Tester', userType: 'player'});
+      client2.emit('joinSession', {id: id, username: 'Another tester', userType: 'player'});
 
       client2.emit('vote', {id: id, userId: client2.id, vote: 5 });
 
-      client2.emit('leaveSession', {id: id, username: 'Another tester'});
+      client2.emit('leaveSession', {id: id, username: 'Another tester', userType: 'player'});
 
       client1.on('updateVotes', function(data){
         var votesLength = _.keys(data).length
