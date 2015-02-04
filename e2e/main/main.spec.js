@@ -2,7 +2,7 @@
 
 var config = require('../../server/config/local.env');
 
-ddescribe('Main View', function() {
+describe('Main View', function() {
   var page;
 
   beforeEach(function() {
@@ -60,6 +60,8 @@ ddescribe('Main View', function() {
 
           browser.getCurrentUrl().then(function(path){
             expect(path).toBe(config.DOMAIN +'/#/sessions/' + id);
+            expect(page.playersList.count()).toBe(1);
+            expect(page.observersList.count()).toBe(1);
             expect(page.modal.isPresent()).toBe(false);
             browser.driver.close().then(function () {
               browser.switchTo().window(appWindow);
@@ -93,6 +95,8 @@ ddescribe('Main View', function() {
 
           browser.getCurrentUrl().then(function(path){
             expect(path).toBe(config.DOMAIN +'/#/sessions/' + id);
+            expect(page.playersList.count()).toBe(2);
+            expect(page.observersList.count()).toBe(0);
             expect(page.modal.isPresent()).toBe(false);
             browser.driver.close().then(function () {
               browser.switchTo().window(appWindow);

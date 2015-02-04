@@ -19,6 +19,7 @@ var MainPage = function() {
 
   this.shareLink = element.all(by.css('.share a')).first();
   this.numbers = element(by.repeater('vote in voteValues').row(0));
+
   this.number = element(by.repeater('vote in voteValues').row(0).column('vote'));
 
   this.statics = element(by.css('.statics'));
@@ -38,6 +39,11 @@ var MainPage = function() {
   this.modal = element(by.css('.reveal-modal'));
   this.usernameModalInput = this.modal.element(by.model('username'));
   this.modalBtn = this.modal.element(by.buttonText('OK'));
+
+ this.observerOpt = element(by.cssContainingText('.start option', 'Observer'));
+ this.observersList = element.all(by.repeater('observer in observers'));
+ this.firstObserver= element(by.repeater('observer in observers').row(0).column('username'));
+ this.numbersList = element(by.css('[ng-repeat = "vote in voteValues]"'));
 };
 
 module.exports = new MainPage();
