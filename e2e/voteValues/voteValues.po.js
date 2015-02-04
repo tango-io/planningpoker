@@ -10,7 +10,7 @@ var MainPage = function() {
   this.form = this.container.element(by.css('form[name="startSessionForm"]'));
 
   this.usernameInput = this.container.element(by.model('username'));
-  this.startBtn = this.form.element(by.css('button'));
+  this.startBtn = element(by.buttonText('Start'));
 
   //this.voteListRow = element(by.repeater('vote in voteValues').row(0).column('vote.value'));
   this.voteList = element.all(by.repeater('vote in voteValues'));
@@ -23,11 +23,11 @@ var MainPage = function() {
   this.voteAddBtn = element(by.css('tr:last-child td:last-child button'));
 
   this.voteListFirst = element(by.css('ul.button-group li:first-child button'));
-  this.votesFirst = element(by.css('tr[ng-repeat="user in users"] td:last-child'));
+  this.votesFirst = element(by.css('tr[ng-repeat="player in players"] td:last-child'));
 
   this.usernameInput_ = this.container.element(by.model('username_'));
   this.sessionIdInput = this.container.element(by.model('sessionId'));
-  this.joinBtn = this.container.element(by.css('form[name="joinSessionForm"] button'));
+  this.joinBtn = element(by.buttonText('Join'));
 
   this.clearBtn = element(by.buttonText('Clear Votes'));
   this.showBtn = element(by.buttonText('Show Votes'));

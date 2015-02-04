@@ -10,14 +10,17 @@ angular.module('pokerestimateApp')
     $scope.votes = {};
     $scope.currentUser = {};
     $scope.username = userService.getUser().username;
+    $scope.userType = userService.getUser().userType;
 
     if($scope.username){
-     $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId});
+     $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId, userType: $scope.userType});
     }else{
-      var modalInstance = $modal.open({templateUrl: 'app/templates/modals/username.html', keyboard:false});
-      modalInstance.result.then(function (username) {
-        $scope.username = username;
-        $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId});
+      $scope.userType = "player";
+      var modalInstance = $modal.open({templateUrl: 'app/templates/modals/username.html', keyboard:false, scope: this});
+      modalInstance.result.then(function (data) {
+        $scope.username = data.username;
+        $scope.userType = data.userType;
+        $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId, userType: data.userType});
       });
     }
 
@@ -42,8 +45,9 @@ angular.module('pokerestimateApp')
     },
 
     onUpdateUsers:  function (data){
-      $scope.users = data.users;
-      $scope.currentUser = _.findWhere(data.users, {socketId: $scope.id});
+      $scope.players = data.players;
+      $scope.observers = data.observers;
+      $scope.currentUser = _.findWhere(_.union(data.players, data.observers), {socketId: $scope.id});
     },
 
     onError: function(){
@@ -82,7 +86,7 @@ angular.module('pokerestimateApp')
     $scope.description = "";
     $scope.consensus = false;
     $scope.points = false;
-    $scope.users  = _.map($scope.users, function(u){ u.voted = false; return u;});
+    $scope.players  = _.map($scope.players, function(u){ u.voted = false; return u;});
     $scope.votes = {};
     $scope.showVotes = false;
   };

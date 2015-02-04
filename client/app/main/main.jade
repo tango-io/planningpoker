@@ -2,18 +2,34 @@ include ../templates/header.jade
 .container(ng-init="init()")
   .main-content
     .row.row-with-padding
-      .large-2.large-centered.columns
-        form(name="startSessionForm" ng-submit="startSession()" novalidate)
+      .large-4.large-centered.columns
+        form(name="startSessionForm" novalidate)
           input(type="text" name="username" ng-model="username" placeholder="Enter a username" required)
           span.error(ng-show="submitted && startSessionForm.$invalid") Please enter a username
-          button.medium.button.radius(type="submit") Start a session
+    .row.start
+      .large-4.large-centered.columns
+        .row.collapse
+          .large-8.columns
+            select(ng-model="userType")
+              option(value="player") Player
+              option(value="observer") Observer
+          .large-4.columns
+            button.button.postfix(ng-click="startSession()") Start
       hr
     .row.row-with-padding
-      .large-2.large-centered.columns
-        form(name="joinSessionForm" ng-submit="joinSession()" novalidate)
+      .large-4.large-centered.columns
+        form(name="joinSessionForm" novalidate)
           input(type="text" name="username" ng-model="username_" placeholder="Enter a username" required)
           span.error(ng-show="submitted_ && joinSessionForm.username.$invalid") Please enter a username
           input(type="text" name="sessionId" ng-model="sessionId" placeholder="Enter a session id" required)
           span.error(ng-show="submitted_ && joinSessionForm.sessionId.$invalid") Please enter a session id
-          button.medium.button.radius(type="submit") Join a session
+    .row.join
+      .large-4.large-centered.columns
+        .row.collapse
+          .large-8.columns
+            select(ng-model="userType_")
+              option(value="player") Player
+              option(value="observer") Observer
+          .large-4.columns
+            button.button.postfix(ng-click="joinSession()") Join
 include ../templates/footer.jade

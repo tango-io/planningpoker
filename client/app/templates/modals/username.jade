@@ -1,4 +1,8 @@
 div
   h3 Enter username
   input(type="text" ng-model="username")
-  button.button(ng-click='$close(username)' ng-disabled="!username" ) OK
+  h3 Enter as
+  select(ng-model="userType")
+    option(value="player") Player
+    option(value="observer") Observer
+  button.button(ng-click='$close(this)' ng-disabled="!username" ) OK

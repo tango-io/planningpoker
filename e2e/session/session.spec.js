@@ -37,6 +37,7 @@ describe('Session View', function() {
     expect(page.staticsRow.getText()).toEqual("0 1");
   });
 
+
   it('s able to clear session', function() {
     page.descriptionInput.sendKeys('This is an story');
     page.numbers.click();
@@ -76,7 +77,32 @@ describe('Session View', function() {
       });
   });
 
-  it('s should prompt username request if user does not have', function(){
+  it('s not able to vote or actions related if user is an observer', function(){
+    browser.get('/');
+    browser.waitForAngular();
+    page.usernameInput.sendKeys('Arya');
+    page.observerOpt.click();
+    page.startBtn.click();
+    page.goBtn.click();
+
+    expect(page.clearBtn.isPresent()).toBe(false);
+    expect(page.showBtn.isPresent()).toBe(false);
+    expect(page.numbersList.isPresent()).toBe(false);
+    expect(page.firstObserver.getText()).toBe('Arya');
+  });
+
+
+  it('s able to view observer list', function(){
+    browser.get('/');
+    browser.waitForAngular();
+    page.usernameInput.sendKeys('Arya');
+    page.observerOpt.click();
+    page.startBtn.click();
+    page.goBtn.click();
+    expect(page.observersList.count()).toBe(1);
+  });
+
+  it('s prompts username request if user does not have', function(){
     browser.getCurrentUrl().then(function(url){
       browser.get(url);
       expect(page.usernameModalInput.isDisplayed()).toBe(true);

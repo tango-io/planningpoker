@@ -22,7 +22,57 @@ describe('Main View', function() {
     expect(page.usernameError.getText()).toBe('Please enter a username');
   });
 
-  it('s able to join a session', function() {
+  it('s able to start a session as player', function() {
+    page.usernameInput.sendKeys('Arya');
+    element(by.cssContainingText('.start option', 'Player')).click();
+    page.startBtn.click();
+    expect(browser.getCurrentUrl()).toMatch('#/voteValues');
+  });
+
+  it('s able to start a session as observer', function() {
+    page.usernameInput.sendKeys('Arya');
+    element(by.cssContainingText('.start option', 'Observer')).click();
+    page.startBtn.click();
+    expect(browser.getCurrentUrl()).toMatch('#/voteValues');
+  });
+
+  it('s able to join a session as observer', function() {
+    var id;
+    page.usernameInput.sendKeys('Arya');
+    page.startBtn.click();
+    page.goBtn.click();
+
+    browser.getCurrentUrl().then(function(url){
+      id = url.split('/')[5];
+      expect(id).toMatch(/^.{8}-.{4}-.{4}-.{4}-.{12}/);
+
+      browser.driver.executeScript('window.open();');
+      var appWindow = browser.getWindowHandle();
+      browser.getAllWindowHandles().then(function (handles) {
+        var newWindowHandle = handles[1];
+        browser.switchTo(newWindowHandle).window(newWindowHandle).then(function () {
+          browser.driver.executeScript('window.focus();');
+          browser.get('/');
+          page.usernameInput_.sendKeys('Cersei');
+          element(by.cssContainingText('.join option', 'Observer')).click();
+          page.sessionIdInput.sendKeys(id);
+          page.joinBtn.click();
+
+          browser.getCurrentUrl().then(function(path){
+            expect(path).toBe(config.DOMAIN +'/#/sessions/' + id);
+            expect(page.playersList.count()).toBe(1);
+            expect(page.observersList.count()).toBe(1);
+            expect(page.modal.isPresent()).toBe(false);
+            browser.driver.close().then(function () {
+              browser.switchTo().window(appWindow);
+            });
+          });
+        });
+      });
+    });
+  });
+
+  it('s able to join a session as player', function() {
     var id;
     page.usernameInput.sendKeys('Arya');
     page.startBtn.click();
@@ -45,6 +95,8 @@ describe('Main View', function() {
 
           browser.getCurrentUrl().then(function(path){
             expect(path).toBe(config.DOMAIN +'/#/sessions/' + id);
+            expect(page.playersList.count()).toBe(2);
+            expect(page.observersList.count()).toBe(0);
             expect(page.modal.isPresent()).toBe(false);
             browser.driver.close().then(function () {
               browser.switchTo().window(appWindow);
