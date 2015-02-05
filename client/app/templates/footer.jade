@@ -1,3 +1,9 @@
-footer.footer
+footer.footer(ng-controller="FooterCtrl")
   .container
-    p I am a footer
+    .row
+      .large-1.large-centered.columns
+        .button-bar
+          ul.button-group
+            li
+              a.twitter-btn(href="http://poker-estimate.herokuapp.com" ng-click="share($event)" target="_blank")
+                i.fa.fa-twitter-square
