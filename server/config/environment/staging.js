@@ -11,5 +11,7 @@ module.exports = {
   // Server port
   port:     process.env.OPENSHIFT_NODEJS_PORT ||
             process.env.PORT ||
-            8080
+            8080,
+
+  FACEBOOK_APP_ID: "1597643290467508"
 };
