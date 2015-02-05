@@ -2,10 +2,11 @@ footer.footer(ng-controller="FooterCtrl")
   .container
     .row
       .large-2.large-centered.columns
-        div.icon-bar.three-up
-          a.social-btn.item(href="http://poker-estimate.herokuapp.com" ng-click="share($event, 'twitter')" target="_blank")
-            i.fa.fa-twitter-square
-          a.social-btn.item(href="/" ng-click="share($event, 'facebook')" target="_blank")
-            i.fa.fa-facebook-square
-          a.social-btn.item(href="/" ng-click="share($event, 'linkedin')" target="_blank")
-            i.fa.fa-linkedin-square
+        .button-bar
+          div.icon-bar.three-up
+            a.social-btn.item(href="/" ng-click="share($event, 'twitter')" target="_blank")
+              i.fa.fa-twitter-square
+            a.social-btn.item(href="/" ng-click="share($event, 'facebook')" target="_blank")
+              i.fa.fa-facebook-square
+            a.social-btn.item(href="/" ng-click="share($event, 'linkedin')" target="_blank")
+              i.fa.fa-linkedin-square

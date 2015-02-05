@@ -8,14 +8,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <base href="/">
     <title></title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
-    <meta name="Title" content="Tango Poker Estimate" />
-    <meta name="og:title" content="Tango Poker Estimate" />
-    <meta name="og:name" content="Tango Poker Estimate" />
-    <meta name="og:url" content="http://poker-estimate-staging.com" />
-    <meta name="description" content="Some description" />
-    <meta name="og:description" content="Some description" />
+    <meta property="og:title" content="Tango Poker Estimate" />
+    <meta property="og:description" content="Best planning poker app" />
+    <meta property="og:url" content="http://poker-estimate-staging.herokuapp.com" />
+    <meta property="og:image" content="https://pbs.twimg.com/profile_images/1409762848/tangosource_logo.png" />
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(client) app/vendor.css -->
       <!-- bower:css -->
@@ -29,6 +25,23 @@
     <!-- endbuild -->
   </head>
   <body ng-app="pokerestimateApp">
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '1597643290467508',
+          xfbml      : true,
+          version    : 'v2.2'
+        });
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
