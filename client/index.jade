@@ -30,12 +30,11 @@ html.no-js
     <!-- endbuild -->
 
   body(ng-app='pokerestimateApp')
-    // var TREX_SERVER_URL = '#{locals.settings.trexServerURL}';
     script(type='text/javascript').
     script.
       window.fbAsyncInit = function() {
       FB.init({
-      appId      : '',
+      appId      : '#{FACEBOOK_APP_ID}',
       xfbml      : true,
       version    : 'v2.2'
       });
@@ -92,13 +91,13 @@ html.no-js
     <!-- build:js({.tmp,client}) app/app.js -->
     script(src='app/app.js')
     // injector:js
-    script(src='app/footer/footer.controller.js')
-    script(src='app/hideFor/hideFor.directive.js')
-    script(src='app/main/main.controller.js')
-    script(src='app/session/session.controller.js')
-    script(src='app/userService/userService.service.js')
-    script(src='app/voteValues/voteValues.controller.js')
-    script(src='components/socket/socket.service.js')
+    script(src="app/footer/footer.controller.js")
+    script(src="app/hideFor/hideFor.directive.js")
+    script(src="app/main/main.controller.js")
+    script(src="app/session/session.controller.js")
+    script(src="app/userService/userService.service.js")
+    script(src="app/voteValues/voteValues.controller.js")
+    script(src="components/socket/socket.service.js")
     // endinjector
     <!-- endbuild -->
 
