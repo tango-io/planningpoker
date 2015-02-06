@@ -32,7 +32,9 @@ describe('Controller: SessionCtrl', function () {
         {label: 3, value: 3},
         {label: 5, value: 5},
         {label: 8, value: 8},
-        {label: 13, value: 13}
+        {label: 13, value: 13},
+        { label : ':/', value : '?' },
+        { label : 'Break', value : 'need a break' }
       ];
 
       $location.path('/sessions/sessionId');
@@ -81,6 +83,28 @@ describe('Controller: SessionCtrl', function () {
       expect(scope.username).toBe('tester');
       expect(scope.userType).toBe('observer');
       expect(scope.listeners.onJoinedSession).toHaveBeenCalled();
+    }));
+
+    it('emits update description in updateDescription function', inject(function (socket) {
+      scope.init();
+      spyOn(socket.socket, 'emit');
+
+      scope.userType = 'observer';
+      scope.sessionId = 'sessionId';
+
+      scope.updateDescription("This is an update for description");
+      expect(socket.socket.emit).toHaveBeenCalledWith('updateDescription', { id : 'sessionId', description : 'this is a description' });
+    }));
+
+    it('does not emit update description in updateDescription function if user is a player', inject(function (socket) {
+      scope.init();
+      spyOn(socket.socket, 'emit');
+
+      scope.userType = 'player';
+      scope.sessionId = 'sessionId';
+
+      scope.updateDescription("This is an update for description");
+      expect(socket.socket.emit).not.toHaveBeenCalled();
     }));
 
     it('sets id and description on joinedSession function', inject(function () {

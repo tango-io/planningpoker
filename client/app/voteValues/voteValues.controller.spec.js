@@ -14,7 +14,9 @@ describe('Controller: VoteValuesCtrl', function () {
     {label: 3, value: 3},
     {label: 5, value: 5},
     {label: 8, value: 8},
-    {label: 13, value: 13}
+    {label: 13, value: 13},
+    { label : ':/', value : '?' },
+    { label : 'Break', value : 'need a break' }
   ];
 
   // Initialize the controller and a mock scope
@@ -46,16 +48,16 @@ describe('Controller: VoteValuesCtrl', function () {
 
   it('remove values from list', inject(function ($location) {
     scope.init();
-    expect(scope.voteValues.length).toBe(7);
+    expect(scope.voteValues.length).toBe(defaultValues.length);
     scope.removeValue(0);
-    expect(scope.voteValues.length).toBe(6);
+    expect(scope.voteValues.length).toBe(defaultValues.length - 1);
   }));
 
   it('add values from votes list', inject(function ($location) {
     scope.init();
-    expect(scope.voteValues.length).toBe(7);
+    expect(scope.voteValues.length).toBe(defaultValues.length);
     scope.addValue({label:"this one", value:"4"});
-    expect(scope.voteValues.length).toBe(8);
+    expect(scope.voteValues.length).toBe(defaultValues.length + 1);
   }));
 
   it('redirects to session:id on redirect to session function', inject(function ($location) {

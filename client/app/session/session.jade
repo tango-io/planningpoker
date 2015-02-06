@@ -7,7 +7,7 @@ include ../templates/header.jade
           .large-8.columns
             h5 Your username: {{username}}
             label Story description
-            textarea(ng-model="description" ng-keyup="updateDescription()")
+            textarea(ng-model="description" ng-keyup="updateDescription()" ng-disabled="userType == 'player'")
           .large-4.columns.statics(ng-show="showVotes")
             h5  Statics
             h3.success(ng-show="consensus") Consensus!!!
@@ -20,7 +20,7 @@ include ../templates/header.jade
                 tr(ng-repeat="(point, votes) in points")
                   td {{point}}
                   td {{votes.length}}
-        .row(hide-for="observer")
+        .row(hide-for="player")
           .large-6.columns
             button.small.button(ng-click="clearVotes()") Clear Votes
             button.small.button(ng-click="revealVotes()") Show Votes
