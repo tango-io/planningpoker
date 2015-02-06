@@ -13,5 +13,6 @@ module.exports = {
             process.env.PORT ||
             8080,
 
-  FACEBOOK_APP_ID: "768576229899199"
+  FACEBOOK_APP_ID: "768576229899199",
+  GOOGLE_ANALYTICS_ID: "UA-59429515-2"
 };
