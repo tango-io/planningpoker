@@ -30,6 +30,7 @@ module.exports = function(app) {
   app.use(cookieParser());
 
   if ('production' === env || 'staging' === env) {
+    app.set('views', path.join(config.root + '/public'));
     app.use(favicon(path.join(config.root, 'public', 'favicon.ico')));
     app.use(express.static(path.join(config.root, 'public')));
     app.set('appPath', config.root + '/public');
