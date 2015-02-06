@@ -227,7 +227,7 @@ module.exports = function (grunt) {
     // Automatically inject Bower components into the app
     wiredep: {
       target: {
-        src: '<%= yeoman.client %>/index.html',
+        src: '<%= yeoman.client %>/index.jade',
         ignorePath: '<%= yeoman.client %>/',
         exclude: [/bootstrap-sass-official/, /bootstrap.js/, '/json3/', '/es5-shim/', /bootstrap.css/, /font-awesome.css/ ]
       }
@@ -251,7 +251,7 @@ module.exports = function (grunt) {
     // concat, minify and revision files. Creates configurations in memory so
     // additional tasks can operate on them
     useminPrepare: {
-      html: ['<%= yeoman.client %>/index.html'],
+      jade: ['<%= yeoman.client %>/index.jade'],
       options: {
         dest: '<%= yeoman.dist %>/public'
       }
@@ -259,10 +259,23 @@ module.exports = function (grunt) {
 
     // Performs rewrites based on rev and the useminPrepare configuration
     usemin: {
+      jade: ['<%= yeoman.dist %>/public/{,*/}*.jade'],
       html: ['<%= yeoman.dist %>/public/{,*/}*.html'],
       css: ['<%= yeoman.dist %>/public/{,*/}*.css'],
       js: ['<%= yeoman.dist %>/public/{,*/}*.js'],
+
       options: {
+        blockReplacements: {
+          'css': function (block) {
+            grunt.log.debug(JSON.stringify(block.dest));
+            return 'link(rel="stylesheet" href="'+ block.dest +'")';
+          },
+          'js': function (block) {
+            grunt.log.debug(JSON.stringify(block.dest));
+            return 'script(src="'+ block.dest +'")';
+          }
+        },
+
         assetsDirs: [
           '<%= yeoman.dist %>/public',
           '<%= yeoman.dist %>/public/assets/images'
@@ -271,7 +284,8 @@ module.exports = function (grunt) {
         patterns: {
           js: [
             [/(assets\/images\/.*?\.(?:gif|jpeg|jpg|png|webp|svg))/gm, 'Update the JS to reference our revved images']
-          ]
+          ],
+          jade: require('usemin-patterns').jade
         }
       }
     },
@@ -361,7 +375,7 @@ module.exports = function (grunt) {
             'bower_components/**/*',
             'assets/images/{,*/}*.{webp}',
             'assets/fonts/**/*',
-            'index.html'
+            'index.jade'
           ]
         }, {
           expand: true,
@@ -513,19 +527,19 @@ module.exports = function (grunt) {
       options: {
 
       },
-      // Inject application script files into index.html (doesn't include bower)
+      // Inject application script files into index.jade (doesn't include bower)
       scripts: {
         options: {
           transform: function(filePath) {
             filePath = filePath.replace('/client/', '');
             filePath = filePath.replace('/.tmp/', '');
-            return '<script src="' + filePath + '"></script>';
+            return 'script(src="' + filePath + '")';
           },
-          starttag: '<!-- injector:js -->',
-          endtag: '<!-- endinjector -->'
+          starttag: '// injector:js',
+          endtag: '// endinjector'
         },
         files: {
-          '<%= yeoman.client %>/index.html': [
+          '<%= yeoman.client %>/index.jade': [
               ['{.tmp,<%= yeoman.client %>}/{app,components}/**/*.js',
                '!{.tmp,<%= yeoman.client %>}/app/app.js',
                '!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.spec.js',
@@ -553,19 +567,19 @@ module.exports = function (grunt) {
         }
       },
 
-      // Inject component css into index.html
+      // Inject component css into index.jade
       css: {
         options: {
           transform: function(filePath) {
             filePath = filePath.replace('/client/', '');
             filePath = filePath.replace('/.tmp/', '');
-            return '<link rel="stylesheet" href="' + filePath + '">';
+            return 'link(rel="stylesheet" href="' + filePath + '")';
           },
-          starttag: '<!-- injector:css -->',
-          endtag: '<!-- endinjector -->'
+          starttag: '// injector:css',
+          endtag: '// endinjector'
         },
         files: {
-          '<%= yeoman.client %>/index.html': [
+          '<%= yeoman.client %>/index.jade': [
             '<%= yeoman.client %>/{app,components}/**/*.css'
           ]
         }
@@ -684,7 +698,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
-    'injector:stylus', 
+    'injector:stylus',
     'concurrent:dist',
     'injector',
     'wiredep',

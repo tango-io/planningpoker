@@ -1,6 +1,6 @@
 'use strict';
 
-// Production specific configuration
+// Staging specific configuration
 // =================================
 module.exports = {
   // Server IP
@@ -13,5 +13,5 @@ module.exports = {
             process.env.PORT ||
             8080,
 
-  FACEBOOK_APP_ID: "768576229899199"
+  FACEBOOK_APP_ID: "1597643290467508"
 };

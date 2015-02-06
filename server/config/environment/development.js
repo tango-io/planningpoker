@@ -3,10 +3,5 @@
 // Development specific configuration
 // ==================================
 module.exports = {
-  // MongoDB connection options
-  mongo: {
-    uri: 'mongodb://localhost/pokerestimate-dev'
-  },
-
-  seedDB: true
+  FACEBOOK_APP_ID: "test"
 };

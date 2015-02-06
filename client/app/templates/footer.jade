@@ -1,9 +1,12 @@
 footer.footer(ng-controller="FooterCtrl")
   .container
     .row
-      .large-1.large-centered.columns
+      .large-2.large-centered.columns
         .button-bar
-          ul.button-group
-            li
-              a.twitter-btn(href="http://poker-estimate.herokuapp.com" ng-click="share($event)" target="_blank")
-                i.fa.fa-twitter-square
+          div.icon-bar.three-up
+            a.social-btn.item(href="/" ng-click="share($event, 'twitter')" target="_blank")
+              i.fa.fa-twitter-square
+            a.social-btn.item(href="/" ng-click="share($event, 'facebook')" target="_blank")
+              i.fa.fa-facebook-square
+            a.social-btn.item(href="/" ng-click="share($event, 'linkedin')" target="_blank")
+              i.fa.fa-linkedin-square

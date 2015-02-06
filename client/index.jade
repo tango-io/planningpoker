@@ -1,0 +1,103 @@
+doctype //if lt IE 7
+html.no-js.lt-ie9.lt-ie8.lt-ie7  
+//if IE 7
+html.no-js.lt-ie9.lt-ie8  
+//if IE 8
+  html.no-js.lt-ie9  
+// [if gt IE 8] <!
+html.no-js
+  // <![endif]
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    base(href='/')
+    title
+    meta(property='og:title', content='Tango Poker Estimate')
+    meta(property='og:description', content='Best planning poker app')
+    meta(property='og:url', content='http://poker-estimate-staging.herokuapp.com')
+    meta(property='og:image', content='https://pbs.twimg.com/profile_images/1409762848/tangosource_logo.png')
+
+    <!-- build:css(client) app/vendor.css -->
+    // bower:css
+    link(rel='stylesheet', href='bower_components/foundation/css/foundation.css')
+    // endbower
+    <!-- endbuild -->
+
+    <!-- build:css({.tmp,client}) app/app.css -->
+    link(rel='stylesheet', href='app/app.css')
+    // injector:css
+    // endinjector
+    <!-- endbuild -->
+
+  body(ng-app='pokerestimateApp')
+    script(type='text/javascript').
+    script.
+      window.fbAsyncInit = function() {
+      FB.init({
+      appId      : '#{FACEBOOK_APP_ID}',
+      xfbml      : true,
+      version    : 'v2.2'
+      });
+      };
+      (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    //if lt IE 7
+      p.browsehappy
+        | You are using an 
+        strong outdated
+        |  browser. Please 
+        a(href='http://browsehappy.com/') upgrade your browser
+        |  to improve your experience.
+    // Add your site or application content here
+    div(ng-view='')
+    // Google Analytics: change UA-XXXXX-X to be your site's ID
+    script.
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-XXXXX-X');
+      ga('send', 'pageview');
+    //if lt IE 9
+      script(src='bower_components/es5-shim/es5-shim.js')
+      script(src='bower_components/json3/lib/json3.min.js')
+
+    <!-- build:js({client,node_modules}) app/vendor.js -->
+    // bower:js
+    script(src='bower_components/modernizr/modernizr.js')
+    script(src='bower_components/jquery/dist/jquery.js')
+    script(src='bower_components/angular/angular.js')
+    script(src='bower_components/angular-resource/angular-resource.js')
+    script(src='bower_components/angular-cookies/angular-cookies.js')
+    script(src='bower_components/angular-sanitize/angular-sanitize.js')
+    script(src='bower_components/angular-route/angular-route.js')
+    script(src='bower_components/lodash/dist/lodash.compat.js')
+    script(src='bower_components/angular-socket-io/socket.js')
+    script(src='bower_components/angular-foundation/mm-foundation-tpls.js')
+    script(src='bower_components/fastclick/lib/fastclick.js')
+    script(src='bower_components/jquery.cookie/jquery.cookie.js')
+    script(src='bower_components/jquery-placeholder/jquery.placeholder.js')
+    script(src='bower_components/foundation/js/foundation.js')
+    // endbower
+    script(src='socket.io-client/socket.io.js')
+    <!-- endbuild -->
+
+
+    <!-- build:js({.tmp,client}) app/app.js -->
+    script(src='app/app.js')
+    // injector:js
+    script(src="app/footer/footer.controller.js")
+    script(src="app/hideFor/hideFor.directive.js")
+    script(src="app/main/main.controller.js")
+    script(src="app/session/session.controller.js")
+    script(src="app/userService/userService.service.js")
+    script(src="app/voteValues/voteValues.controller.js")
+    script(src="components/socket/socket.service.js")
+    // endinjector
+    <!-- endbuild -->
+
