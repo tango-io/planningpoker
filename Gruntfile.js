@@ -251,7 +251,7 @@ module.exports = function (grunt) {
     // concat, minify and revision files. Creates configurations in memory so
     // additional tasks can operate on them
     useminPrepare: {
-      html: ['<%= yeoman.client %>/index.html'],
+      jade: ['<%= yeoman.client %>/index.jade'],
       options: {
         dest: '<%= yeoman.dist %>/public'
       }
@@ -259,10 +259,23 @@ module.exports = function (grunt) {
 
     // Performs rewrites based on rev and the useminPrepare configuration
     usemin: {
+      jade: ['<%= yeoman.dist %>/public/{,*/}*.jade'],
       html: ['<%= yeoman.dist %>/public/{,*/}*.html'],
       css: ['<%= yeoman.dist %>/public/{,*/}*.css'],
       js: ['<%= yeoman.dist %>/public/{,*/}*.js'],
+
       options: {
+        blockReplacements: {
+          'css': function (block) {
+            grunt.log.debug(JSON.stringify(block.dest));
+            return 'link(rel="stylesheet" href="'+ block.dest +'")';
+          },
+          'js': function (block) {
+            grunt.log.debug(JSON.stringify(block.dest));
+            return 'script(src="'+ block.dest +'")';
+          }
+        },
+
         assetsDirs: [
           '<%= yeoman.dist %>/public',
           '<%= yeoman.dist %>/public/assets/images'
@@ -271,7 +284,8 @@ module.exports = function (grunt) {
         patterns: {
           js: [
             [/(assets\/images\/.*?\.(?:gif|jpeg|jpg|png|webp|svg))/gm, 'Update the JS to reference our revved images']
-          ]
+          ],
+          jade: require('usemin-patterns').jade
         }
       }
     },
@@ -684,7 +698,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
-    'injector:stylus', 
+    'injector:stylus',
     'concurrent:dist',
     'injector',
     'wiredep',
