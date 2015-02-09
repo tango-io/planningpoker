@@ -70,7 +70,9 @@ angular.module('pokerestimateApp')
   };
 
   $scope.updateDescription = function(){
-    $scope.socket.emit('updateDescription', {id: $scope.sessionId, description: $scope.description});
+    if($scope.userType == 'observer'){
+      $scope.socket.emit('updateDescription', {id: $scope.sessionId, description: $scope.description});
+    }
   };
 
   $scope.revealVotes = function(){
