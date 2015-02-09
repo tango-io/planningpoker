@@ -3,14 +3,14 @@
 angular.module('pokerestimateApp')
 .controller('SessionCtrl', function (socket, $scope, $location, $routeParams, $modal, userService, $rootScope) {
   $scope.init = function(){
-    $scope.url = $location.$$absUrl;
-    $scope.socket = socket.socket;
-    $scope.voteValues = userService.getVoteValues();
-    $scope.sessionId = $routeParams.id;
-    $scope.votes = {};
+    $scope.url         = $location.$$absUrl;
+    $scope.socket      = socket.socket;
+    $scope.voteValues  = userService.getVoteValues();
+    $scope.sessionId   = $routeParams.id;
+    $scope.votes       = {};
     $scope.currentUser = {};
-    $scope.username = userService.getUser().username;
-    $scope.userType = userService.getUser().userType;
+    $scope.username    = userService.getUser().username;
+    $scope.userType    = userService.getUser().userType;
 
     if($scope.username){
      $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId, userType: $scope.userType});
@@ -24,13 +24,13 @@ angular.module('pokerestimateApp')
       });
     }
 
-    $scope.socket.on('clearVotes', $scope.clearSession);
-    $scope.socket.on('descriptionUpdated', function(description){ $scope.listeners.onDescriptionUpdated(description)});
-    $scope.socket.on('joinedSession', function(data){ $scope.listeners.onJoinedSession(data)});
-    $scope.socket.on('updateUsers', function(data){ $scope.listeners.onUpdateUsers(data)});
-    $scope.socket.on('hideVotes', function(){ $scope.listeners.onHideVotes()});
-    $scope.socket.on('updateVotes', function(votes){ $scope.listeners.onUpdateVotes(votes)});
-    $scope.socket.on('errorMsg', function(){ $scope.listeners.onError() });
+    $scope.socket.on('clearVotes',         $scope.clearSession);
+    $scope.socket.on('descriptionUpdated', $scope.listeners.onDescriptionUpdated);
+    $scope.socket.on('joinedSession',      $scope.listeners.onJoinedSession);
+    $scope.socket.on('updateUsers',        $scope.listeners.onUpdateUsers);
+    $scope.socket.on('hideVotes',          $scope.listeners.onHideVotes);
+    $scope.socket.on('updateVotes',        $scope.listeners.onUpdateVotes);
+    $scope.socket.on('errorMsg',           $scope.listeners.onError);
   };
 
   $scope.listeners = {

@@ -1,8 +1,8 @@
 'use strict';
 
-var uuid = require('node-uuid');
-var _ = require('lodash');
-var rooms = {};
+var uuid  = require('node-uuid'),
+    _     = require('lodash'),
+    rooms = {};
 
 exports.register = function(socket, io) {
   socket.on('newSession', function(data){ onNewSession(socket, data);});
@@ -22,24 +22,16 @@ function onNewSession(socket, data) {
 };
 
 function onJoinSession(io, socket, data) {
-  if(rooms[data.id]){
-    if(data.username && data.userType){
-      socket.join(data.id);
-      if(data.userType == 'player'){
-        rooms[data.id].players.push({username: data.username, userType: 'player', socketId: socket.id});
-      }else{
-        rooms[data.id].observers.push({username: data.username, userType: data.userType, socketId: socket.id});
-      }
-      socket.emit('joinedSession', {id: socket.id, userType: data.userType, description: rooms[data.id].description, voteValues: rooms[data.id].voteValues});
+  if(!rooms[data.id]){ return socket.emit('errorMsg', {message: "Session does not exist"}); }
+  if(!data.username || !data.userType){ return socket.emit('errorMsg', {message: "Missing information"}); }
 
-      io.to(data.id).emit('hideVotes');
-      io.to(data.id).emit('updateUsers', {players: rooms[data.id].players, observers: rooms[data.id].observers});
-    }else{
-      socket.emit('errorMsg', {message: "Missing information"});
-    }
-  }else{
-    socket.emit('errorMsg', {message: "Session does not exist"});
-  }
+  socket.join(data.id);
+  var userTypes = { "player": "players", "observer": "observers" }
+  rooms[data.id][userTypes[data.userType]].push({username: data.username, userType: data.userType, socketId: socket.id});
+  socket.emit('joinedSession', {id: socket.id, userType: data.userType, description: rooms[data.id].description, voteValues: rooms[data.id].voteValues});
+
+  io.to(data.id).emit('hideVotes');
+  io.to(data.id).emit('updateUsers', {players: rooms[data.id].players, observers: rooms[data.id].observers});
 };
 
 function updateDescription(socket, data) {
@@ -55,15 +47,8 @@ function onVote(io, socket, data) {
   var numVotes = _.groupBy(rooms[data.id].players, 'voted').true.length;
 
   //if all user has voted
-  if(numVotes ==  rooms[data.id].players.length){
-    rooms[data.id].revealed = true;
-  }else{
-    rooms[data.id].revealed = false;
-  }
-
-  if(rooms[data.id].revealed){
-    io.to(data.id).emit('updateVotes', rooms[data.id].votes);
-  }
+  rooms[data.id].revealed = numVotes ==  rooms[data.id].players.length;
+  if(rooms[data.id].revealed){ io.to(data.id).emit('updateVotes', rooms[data.id].votes); }
 
   socket.broadcast.to(data.id).emit('updateUsers', {players: rooms[data.id].players, observers: rooms[data.id].observers});
 };
