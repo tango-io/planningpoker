@@ -19,7 +19,7 @@ describe('voteValues View', function() {
   });
 
   it('s loads default vote values for a session', function() {
-    expect(page.voteList.count()).toBe(7);
+    expect(page.voteList.count()).toBe(9);
     expect(page.voteListFirstLabel.getAttribute('value')).toBe('0');
     expect(page.voteListFirstValue.getAttribute('value')).toBe('0');
   });
@@ -38,16 +38,16 @@ describe('voteValues View', function() {
   });
 
   it('s able to delete a vote values for a session', function() {
-    expect(page.voteList.count()).toBe(7);
+    expect(page.voteList.count()).toBe(9);
     page.voteListFirstBtn.click();
-    expect(page.voteList.count()).toBe(6);
+    expect(page.voteList.count()).toBe(8);
   });
 
   it('s able to add vote values for a session', function() {
-    expect(page.voteList.count()).toBe(7);
+    expect(page.voteList.count()).toBe(9);
     page.newVoteLabel.sendKeys('new label')
     page.newVoteValue.sendKeys(9)
     page.voteAddBtn.click();
-    expect(page.voteList.count()).toBe(8);
+    expect(page.voteList.count()).toBe(10);
   });
 });

@@ -37,10 +37,38 @@ describe('Session View', function() {
     expect(page.staticsRow.getText()).toEqual("0 1");
   });
 
+  it('s not able to vote or actions related if user is an observer', function(){
+    browser.get('/');
+    browser.waitForAngular();
+    page.usernameInput.sendKeys('Arya');
+    page.observerOpt.click();
+    page.startBtn.click();
+    page.goBtn.click();
 
-  it('s able to clear session', function() {
-    page.descriptionInput.sendKeys('This is an story');
+    expect(page.clearBtn.isPresent()).toBe(true);
+    expect(page.showBtn.isPresent()).toBe(true);
+    expect(page.numbersList.isPresent()).toBe(false);
+    expect(page.descriptionInput.isEnabled()).toBe(true);
+    expect(page.firstObserver.getText()).toBe('Arya');
+  });
+
+  it('s not able to write description, clear or show votes is user is a player', function() {
     page.numbers.click();
+    expect(page.clearBtn.isPresent()).toBe(false);
+    expect(page.showBtn.isPresent()).toBe(false);
+    expect(page.descriptionInput.isEnabled()).toBe(false);
+  });
+
+  it('s able to clear session if user is a observer', function() {
+    browser.get('/');
+    browser.waitForAngular();
+
+    page.usernameInput.sendKeys('Arya');
+    element(by.cssContainingText('.start option', 'Observer')).click();
+    page.startBtn.click();
+    page.goBtn.click();
+
+    page.descriptionInput.sendKeys('This is an story');
     page.clearBtn.click();
     expect(page.descriptionInput.getAttribute('value')).toEqual("");
     expect(page.statics.isDisplayed()).toBe(false);
@@ -48,22 +76,28 @@ describe('Session View', function() {
 
   it('s not able to vote after show votes', function() {
     page.numbers.click();
-    page.showBtn.click();
     expect(page.number.isEnabled()).toBe(false);
-    page.clearBtn.click();
-    expect(page.number.isEnabled()).toBe(true);
   });
 
   it('s able to modify description', function() {
-    expect(page.descriptionInput.getAttribute('value')).toEqual("");
+    browser.get('/');
+    browser.waitForAngular();
+    page.usernameInput.sendKeys('Arya');
+    page.observerOpt.click();
+    page.startBtn.click();
+    page.goBtn.click();
     page.descriptionInput.sendKeys('This is an story');
 
     browser.driver.executeScript('window.open();');
     var appWindow = browser.getWindowHandle();
-    browser.getAllWindowHandles().then(function (handles) {
-      var newWindowHandle = handles[1];
-      browser.switchTo(newWindowHandle).window(newWindowHandle).then(function () {
-        browser.driver.executeScript('window.focus();');
+    browser.getCurrentUrl().then(function(url){
+      id = url.split('/')[5];
+
+      browser.getAllWindowHandles().then(function (handles) {
+        var newWindowHandle = handles[1];
+
+        browser.switchTo(newWindowHandle).window(newWindowHandle).then(function () {
+          browser.driver.executeScript('window.focus();');
           browser.get('/');
 
           page.usernameInput_.sendKeys('Cersei');
@@ -75,22 +109,8 @@ describe('Session View', function() {
           });
         });
       });
+    });
   });
-
-  it('s not able to vote or actions related if user is an observer', function(){
-    browser.get('/');
-    browser.waitForAngular();
-    page.usernameInput.sendKeys('Arya');
-    page.observerOpt.click();
-    page.startBtn.click();
-    page.goBtn.click();
-
-    expect(page.clearBtn.isPresent()).toBe(false);
-    expect(page.showBtn.isPresent()).toBe(false);
-    expect(page.numbersList.isPresent()).toBe(false);
-    expect(page.firstObserver.getText()).toBe('Arya');
-  });
-
 
   it('s able to view observer list', function(){
     browser.get('/');
