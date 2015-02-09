@@ -4,18 +4,43 @@ describe('Controller: FooterCtrl', function () {
 
   // load the controller's module
   beforeEach(module('pokerestimateApp'));
+  beforeEach(module('windowMock'));
+  beforeEach(module('FBMock'));
 
   var FooterCtrl, scope;
+  var FB  = {ui: function(){}};
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
+  beforeEach(inject(function ($controller, $rootScope, $window, _FB_) {
     scope = $rootScope.$new();
+
     FooterCtrl = $controller('FooterCtrl', {
-      $scope: scope
+      $scope: scope,
     });
+
+    spyOn($window, 'open');
   }));
 
-  it('should ...', function () {
-    expect(1).toEqual(1);
-  });
+  var event = {currentTarget: {href:"http://test"}, preventDefault: function(){}};
+  var description = encodeURIComponent('Best app to point in your sprint planning sessions');
+  var text        = encodeURIComponent('Check this awesome planning poker app');
+  var encodedPath = encodeURIComponent(event.currentTarget.href);
+
+  it('should call open  method with the correct arguments for twitter', inject(function ($window) {
+
+    scope.share(event, 'twitter');
+    expect($window.open).toHaveBeenCalledWith("http://twitter.com/share?url="+ event.currentTarget.href +"&text="+ text, 'twitter', 'width=500, height=450, left=267.5, top=104');
+  }));
+
+  it('should call open  method with the correct arguments for linked in', inject(function ($window) {
+    scope.share(event, 'linkedin');
+    expect($window.open).toHaveBeenCalledWith("http://www.linkedin.com/shareArticle?mini=true&url="+encodedPath+"&title="+text+"&summary="+description+"&source="+encodedPath, 'linkedin', 'width=500, height=450, left=267.5, top=104');
+  }));
+
+  it('should call share method from FB ui method with the correct arguments for facebook', inject(function ($window, FB) {
+    window.FB = FB;
+    spyOn(window.FB, 'ui');
+    scope.share(event, 'facebook');
+    expect(FB.ui).toHaveBeenCalledWith({ method : 'share', href : event.currentTarget.href }, jasmine.any(Function));
+  }));
 });
