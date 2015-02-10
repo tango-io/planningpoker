@@ -17,7 +17,7 @@ exports.register = function(socket, io) {
 
 function onNewSession(socket, data) {
   var roomid = uuid.v1();
-  rooms[roomid] = {players: [], observers:[], votes: {}, voteValues: data};
+  rooms[roomid] = {players: [], moderators:[], votes: {}, voteValues: data};
   socket.emit('sessionCreated', roomid);
 };
 
@@ -26,12 +26,12 @@ function onJoinSession(io, socket, data) {
   if(!data.username || !data.userType){ return socket.emit('errorMsg', {message: "Missing information"}); }
 
   socket.join(data.id);
-  var userTypes = { player: "players", observer: "observers" }
+  var userTypes = { player: "players", moderator: "moderators" }
   rooms[data.id][userTypes[data.userType]].push({username: data.username, userType: data.userType, socketId: socket.id});
   socket.emit('joinedSession', {id: socket.id, userType: data.userType, description: rooms[data.id].description, voteValues: rooms[data.id].voteValues});
 
   io.to(data.id).emit('hideVotes');
-  io.to(data.id).emit('updateUsers', {players: rooms[data.id].players, observers: rooms[data.id].observers});
+  io.to(data.id).emit('updateUsers', {players: rooms[data.id].players, moderators: rooms[data.id].moderators});
 };
 
 function updateDescription(socket, data) {
@@ -50,7 +50,7 @@ function onVote(io, socket, data) {
   rooms[data.id].revealed = numVotes ==  rooms[data.id].players.length;
   if(rooms[data.id].revealed){ io.to(data.id).emit('updateVotes', rooms[data.id].votes); }
 
-  socket.broadcast.to(data.id).emit('updateUsers', {players: rooms[data.id].players, observers: rooms[data.id].observers});
+  socket.broadcast.to(data.id).emit('updateUsers', {players: rooms[data.id].players, moderators: rooms[data.id].moderators});
 };
 
 function onRevealVotes(io, socket, data){
@@ -67,14 +67,14 @@ function onClearSession(socket, data){
 function onLeaveSession(socket){
   var match, union;
   var roomId = _.findKey(rooms, function(room){
-    union = _.union(room.players, room.observers);
+    union = _.union(room.players, room.moderators);
     match = _.findWhere(union, {socketId: socket.id});
     if(match){ return room;}
   });
 
   if(roomId && union.length > 1){
     rooms[roomId][match.userType + "s"]= _.reject(rooms[roomId][match.userType + "s"], {socketId: socket.id});
-    socket.broadcast.to(roomId).emit('updateUsers', {players: rooms[roomId].players, observers: rooms[roomId].observers});
+    socket.broadcast.to(roomId).emit('updateUsers', {players: rooms[roomId].players, moderators: rooms[roomId].moderators});
     if(match.userType == 'player'){
       delete rooms[roomId].votes[socket.id];
       socket.broadcast.to(roomId).emit('updateVotes', rooms[roomId].votes);

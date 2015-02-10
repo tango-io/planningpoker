@@ -19,36 +19,38 @@ describe('Controller: SessionCtrl', function () {
     });
 
     spyOn($modal, 'open').andReturn($modal.fakeResponses.cleanOpen);
-
   }));
 
   describe('Sessions controller', function(){
 
     it('initialize variables on calling init', inject(function ($location, socket, userService, $routeParams, $modal) {
-      var  defaultValues = [
-        {label: 0, value: 0},
-        {label: 1, value: 1},
-        {label: 2, value: 2},
-        {label: 3, value: 3},
-        {label: 5, value: 5},
-        {label: 8, value: 8},
-        {label: 13, value: 13},
-        { label : ':/', value : '?' },
-        { label : 'Break', value : 'need a break' }
-      ];
-
       $location.path('/sessions/sessionId');
       spyOn(userService, 'getUser').andReturn(userService.fakeResponses.getFakeUser());
       scope.init();
       expect(scope.url).toEqual($location.$$absUrl + "sessions/sessionId");
       expect(scope.socket).toEqual(socket.socket);
-      expect(scope.voteValues).toEqual(defaultValues);
+      expect(scope.voteValues).toEqual(userService.fakeResponses.getFakeValues());
       expect(scope.sessionId).toEqual($routeParams.id);
       expect(scope.sessionId).toEqual($routeParams.id);
       expect(userService.getUser).toHaveBeenCalled();
       expect(scope.username).toEqual(userService.fakeResponses.getFakeUser().username);
       expect(scope.userType).toEqual(userService.fakeResponses.getFakeUser().userType);
       expect(scope.votes).toEqual({});
+    }));
+
+    it('opens modal and redirects to home on errorMsg function', inject(function ($location, $modal) {
+      var fakeResponse = $modal.open();
+      $modal.open.andReturn(fakeResponse);
+      scope.listeners.onError();
+
+      expect($modal.open).toHaveBeenCalled();
+      expect($location.path()).toBe('/');
+    }));
+
+    it('emits leave session if location.patch changes', inject(function ($location, socket) {
+      spyOn(socket.socket, 'emit');
+      $location.path('/')
+      expect(socket.socket.emit).not.toHaveBeenCalledWith('leaveSession');
     }));
 
     it('sets the listener for socket events', inject(function () {
@@ -68,28 +70,20 @@ describe('Controller: SessionCtrl', function () {
       expect(scope.listeners.onError).toHaveBeenCalled();
     }));
 
-    it('emits join session if user has a username', inject(function (socket) {
+    it('emit join session it user have a username', inject(function (socket) {
       spyOn(socket.socket, 'emit');
       scope.init();
       expect(socket.socket.emit).not.toHaveBeenCalledWith('joinSession');
-    }));
-
-    it('sets username and emits session id after setting username in modal', inject(function ($modal) {
-      $modal.open.andReturn($modal.fakeResponses.open);
-      spyOn(scope.listeners, 'onJoinedSession');
+      scope.username = 'Tester';
       scope.init();
-
-      expect($modal.open).toHaveBeenCalled();
-      expect(scope.username).toBe('tester');
-      expect(scope.userType).toBe('observer');
-      expect(scope.listeners.onJoinedSession).toHaveBeenCalled();
+      expect(socket.socket.emit).not.toHaveBeenCalledWith('joinSession');
     }));
 
     it('emits update description in updateDescription function', inject(function (socket) {
       scope.init();
       spyOn(socket.socket, 'emit');
 
-      scope.userType = 'observer';
+      scope.userType = 'moderator';
       scope.sessionId = 'sessionId';
 
       scope.updateDescription("This is an update for description");
@@ -107,9 +101,21 @@ describe('Controller: SessionCtrl', function () {
       expect(socket.socket.emit).not.toHaveBeenCalled();
     }));
 
-    it('sets id and description on joinedSession function', inject(function () {
-      scope.listeners.onDescriptionUpdated("Updated description");
-      expect(scope.description).toEqual('Updated description');
+    it('sets username and emits session id after setting username in modal', inject(function ($modal) {
+      $modal.open.andReturn($modal.fakeResponses.open);
+      spyOn(scope.listeners, 'onJoinedSession');
+      scope.init();
+
+      expect($modal.open).toHaveBeenCalled();
+      expect(scope.username).toBe('tester');
+      expect(scope.userType).toBe('moderator');
+      expect(scope.listeners.onJoinedSession).toHaveBeenCalled();
+    }));
+
+    it('does not emit vote if show votes is true ', inject(function (socket) {
+      spyOn(socket.socket, 'emit');
+      scope.showVotes = true;
+      expect(socket.socket.emit).not.toHaveBeenCalled();
     }));
 
     it('sets description and id on joined session function', inject(function () {
@@ -118,13 +124,13 @@ describe('Controller: SessionCtrl', function () {
       expect(scope.id).toEqual(1);
     }));
 
-    it('sets players, observers and current user, and users list on updateUsers function', inject(function () {
+    it('sets players, moderators, and current user on updateUsers function', inject(function () {
       scope.id = 1;
-      scope.listeners.onUpdateUsers({players:[{socketId: 1, username: 'Daenerys'}, {socketId: 2, username: 'Drogo'}], observers: [{socketId: 4, username: 'Viserys'}]});
+      scope.listeners.onUpdateUsers({players:[{socketId: 1, username: 'Daenerys'}, {socketId: 2, username: 'Drogo'}], moderators: [{socketId: 4, username: 'Viserys'}]});
       expect(scope.currentUser.username).toEqual('Daenerys');
       expect(scope.players).toEqual([{socketId: 1, username: 'Daenerys'}, {socketId: 2, username: 'Drogo'}]);
-      expect(scope.observers).toEqual([{socketId: 4, username: 'Viserys'}]);
-      scope.listeners.onUpdateUsers({observers:[{socketId: 1, username: 'Daenerys'}, {socketId: 2, username: 'Drogo'}], players: [{socketId: 4, username: 'Viserys'}]});
+      expect(scope.moderators).toEqual([{socketId: 4, username: 'Viserys'}]);
+      scope.listeners.onUpdateUsers({moderators:[{socketId: 1, username: 'Daenerys'}, {socketId: 2, username: 'Drogo'}], players: [{socketId: 4, username: 'Viserys'}]});
       expect(scope.currentUser.username).toEqual('Daenerys');
     }));
 
@@ -157,16 +163,7 @@ describe('Controller: SessionCtrl', function () {
       expect(scope.consensus).toEqual(true);
     }));
 
-    it('opens modal and redirects to home on errorMsg function', inject(function ($location, $modal) {
-      var fakeResponse = $modal.open();
-      $modal.open.andReturn(fakeResponse);
-      scope.listeners.onError();
-
-      expect($modal.open).toHaveBeenCalled();
-      expect($location.path()).toBe('/');
-    }));
-
-    it('it clears variables related to session in clear session function', inject(function () {
+    it('clears variables related to session in clear session function', inject(function () {
       scope.description = "some description";
       scope.consensus = true;
       scope.points = true;
@@ -184,7 +181,7 @@ describe('Controller: SessionCtrl', function () {
       expect(scope.showVotes).toEqual(false);
     }));
 
-    it('it sets votes values  and emit vote event in set vote function', inject(function (socket) {
+    it('sets votes values  and emit vote event in set vote function', inject(function (socket) {
       spyOn(socket.socket, 'emit');
       scope.init();
       scope.id = 'socketId';
@@ -198,18 +195,6 @@ describe('Controller: SessionCtrl', function () {
       expect(scope.currentUser.voted).toEqual(true);
       expect(scope.votes[scope.id]).toEqual(4);
       expect(socket.socket.emit).toHaveBeenCalledWith('vote', {id: 'sessionId', userId: 'socketId', vote:4});
-    }));
-
-    it('does not emit vote if show votes is true ', inject(function (socket) {
-      spyOn(socket.socket, 'emit');
-      scope.showVotes = true;
-      expect(socket.socket.emit).not.toHaveBeenCalled();
-    }));
-
-    it('emits leave session if location.patch changes', inject(function ($location, socket) {
-      spyOn(socket.socket, 'emit');
-      $location.path('/')
-      expect(socket.socket.emit).not.toHaveBeenCalledWith('leaveSession');
     }));
   });
 });

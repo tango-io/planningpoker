@@ -47,8 +47,8 @@ angular.module('pokerestimateApp')
 
     onUpdateUsers:  function (data){
       $scope.players = data.players;
-      $scope.observers = data.observers;
-      $scope.currentUser = _.findWhere(_.union(data.players, data.observers), {socketId: $scope.id});
+      $scope.moderators = data.moderators;
+      $scope.currentUser = _.findWhere(_.union(data.players, data.moderators), {socketId: $scope.id});
     },
 
     onError: function(){
@@ -71,7 +71,7 @@ angular.module('pokerestimateApp')
   };
 
   $scope.updateDescription = function(){
-    if($scope.userType == 'observer'){
+    if($scope.userType == 'moderator'){
       $scope.socket.emit('updateDescription', {id: $scope.sessionId, description: $scope.description});
     }
   };

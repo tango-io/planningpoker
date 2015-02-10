@@ -26,18 +26,17 @@ describe('Controller: FooterCtrl', function () {
   var text        = encodeURIComponent('Check this awesome planning poker app');
   var encodedPath = encodeURIComponent(event.currentTarget.href);
 
-  it('should call open  method with the correct arguments for twitter', inject(function ($window) {
-
+  it('should call open method with the correct arguments sharing via twitter', inject(function ($window) {
     scope.share(event, 'twitter');
     expect($window.open).toHaveBeenCalledWith("http://twitter.com/share?url="+ event.currentTarget.href +"&text="+ text, 'twitter', 'width=500, height=450, left=267.5, top=104');
   }));
 
-  it('should call open  method with the correct arguments for linked in', inject(function ($window) {
+  it('should call open  method with the correct arguments sharing via linked in', inject(function ($window) {
     scope.share(event, 'linkedin');
     expect($window.open).toHaveBeenCalledWith("http://www.linkedin.com/shareArticle?mini=true&url="+encodedPath+"&title="+text+"&summary="+description+"&source="+encodedPath, 'linkedin', 'width=500, height=450, left=267.5, top=104');
   }));
 
-  it('should call share method from FB ui method with the correct arguments for facebook', inject(function ($window, FB) {
+  it('should call share method from FB ui method with the correct arguments sharing via facebook', inject(function ($window, FB) {
     window.FB = FB;
     spyOn(window.FB, 'ui');
     scope.share(event, 'facebook');
