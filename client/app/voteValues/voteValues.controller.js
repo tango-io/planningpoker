@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pokerestimateApp')
-  .controller('VoteValuesCtrl', function ($scope, $routeParams, userService, $location, socket) {
+  .controller('VoteValuesCtrl', function ($scope, userService, $location, socket) {
     $scope.init = function(){
       $scope.voteValues = [
         {label: 0, value: 0},
