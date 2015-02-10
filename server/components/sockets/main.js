@@ -80,15 +80,20 @@ function onClearSession(socket, data){
 };
 
 function onLeaveSession(socket){
+  var match, union;
   var roomId = _.findKey(rooms, function(room){
-    return _.findWhere(room.players, {socketId: socket.id});
+    union = _.union(room.players, room.observers);
+    match = _.findWhere(union, {socketId: socket.id});
+    if(match){ return room;}
   });
 
-  if(roomId && rooms[roomId].players.length > 1){
-    rooms[roomId].players = _.reject(rooms[roomId].players, {socketId: socket.id});
-    delete rooms[roomId].votes[socket.id];
+  if(roomId && union.length > 1){
+    rooms[roomId][match.userType + "s"]= _.reject(rooms[roomId][match.userType + "s"], {socketId: socket.id});
     socket.broadcast.to(roomId).emit('updateUsers', {players: rooms[roomId].players, observers: rooms[roomId].observers});
-    socket.broadcast.to(roomId).emit('updateVotes', rooms[roomId].votes);
+    if(match.userType == 'player'){
+      delete rooms[roomId].votes[socket.id];
+      socket.broadcast.to(roomId).emit('updateVotes', rooms[roomId].votes);
+    }
   }else{
     delete rooms[roomId];
   }
