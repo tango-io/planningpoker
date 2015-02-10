@@ -39,11 +39,12 @@ describe('Main View', function() {
   });
 
   describe('Join a session', function() {
+    var id;
     it('s able to join a session as moderator', function() {
-      var id;
       page.usernameInput.sendKeys('Arya');
       page.startBtn.click();
       page.goBtn.click();
+      browser.sleep(3000);
 
       browser.getCurrentUrl().then(function(url){
         id = url.split('/')[5];
@@ -60,6 +61,7 @@ describe('Main View', function() {
             page.joinModeratorOpt.click();
             page.sessionIdInput.sendKeys(id);
             page.joinBtn.click();
+            browser.sleep(3000);
 
             browser.getCurrentUrl().then(function(path){
               expect(path).toBe(config.DOMAIN +'/#/sessions/' + id);
@@ -76,10 +78,10 @@ describe('Main View', function() {
     });
 
     it('s able to join a session as player', function() {
-      var id;
       page.usernameInput.sendKeys('Arya');
       page.startBtn.click();
       page.goBtn.click();
+      browser.sleep(3000);
 
       browser.getCurrentUrl().then(function(url){
         id = url.split('/')[5];
@@ -95,6 +97,7 @@ describe('Main View', function() {
             page.usernameInput_.sendKeys('Cersei');
             page.sessionIdInput.sendKeys(id);
             page.joinBtn.click();
+            browser.sleep(3000);
 
             browser.getCurrentUrl().then(function(path){
               expect(path).toBe(config.DOMAIN +'/#/sessions/' + id);
@@ -116,6 +119,7 @@ describe('Main View', function() {
       page.joinBtn.click();
       browser.getCurrentUrl().then(function(path){
         expect(path).toMatch('#/sessions/');
+        browser.sleep(3000);
         expect(page.modal.getText()).toBe("Session does not exist")
         page.modalBtn.click();
         expect(browser.getCurrentUrl()).toBe(config.DOMAIN + "/#/");

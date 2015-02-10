@@ -10,7 +10,7 @@ describe('Footer', function() {
     browser.get('/');
   });
 
-  it('s able to share via facebook', function() {
+  it('s able to share via facebook', function(done) {
     page.fbBtn.click();
     var appWindow = browser.getWindowHandle();
     browser.getAllWindowHandles().then(function (handles) {
@@ -21,12 +21,13 @@ describe('Footer', function() {
         expect(browser.getCurrentUrl()).toMatch('facebook.com');
         browser.driver.close().then(function () {
           browser.switchTo().window(appWindow);
+          done();
         });
       });
     });
   });
 
-  it('s able to share via twitter', function() {
+  it('s able to share via twitter', function(done) {
     page.twitterBtn.click();
     var appWindow = browser.getWindowHandle();
     browser.getAllWindowHandles().then(function (handles) {
@@ -40,12 +41,13 @@ describe('Footer', function() {
 
         browser.driver.close().then(function () {
           browser.switchTo().window(appWindow);
+          done();
         });
       });
     });
   });
 
-  it('s able to share via linkedin', function() {
+  it('s able to share via linkedin', function(done) {
     page.linkedInBtn.click();
     var appWindow = browser.getWindowHandle();
     browser.getAllWindowHandles().then(function (handles) {
@@ -56,6 +58,7 @@ describe('Footer', function() {
         expect(browser.getCurrentUrl()).toMatch('linkedin.com');
         browser.driver.close().then(function () {
           browser.switchTo().window(appWindow);
+          done();
         });
       });
     });

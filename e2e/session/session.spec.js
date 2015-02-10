@@ -14,6 +14,7 @@ describe('Session View', function() {
     page.usernameInput.sendKeys('Arya');
     page.startBtn.click();
     page.goBtn.click();
+    browser.sleep(3000);
     browser.getCurrentUrl().then(function(url){
       id = url.split('/')[5];
       expect(url).toMatch('#/sessions/');
@@ -29,12 +30,13 @@ describe('Session View', function() {
     });
   });
 
-  iit('s able to view moderator and players list', function(){
+  it('s able to view moderator and players list', function(){
     browser.get('/');
     browser.waitForAngular();
     page.usernameInput.sendKeys('Arya');
     page.startBtn.click();
     page.goBtn.click();
+    browser.sleep(3000);
     expect(page.userList.count()).toBe(1);
 
     browser.get('/');
@@ -43,6 +45,7 @@ describe('Session View', function() {
     page.moderatorOpt.click();
     page.startBtn.click();
     page.goBtn.click();
+    browser.sleep(3000);
     expect(page.moderatorsList.count()).toBe(1);
   });
 
@@ -103,6 +106,7 @@ describe('Session View', function() {
       page.moderatorOpt.click();
       page.startBtn.click();
       page.goBtn.click();
+      browser.sleep(3000);
 
       page.descriptionInput.sendKeys('This is an story');
       page.clearBtn.click();
@@ -117,6 +121,7 @@ describe('Session View', function() {
       page.moderatorOpt.click();
       page.startBtn.click();
       page.goBtn.click();
+      browser.sleep(3000);
       page.descriptionInput.sendKeys('This is an story');
 
       browser.driver.executeScript('window.open();');
