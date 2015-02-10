@@ -70,21 +70,25 @@ describe('sockets', function() {
     client1.emit('newSession');
   });
 
-  it('saves players and observers', function(done) {
+  it('saves players and moderators', function(done) {
     client1.on('sessionCreated', function(sessionId){
       client1.emit('joinSession', {id: sessionId, username:'player1', userType: 'player'});
-      client2.emit('joinSession', {id: sessionId, username:'observer1', userType: 'observer'});
 
-      client2.on('updateUsers', function(data){
-        data.players[0].username.should.be.exactly('player1');
-        data.observers[0].username.should.be.exactly('observer1');
-        done();
+      client1.once('joinedSession', function(){
+        client2.emit('joinSession', {id: sessionId, username:'moderator1', userType: 'moderator'});
+        client2.once('joinedSession', function(){
+          client2.on('updateUsers', function(data){
+            data.players[0].username.should.be.exactly('player1');
+            data.moderators[0].username.should.be.exactly('moderator1');
+            done();
+          });
+        });
       });
     });
     client1.emit('newSession');
   });
 
-  it('sends observers and players list', function(done) {
+  it('sends moderators and players list', function(done) {
     client1.emit('joinSession', {id:'not-existing-id'});
 
     client1.on('errorMsg', function(data){
@@ -135,11 +139,13 @@ describe('sockets', function() {
       client1.emit('joinSession', {id: id, username: 'Tester', userType: 'player'});
       client2.emit('joinSession', {id: id, username: 'Another tester', userType: 'player'});
 
-      client1.emit('updateDescription', {id: id, description: 'Hello'});
-      client2.on('descriptionUpdated', function(data){
-        data.should.be.exactly('Hello');
-        done();
-      })
+      client2.once('joinedSession', function(){
+        client2.on('descriptionUpdated', function(data){
+          data.should.be.exactly('Hello');
+          done();
+        });
+        client1.emit('updateDescription', {id: id, description: 'Hello'});
+      });
     });
   });
 
@@ -165,22 +171,22 @@ describe('sockets', function() {
   });
 
   it('emits to reveal votes when all clients has voted', function(done) {
-    client1.emit('newSession');
-
     client1.on('sessionCreated', function(id){
-
       client1.emit('joinSession', {id: id, username: 'Tester', userType: 'player'});
-      client2.emit('joinSession', {id: id, username: 'Another tester', userType: 'player'});
-
-      client1.emit('vote', {id: id, userId: client1.id, vote: 4 });
-      client2.emit('vote', {id: id, userId: client2.id, vote: 5 });
-
-      client2.once('updateVotes', function(data){
-          data[client1.id].should.be.exactly(4);
-          data[client2.id].should.be.exactly(5);
-          done();
+      client1.once('joinedSession', function(){
+        client2.emit('joinSession', {id: id, username: 'Another tester', userType: 'player'});
+        client2.once('joinedSession', function(){
+          client2.on('updateVotes', function(data){
+            data[client1.id].should.be.exactly(4);
+            data[client2.id].should.be.exactly(5);
+            done();
+          });
+          client1.emit('vote', {id: id, userId: client1.id, vote: 4 });
+          client2.emit('vote', {id: id, userId: client2.id, vote: 5 });
+        });
       });
-    }.bind(this));
+    });
+    client1.emit('newSession');
   });
 
   it('emits clear votes after clearing a session', function(done) {
@@ -190,11 +196,12 @@ describe('sockets', function() {
       client1.emit('joinSession', {id: id, username: 'Tester', userType: 'player'});
       client2.emit('joinSession', {id: id, username: 'Another tester', userType:'player'});
 
-      client1.emit('clearSession', {id: id});
-
-      client2.on('clearVotes', function(data){
-        done();
-      })
+      client2.once('joinedSession', function(){
+        client2.on('clearVotes', function(data){
+          done();
+        });
+        client1.emit('clearSession', {id: id});
+      });
     });
   });
 
@@ -222,18 +229,22 @@ describe('sockets', function() {
   it('updates votes after a client leaves', function(done) {
     client1.emit('newSession');
     client1.on('sessionCreated', function(id){
-
       client1.emit('joinSession', {id: id, username: 'Tester', userType: 'player'});
       client2.emit('joinSession', {id: id, username: 'Another tester', userType: 'player'});
 
-      client2.emit('vote', {id: id, userId: client2.id, vote: 5 });
+      client2.once('joinedSession', function(){
+        client1.emit('vote', {id: id, userId: client1.id, vote: 7 });
+        client2.emit('vote', {id: id, userId: client2.id, vote: 5 });
 
-      client2.emit('leaveSession', {id: id, username: 'Another tester', userType: 'player'});
+        client1.once('updateVotes', function(data){
+          client1.on('updateVotes', function(data){
+            var votesLength = _.keys(data).length
+            votesLength.should.be.exactly(1);
+            done();
+          });
 
-      client1.on('updateVotes', function(data){
-        var votesLength = _.keys(data).length
-        votesLength.should.be.exactly(0);
-        done();
+          client2.emit('leaveSession', {id: id, username: 'Another tester', userType: 'player'});
+        });
       });
     });
   });
