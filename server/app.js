@@ -7,16 +7,17 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var express = require('express');
-var config = require('./config/environment');
+var config  = require('./config/environment');
 
 // Setup server
-var app = express();
+var app    = express();
 var server = require('http').createServer(app);
 
 var socketio = require('socket.io')(server, {
   serveClient: (config.env != 'development') ? false : true,
   path: '/socket.io-client'
 });
+
 require('./config/socketio')(socketio);
 require('./config/express')(app);
 require('./routes')(app);

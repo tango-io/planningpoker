@@ -26,7 +26,7 @@ function onJoinSession(io, socket, data) {
   if(!data.username || !data.userType){ return socket.emit('errorMsg', {message: "Missing information"}); }
 
   socket.join(data.id);
-  var userTypes = { "player": "players", "observer": "observers" }
+  var userTypes = { player: "players", observer: "observers" }
   rooms[data.id][userTypes[data.userType]].push({username: data.username, userType: data.userType, socketId: socket.id});
   socket.emit('joinedSession', {id: socket.id, userType: data.userType, description: rooms[data.id].description, voteValues: rooms[data.id].voteValues});
 

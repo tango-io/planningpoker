@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pokerestimateApp')
-.controller('SessionCtrl', function (socket, $scope, $location, $routeParams, $modal, userService, $rootScope) {
+.controller('SessionCtrl', function (socket, $scope, $location, $routeParams, $modal, userService) {
   $scope.init = function(){
     $scope.url         = $location.$$absUrl;
     $scope.socket      = socket.socket;
