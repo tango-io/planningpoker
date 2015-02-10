@@ -24,7 +24,7 @@ include ../templates/header.jade
           .large-6.columns
             button.small.button(ng-click="clearVotes()") Clear Votes
             button.small.button(ng-click="revealVotes()") Show Votes
-        .row.row-with-padding(hide-for="observer" model="userType")
+        .row.row-with-padding(hide-for="moderator" model="userType")
           .large-12.large-centered.columns
             .button-bar
               ul.button-group
@@ -45,16 +45,16 @@ include ../templates/header.jade
                  td(ng-class="{active: player.socketId == id}")
                    i.fa.fa-check(ng-show="player.voted")
                  td(ng-class="{active: player.socketId == id}") {{votes[player.socketId]}}
-        .row(ng-show="observers.length")
+        .row(ng-show="moderators.length")
           .large-12.large-centered.columns
-            h5 Observers
+            h5 Moderators
             table
               thead
                 tr
                   th Name
               tbody
-                tr(ng-repeat="observer in observers")
-                 td(ng-class="{active: observer.socketId == id}") {{observer.username}}
+                tr(ng-repeat="moderator in moderators")
+                 td(ng-class="{active: moderator.socketId == id}") {{moderator.username}}
         hr
         .row.share
           .large-12.large-centered.columns

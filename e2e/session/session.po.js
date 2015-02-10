@@ -40,9 +40,9 @@ var MainPage = function() {
   this.usernameModalInput = this.modal.element(by.model('username'));
   this.modalBtn = this.modal.element(by.buttonText('OK'));
 
- this.observerOpt = element(by.cssContainingText('.start option', 'Observer'));
- this.observersList = element.all(by.repeater('observer in observers'));
- this.firstObserver= element(by.repeater('observer in observers').row(0).column('username'));
+ this.moderatorOpt = element(by.cssContainingText('.start option', 'Scrum Master \/ Moderator'));
+ this.moderatorsList = element.all(by.repeater('moderator in moderators'));
+ this.firstObserver= element(by.repeater('moderator in moderators').row(0).column('username'));
  this.numbersList = element(by.css('[ng-repeat = "vote in voteValues]"'));
 };
 

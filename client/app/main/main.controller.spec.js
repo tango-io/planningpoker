@@ -49,10 +49,10 @@ describe('Controller: MainCtrl', function () {
 
   it('sets userType in service before start session', inject(function (userService) {
     spyOn(userService, 'setUser');
-    scope.userType = "observer";
+    scope.userType = "moderator";
     scope.username = "tester";
     scope.startSession();
-    expect(userService.setUser).toHaveBeenCalledWith({ username : 'tester', userType : 'observer' });
+    expect(userService.setUser).toHaveBeenCalledWith({ username : 'tester', userType : 'moderator' });
   }));
 
   it('goes to vote values start session', inject(function ($location) {

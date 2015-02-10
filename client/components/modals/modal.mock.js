@@ -17,7 +17,7 @@ angular.module('modalMock', [])
       open: {
         result: {
           then: function(cb) {
-            return cb({username: 'tester', userType: 'observer'});
+            return cb({username: 'tester', type: 'moderator'});
           }
         }
       },

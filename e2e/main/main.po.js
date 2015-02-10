@@ -26,7 +26,12 @@ var MainPage = function() {
   this.sessionError = element.all(by.css('form[name="joinSessionForm"] span.error')).last();;
 
   this.playersList = element.all(by.repeater('player in players'));
-  this.observersList = element.all(by.repeater('observer in observers'));
+  this.moderatorsList = element.all(by.repeater('moderator in moderators'));
+
+  this.moderatorOpt = element(by.cssContainingText('.start option', 'Scrum Master \/ Moderator'));
+  this.playerOpt = element(by.cssContainingText('.start option', 'Player'));
+
+  this.joinModeratorOpt = element(by.cssContainingText('.join option', 'Scrum Master \/ Moderator'));
 };
 
 module.exports = new MainPage();
