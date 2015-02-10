@@ -15,11 +15,12 @@ angular.module('pokerestimateApp')
     if($scope.username){
      $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId, userType: $scope.userType});
     }else{
-      $scope.userType = "player";
+      $scope.type = "player";
       var modalInstance = $modal.open({templateUrl: 'app/templates/modals/username.html', keyboard:false, scope: this});
       modalInstance.result.then(function (data) {
         $scope.username = data.username;
-        $scope.userType = data.userType;
+        $scope.userType = data.type;
+        userService.setUser({username: data.username, userType: data.userType});
         $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId, userType: data.userType});
       });
     }

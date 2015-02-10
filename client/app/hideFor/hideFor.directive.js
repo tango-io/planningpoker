@@ -1,12 +1,15 @@
 'use strict';
 
 angular.module('pokerestimateApp')
-.directive('hideFor', ['userService', 'removeElement', function (userService, removeElement) {
+.directive('hideFor', ['removeElement', function (removeElement) {
   return {
     restrict: 'A',
     link: function (scope, element, attrs) {
       var roles = attrs.hideFor.split(' ');
-      var hideFor = _.contains(roles, userService.getUser().userType);
+
+      scope.$watch(attrs.model, function(newVal){
+
+      var hideFor = _.contains(roles, scope[attrs.model]);
 
       if (hideFor) {
         angular.forEach(element.children(), function (child) {
@@ -14,6 +17,7 @@ angular.module('pokerestimateApp')
         });
         removeElement(element);
       }
+      })
     }
   };
 }]).constant('removeElement', function(element){
