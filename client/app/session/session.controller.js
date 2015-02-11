@@ -68,6 +68,7 @@ angular.module('pokerestimateApp')
       $scope.points    = _.groupBy(votes);
       //Show unanimous message only when all votes match and is more than one player
       $scope.unanimous = _.keys($scope.points).length == 1 && _.keys(votes).length > 1 ? true : false;
+      $scope.finalVote = _.keys($scope.points)[0];
     }
   };
 

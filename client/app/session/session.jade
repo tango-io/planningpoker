@@ -6,15 +6,17 @@ include ../templates/header.jade
         .row
           .large-8.columns
             h5 Your username: {{currentUser.username}}
-            label Story description
+            label What are we pointing?
             textarea(ng-model="description" ng-keyup="updateDescription()" ng-disabled="currentUser.type == 'player'")
           .large-4.columns.statics(ng-show="showVotes")
             h5  Statics
-            h3.success(ng-show="unanimous") Consensus!!!
+            h3.success(ng-show="unanimous") Harmonious, final point is:
+              span {{finalVote}}
+            h3.error(ng-show="!unanimous") The team disagrees
             table
               thead
                 tr
-                  th Points
+                  th Point
                   th Votes
               tbody
                 tr(ng-repeat="(point, votes) in points")
@@ -22,9 +24,8 @@ include ../templates/header.jade
                   td {{votes.length}}
         .row(hide-for="player" model="currentUser.type")
           .large-6.columns
-            button.small.button(ng-click="clearVotes()") Clear Votes
-            button.small.button(ng-click="revealVotes()") Show Votes
         .row.row-with-padding(hide-for="moderator" model="currentUser.type")
+            button.small.button(ng-click="clearVotes()") Play Again
           .large-12.large-centered.columns
             .button-bar
               ul.button-group
@@ -38,7 +39,7 @@ include ../templates/header.jade
                 tr
                   th Name
                   th Voted
-                  th Points
+                  th Point
               tbody
                 tr(ng-repeat="player in players")
                  td(ng-class="{active: player.id == currentUser.id}") {{player.username}}
