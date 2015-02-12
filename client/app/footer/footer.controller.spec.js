@@ -28,12 +28,12 @@ describe('Controller: FooterCtrl', function () {
 
   it('should call open method with the correct arguments sharing via twitter', inject(function ($window) {
     scope.share(event, 'twitter');
-    expect($window.open).toHaveBeenCalledWith("http://twitter.com/share?url="+ event.currentTarget.href +"&text="+ text, 'twitter', 'width=500, height=450, left=267.5, top=104');
+    expect($window.open).toHaveBeenCalledWith("http://twitter.com/share?url="+ event.currentTarget.href +"&text="+ text, 'twitter', jasmine.any(String));
   }));
 
   it('should call open  method with the correct arguments sharing via linked in', inject(function ($window) {
     scope.share(event, 'linkedin');
-    expect($window.open).toHaveBeenCalledWith("http://www.linkedin.com/shareArticle?mini=true&url="+encodedPath+"&title="+text+"&summary="+description+"&source="+encodedPath, 'linkedin', 'width=500, height=450, left=267.5, top=104');
+    expect($window.open).toHaveBeenCalledWith("http://www.linkedin.com/shareArticle?mini=true&url="+encodedPath+"&title="+text+"&summary="+description+"&source="+encodedPath, 'linkedin', jasmine.any(String));
   }));
 
   it('should call share method from FB ui method with the correct arguments sharing via facebook', inject(function ($window, FB) {
