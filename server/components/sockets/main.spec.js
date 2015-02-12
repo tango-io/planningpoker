@@ -59,7 +59,7 @@ describe('sockets', function() {
 
   it('emits an error if client does not send correct information', function(done) {
     client1.on('sessionCreated', function(sessionId){
-      client2.emit('joinSession', {id:sessionId, username: 'tester'});
+      client2.emit('joinSession', {roomId:sessionId, username: 'tester'});
 
       client2.on('errorMsg', function(data){
         data.message.should.be.exactly("Missing information");
@@ -72,10 +72,10 @@ describe('sockets', function() {
 
   it('saves players and moderators', function(done) {
     client1.on('sessionCreated', function(sessionId){
-      client1.emit('joinSession', {id: sessionId, username:'player1', userType: 'player'});
+      client1.emit('joinSession', {roomId: sessionId, username:'player1', type: 'player'});
 
       client1.once('joinedSession', function(){
-        client2.emit('joinSession', {id: sessionId, username:'moderator1', userType: 'moderator'});
+        client2.emit('joinSession', {roomId: sessionId, username:'moderator1', type: 'moderator'});
         client2.once('joinedSession', function(){
           client2.on('updateUsers', function(data){
             data.players[0].username.should.be.exactly('player1');
@@ -89,7 +89,7 @@ describe('sockets', function() {
   });
 
   it('sends moderators and players list', function(done) {
-    client1.emit('joinSession', {id:'not-existing-id'});
+    client1.emit('joinSession', {roomId:'not-existing-id'});
 
     client1.on('errorMsg', function(data){
       data.message.should.be.exactly("Session does not exist")
@@ -101,10 +101,10 @@ describe('sockets', function() {
     client1.emit('newSession');
     client1.on('sessionCreated', function(id){
 
-      client1.emit('joinSession', {id: id, username: 'Tester', userType: 'player'});
+      client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
 
       client1.on('updateUsers', function(){
-        client2.emit('joinSession', {id: id, username: 'Another tester', userType: 'player'});
+        client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
 
         client1.on('hideVotes', function(data){
           done();
@@ -117,11 +117,11 @@ describe('sockets', function() {
     client1.emit('newSession');
     client1.on('sessionCreated', function(id){
 
-      client1.emit('joinSession', {id: id, username: 'Tester', userType: 'player'});
+      client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
 
       client1.on('updateUsers', function(data){
 
-        client2.emit('joinSession', {id: id, username: 'Another tester', userType: 'player'});
+        client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
         client1.on('updateUsers', function(data){
           data.players[0].username.should.be.exactly('Tester');
           data.players[1].username.should.be.exactly('Another tester');
@@ -136,8 +136,8 @@ describe('sockets', function() {
 
     client1.on('sessionCreated', function(id){
 
-      client1.emit('joinSession', {id: id, username: 'Tester', userType: 'player'});
-      client2.emit('joinSession', {id: id, username: 'Another tester', userType: 'player'});
+      client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
+      client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
 
       client2.once('joinedSession', function(){
         client2.on('descriptionUpdated', function(data){
@@ -152,10 +152,10 @@ describe('sockets', function() {
   it('updates vote flag when a user votes', function(done) {
     client1.emit('newSession');
     client1.on('sessionCreated', function(id){
-      client1.emit('joinSession', {id: id, username: 'Tester', userType:'player'});
+      client1.emit('joinSession', {roomId: id, username: 'Tester', type:'player'});
 
       client1.once('updateUsers', function(data){
-        client2.emit('joinSession', {id: id, username: 'Another tester', userType: 'player'});
+        client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
 
         client2.once('updateUsers', function(data){
 
@@ -172,9 +172,9 @@ describe('sockets', function() {
 
   it('emits to reveal votes when all clients has voted', function(done) {
     client1.on('sessionCreated', function(id){
-      client1.emit('joinSession', {id: id, username: 'Tester', userType: 'player'});
+      client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
       client1.once('joinedSession', function(){
-        client2.emit('joinSession', {id: id, username: 'Another tester', userType: 'player'});
+        client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
         client2.once('joinedSession', function(){
           client2.on('updateVotes', function(data){
             data[client1.id].should.be.exactly(4);
@@ -193,8 +193,8 @@ describe('sockets', function() {
     client1.emit('newSession');
     client1.on('sessionCreated', function(id){
 
-      client1.emit('joinSession', {id: id, username: 'Tester', userType: 'player'});
-      client2.emit('joinSession', {id: id, username: 'Another tester', userType:'player'});
+      client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
+      client2.emit('joinSession', {roomId: id, username: 'Another tester', type:'player'});
 
       client2.once('joinedSession', function(){
         client2.on('clearVotes', function(data){
@@ -209,13 +209,13 @@ describe('sockets', function() {
     client1.emit('newSession');
     client1.on('sessionCreated', function(id){
 
-      client1.emit('joinSession', {id: id, username: 'Tester', userType: 'player'});
+      client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
 
       client1.once('updateUsers', function(data){
-        client2.emit('joinSession', {id: id, username: 'Another tester', userType: 'player'});
+        client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
 
         client1.once('updateUsers', function(data){
-          client2.emit('leaveSession', {id: id, username: 'Another tester', userType: 'player'});
+          client2.emit('leaveSession', {roomId: id, username: 'Another tester', type: 'player'});
 
           client1.once('updateUsers', function(data){
             data.players.length.should.be.exactly(1);
@@ -229,8 +229,8 @@ describe('sockets', function() {
   it('updates votes after a client leaves', function(done) {
     client1.emit('newSession');
     client1.on('sessionCreated', function(id){
-      client1.emit('joinSession', {id: id, username: 'Tester', userType: 'player'});
-      client2.emit('joinSession', {id: id, username: 'Another tester', userType: 'player'});
+      client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
+      client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
 
       client2.once('joinedSession', function(){
         client1.emit('vote', {id: id, userId: client1.id, vote: 7 });
@@ -243,7 +243,7 @@ describe('sockets', function() {
             done();
           });
 
-          client2.emit('leaveSession', {id: id, username: 'Another tester', userType: 'player'});
+          client2.emit('leaveSession', {id: id, username: 'Another tester', type: 'player'});
         });
       });
     });
