@@ -24,17 +24,16 @@ describe('Controller: SessionCtrl', function () {
   describe('Sessions controller', function(){
 
     it('initialize variables on calling init', inject(function ($location, socket, userService, $routeParams, $modal) {
-      $location.path('/sessions/sessionId');
       spyOn(userService, 'getUser').andReturn(userService.fakeResponses.getFakeUser());
+      $location.path('/sessions/sessionId');
+      socket.on = socket.onFake;
       scope.init();
       expect(scope.url).toEqual($location.$$absUrl + "sessions/sessionId");
-      expect(scope.socket).toEqual(socket.socket);
       expect(scope.voteValues).toEqual(userService.fakeResponses.getFakeValues());
       expect(scope.sessionId).toEqual($routeParams.id);
-      expect(scope.sessionId).toEqual($routeParams.id);
       expect(userService.getUser).toHaveBeenCalled();
-      expect(scope.username).toEqual(userService.fakeResponses.getFakeUser().username);
-      expect(scope.userType).toEqual(userService.fakeResponses.getFakeUser().userType);
+      expect(scope.currentUser.username).toEqual(userService.fakeResponses.getFakeUser().username);
+      expect(scope.currentUser.type).toEqual(userService.fakeResponses.getFakeUser().type);
       expect(scope.votes).toEqual({});
     }));
 
@@ -48,13 +47,13 @@ describe('Controller: SessionCtrl', function () {
     }));
 
     it('emits leave session if location.patch changes', inject(function ($location, socket) {
-      spyOn(socket.socket, 'emit');
+      spyOn(socket, 'emit');
       $location.path('/')
-      expect(socket.socket.emit).not.toHaveBeenCalledWith('leaveSession');
+      expect(socket.emit).not.toHaveBeenCalledWith('leaveSession');
     }));
 
-    it('sets the listener for socket events', inject(function () {
-      spyOn(scope, 'clearSession');
+    it('sets the listener for socket events', inject(function (socket) {
+      socket.on = socket.onFake;
       spyOn(scope.listeners, 'onDescriptionUpdated');
       spyOn(scope.listeners, 'onJoinedSession');
       spyOn(scope.listeners, 'onUpdateUsers');
@@ -71,66 +70,65 @@ describe('Controller: SessionCtrl', function () {
     }));
 
     it('emit join session it user have a username', inject(function (socket) {
-      spyOn(socket.socket, 'emit');
+      spyOn(socket, 'emit');
       scope.init();
-      expect(socket.socket.emit).not.toHaveBeenCalledWith('joinSession');
-      scope.username = 'Tester';
+      expect(socket.emit).not.toHaveBeenCalledWith('joinSession');
+      scope.currentUser.username = 'Tester';
       scope.init();
-      expect(socket.socket.emit).not.toHaveBeenCalledWith('joinSession');
+      expect(socket.emit).not.toHaveBeenCalledWith('joinSession');
     }));
 
     it('emits update description in updateDescription function', inject(function (socket) {
-      scope.init();
-      spyOn(socket.socket, 'emit');
-
-      scope.userType = 'moderator';
+      spyOn(socket, 'emit');
+      scope.currentUser= {type:'moderator'};
       scope.sessionId = 'sessionId';
-
-      scope.updateDescription("This is an update for description");
-      expect(socket.socket.emit).toHaveBeenCalledWith('updateDescription', { id : 'sessionId', description : 'this is a description' });
+      scope.description = "This is an update for description";
+      scope.updateDescription();
+      expect(socket.emit).toHaveBeenCalledWith('updateDescription', { id : 'sessionId', description : 'This is an update for description' });
     }));
 
     it('does not emit update description in updateDescription function if user is a player', inject(function (socket) {
       scope.init();
-      spyOn(socket.socket, 'emit');
+      spyOn(socket, 'emit');
 
-      scope.userType = 'player';
+      scope.type = 'player';
       scope.sessionId = 'sessionId';
 
       scope.updateDescription("This is an update for description");
-      expect(socket.socket.emit).not.toHaveBeenCalled();
+      expect(socket.emit).not.toHaveBeenCalled();
     }));
 
-    it('sets username and emits session id after setting username in modal', inject(function ($modal) {
+    it('sets username and emits session id after setting username in modal', inject(function ($modal, userService, socket, $location) {
       $modal.open.andReturn($modal.fakeResponses.open);
-      spyOn(scope.listeners, 'onJoinedSession');
+      spyOn(socket, 'emit');
       scope.init();
-
       expect($modal.open).toHaveBeenCalled();
-      expect(scope.username).toBe('tester');
-      expect(scope.userType).toBe('moderator');
-      expect(scope.listeners.onJoinedSession).toHaveBeenCalled();
+      expect(scope.currentUser.username).toBe('tester');
+      expect(scope.currentUser.type).toBe('moderator');
+      expect(socket.emit).toHaveBeenCalledWith('joinSession', {roomId : undefined, username : 'tester', type : 'moderator' });
     }));
 
     it('does not emit vote if show votes is true ', inject(function (socket) {
-      spyOn(socket.socket, 'emit');
+      spyOn(socket, 'emit');
       scope.showVotes = true;
-      expect(socket.socket.emit).not.toHaveBeenCalled();
+      expect(socket.emit).not.toHaveBeenCalled();
     }));
 
     it('sets description and id on joined session function', inject(function () {
+      scope.init();
       scope.listeners.onJoinedSession({id: 1, description: "This is a description"});
       expect(scope.description).toEqual('This is a description');
-      expect(scope.id).toEqual(1);
+      expect(scope.currentUser.id).toEqual(1);
     }));
 
     it('sets players, moderators, and current user on updateUsers function', inject(function () {
-      scope.id = 1;
-      scope.listeners.onUpdateUsers({players:[{socketId: 1, username: 'Daenerys'}, {socketId: 2, username: 'Drogo'}], moderators: [{socketId: 4, username: 'Viserys'}]});
+      scope.init();
+      scope.currentUser.id = 1;
+      scope.listeners.onUpdateUsers({players:[{id: 1, username: 'Daenerys'}, {id: 2, username: 'Drogo'}], moderators: [{id: 4, username: 'Viserys'}]});
       expect(scope.currentUser.username).toEqual('Daenerys');
-      expect(scope.players).toEqual([{socketId: 1, username: 'Daenerys'}, {socketId: 2, username: 'Drogo'}]);
-      expect(scope.moderators).toEqual([{socketId: 4, username: 'Viserys'}]);
-      scope.listeners.onUpdateUsers({moderators:[{socketId: 1, username: 'Daenerys'}, {socketId: 2, username: 'Drogo'}], players: [{socketId: 4, username: 'Viserys'}]});
+      expect(scope.players).toEqual([{id: 1, username: 'Daenerys'}, {id: 2, username: 'Drogo'}]);
+      expect(scope.moderators).toEqual([{id: 4, username: 'Viserys'}]);
+      scope.listeners.onUpdateUsers({moderators:[{id: 1, username: 'Daenerys'}, {id: 2, username: 'Drogo'}], players: [{id: 4, username: 'Viserys'}]});
       expect(scope.currentUser.username).toEqual('Daenerys');
     }));
 
@@ -140,10 +138,11 @@ describe('Controller: SessionCtrl', function () {
     }));
 
     it('update votes on updateVotes function', inject(function () {
-      scope.listeners.onUpdateVotes({socketId: 4});
+      scope.init();
+      scope.listeners.onUpdateVotes({id: 4});
       expect(scope.showVotes).toEqual(true);
-      expect(scope.votes).toEqual({socketId: 4});
-      expect(scope.consensus).toEqual(false);
+      expect(scope.votes).toEqual({id: 4});
+      expect(scope.unanimous).toEqual(false);
     }));
 
     it('does not show votes if votes are empty', inject(function () {
@@ -151,30 +150,32 @@ describe('Controller: SessionCtrl', function () {
       expect(scope.showVotes).toEqual(false);
     }));
 
-    it('does not show consensus if there is only one vote or votes does not match', inject(function () {
-      scope.listeners.onUpdateVotes({socketId: 3});
-      expect(scope.consensus).toEqual(false);
-      scope.listeners.onUpdateVotes({socketId: 4, otherSocketId: 3, anotherSocketId: 3});
-      expect(scope.consensus).toEqual(false);
+    it('does not show unanimous if there is only one vote or votes does not match', inject(function () {
+      scope.init();
+      scope.listeners.onUpdateVotes({id: 3});
+      expect(scope.unanimous).toEqual(false);
+      scope.listeners.onUpdateVotes({id: 4, otherSocketId: 3, anotherSocketId: 3});
+      expect(scope.unanimous).toEqual(false);
     }));
 
-    it('shows consensus if there is all votes matches', inject(function ($location) {
-      scope.listeners.onUpdateVotes({socketId: 3, otherSocketId: 3, anotherSocketId: 3});
-      expect(scope.consensus).toEqual(true);
+    it('shows unanimous if there is all votes matches', inject(function ($location) {
+      scope.init();
+      scope.listeners.onUpdateVotes({id: 3, otherSocketId: 3, anotherSocketId: 3});
+      expect(scope.unanimous).toEqual(true);
     }));
 
     it('clears variables related to session in clear session function', inject(function () {
       scope.description = "some description";
-      scope.consensus = true;
+      scope.unanimous = true;
       scope.points = true;
-      scope.players = [{socketId: 'socketId', username: 'tester', voted:true}];
-      scope.votes = {socketId: 4};
+      scope.players = [{id: 'id', username: 'tester', voted:true}];
+      scope.votes = {id: 4};
       scope.showVotes = true;
 
       scope.clearSession();
 
       expect(scope.description).toEqual("");
-      expect(scope.consensus).toEqual(false);
+      expect(scope.unanimous).toEqual(false);
       expect(scope.points).toEqual(false);
       expect(scope.players[0].voted).toEqual(false);
       expect(scope.votes).toEqual({});
@@ -182,19 +183,17 @@ describe('Controller: SessionCtrl', function () {
     }));
 
     it('sets votes values  and emit vote event in set vote function', inject(function (socket) {
-      spyOn(socket.socket, 'emit');
-      scope.init();
-      scope.id = 'socketId';
+      spyOn(socket, 'emit');
       scope.sessionId = 'sessionId';
+      scope.currentUser = {id: 4};
       scope.showVotes = false;
-      scope.currentUser = {};
       scope.votes = {};
 
       scope.setVote(4);
 
       expect(scope.currentUser.voted).toEqual(true);
-      expect(scope.votes[scope.id]).toEqual(4);
-      expect(socket.socket.emit).toHaveBeenCalledWith('vote', {id: 'sessionId', userId: 'socketId', vote:4});
+      expect(scope.votes[scope.currentUser.id]).toEqual(4);
+      expect(socket.emit).toHaveBeenCalledWith('vote', {id: 'sessionId', userId: 4, vote:4});
     }));
   });
 });

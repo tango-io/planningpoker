@@ -7,9 +7,9 @@ angular.module('pokerestimateApp')
     link: function (scope, element, attrs) {
       var roles = attrs.hideFor.split(' ');
 
+      // Wait until value is set
       scope.$watch(attrs.model, function(newVal){
-
-      var hideFor = _.contains(roles, scope[attrs.model]);
+      var hideFor = _.contains(roles, newVal);
 
       if (hideFor) {
         angular.forEach(element.children(), function (child) {

@@ -14,5 +14,6 @@ module.exports = {
             8080,
 
   FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
-  GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_ID
+  GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_ID,
+  DOMAIN: process.env.DOMAIN
 };

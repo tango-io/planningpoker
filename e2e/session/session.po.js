@@ -9,7 +9,7 @@ var MainPage = function() {
   this.container = element(by.css('.main-content'));
   this.form = this.container.element(by.css('form[name="startSessionForm"]'));
 
-  this.usernameInput = this.container.element(by.model('username'));
+  this.usernameInput = this.container.element(by.model('currentUser.username'));
   this.startBtn = element(by.buttonText('Start'));
 
   this.usernameText = element(by.css('h5.ng-binding'));;
@@ -28,7 +28,7 @@ var MainPage = function() {
 
   this.descriptionInput = element(by.model('description'));
 
-  this.usernameInput_ = this.container.element(by.model('username_'));
+  this.usernameInput_ = this.container.element(by.model('currentUser_.username'));
   this.sessionIdInput = this.container.element(by.model('sessionId'));
   this.joinBtn = element(by.buttonText('Join'));
 

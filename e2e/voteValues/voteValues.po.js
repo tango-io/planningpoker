@@ -9,7 +9,7 @@ var MainPage = function() {
   this.container = element(by.css('.main-content'));
   this.form = this.container.element(by.css('form[name="startSessionForm"]'));
 
-  this.usernameInput = this.container.element(by.model('username'));
+  this.usernameInput = this.container.element(by.model('currentUser.username'));
   this.startBtn = element(by.buttonText('Start'));
 
   //this.voteListRow = element(by.repeater('vote in voteValues').row(0).column('vote.value'));
@@ -25,7 +25,7 @@ var MainPage = function() {
   this.voteListFirst = element(by.css('ul.button-group li:first-child button'));
   this.votesFirst = element(by.css('tr[ng-repeat="player in players"] td:last-child'));
 
-  this.usernameInput_ = this.container.element(by.model('username_'));
+  this.usernameInput_ = this.container.element(by.model('currentUser_.username'));
   this.sessionIdInput = this.container.element(by.model('sessionId'));
   this.joinBtn = element(by.buttonText('Join'));
 

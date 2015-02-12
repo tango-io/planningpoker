@@ -20,6 +20,7 @@ module.exports = function(app) {
 
   app.locals.FACEBOOK_APP_ID= config.FACEBOOK_APP_ID;
   app.locals.GOOGLE_ANALYTICS_ID= config.GOOGLE_ANALYTICS_ID;
+  app.locals.DOMAIN = config.DOMAIN;
 
   app.set('view engine', 'jade');
   app.set('views', config.root + '/client/');

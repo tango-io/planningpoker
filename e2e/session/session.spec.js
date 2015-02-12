@@ -90,6 +90,7 @@ describe('Session View', function() {
       page.moderatorOpt.click();
       page.startBtn.click();
       page.goBtn.click();
+      browser.sleep(3000);
 
       expect(page.clearBtn.isPresent()).toBe(true);
       expect(page.showBtn.isPresent()).toBe(true);
