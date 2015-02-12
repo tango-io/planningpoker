@@ -72,7 +72,7 @@ angular.module('pokerestimateApp')
   };
 
   $scope.updateDescription = function(){
-    if($scope.type == 'moderator'){
+    if($scope.currentUser.type == 'moderator'){
       socket.emit('updateDescription', {id: $scope.sessionId, description: $scope.description});
     }
   };

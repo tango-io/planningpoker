@@ -64,13 +64,13 @@ describe('Controller: MainCtrl', function () {
   }));
 
   it('does not join a session without username or session id', inject(function (userService, socket) {
-    spyOn(socket.socket, 'emit');
+    spyOn(socket, 'emit');
     spyOn(userService, 'setUser');
     scope.startSession();
     expect(userService.setUser).not.toHaveBeenCalledWith();
     scope.currentUser_.username = "tester";
     expect(userService.setUser).not.toHaveBeenCalledWith();
-    expect(socket.socket.emit).not.toHaveBeenCalledWith('joinSession');
+    expect(socket.emit).not.toHaveBeenCalledWith('joinSession');
   }));
 
   it('sets submitted_ to true after attempting starting a session without username or session id', inject(function () {

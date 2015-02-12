@@ -41,9 +41,9 @@ describe('Controller: VoteValuesCtrl', function () {
 
   it('emits new session in start session', inject(function (socket) {
     scope.init();
-    spyOn(socket.socket, 'emit');
+    spyOn(socket, 'emit');
     scope.go();
-    expect(socket.socket.emit).toHaveBeenCalledWith('newSession', defaultValues);
+    expect(socket.emit).toHaveBeenCalledWith('newSession', defaultValues);
   }));
 
   it('remove values from list', inject(function ($location) {
