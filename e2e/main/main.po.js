@@ -8,7 +8,7 @@
 var MainPage = function() {
   this.container = element(by.css('.main-content'));
   this.form = this.container.element(by.css('form[name="startSessionForm"]'));
-  this.usernameInput = this.container.element(by.model('username'));
+  this.usernameInput = this.container.element(by.model('currentUser.username'));
 
   this.usernameError = this.form.element(by.css('span.error'));
   this.startBtn = element(by.buttonText('Start'));
@@ -18,7 +18,7 @@ var MainPage = function() {
 
   this.goBtn = element(by.buttonText('Go ->'));
 
-  this.usernameInput_ = this.container.element(by.model('username_'));
+  this.usernameInput_ = this.container.element(by.model('currentUser_.username'));
   this.sessionIdInput = this.container.element(by.model('sessionId'));
   this.joinBtn = element(by.buttonText('Join'));
 
