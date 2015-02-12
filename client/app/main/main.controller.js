@@ -3,6 +3,7 @@
 angular.module('pokerestimateApp')
 .controller('MainCtrl', function ($scope, $location, userService) {
 
+  //Setting default options and clearing user in userservice
   $scope.init = function(){
     userService.setUser({username: ""});
     $scope.username = "";
@@ -15,6 +16,7 @@ angular.module('pokerestimateApp')
       userService.setUser({username: $scope.username, userType: $scope.userType});
       $location.path('/voteValues');
     }else{
+      //Set submitted to true to show form errors in start form
       $scope.submitted = true;
     }
   };
@@ -24,6 +26,7 @@ angular.module('pokerestimateApp')
       userService.setUser({username: $scope.username_, userType: $scope.userType_});
       $location.path('/sessions/' + $scope.sessionId);
     }else{
+      //Set submitted_ to true to show errors in join form
       $scope.submitted_ = true;
     }
   };
