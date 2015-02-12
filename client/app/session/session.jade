@@ -10,7 +10,7 @@ include ../templates/header.jade
             textarea(ng-model="description" ng-keyup="updateDescription()" ng-disabled="type == 'player'")
           .large-4.columns.statics(ng-show="showVotes")
             h5  Statics
-            h3.success(ng-show="consensus") Consensus!!!
+            h3.success(ng-show="unanimous") Consensus!!!
             table
               thead
                 tr

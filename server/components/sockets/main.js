@@ -16,9 +16,9 @@ exports.register = function(socket, io) {
 };
 
 function onNewSession(socket, data) {
-  var roomid = uuid.v1();
-  rooms[roomid] = {players: [], moderators:[], votes: {}, voteValues: data};
-  socket.emit('sessionCreated', roomid);
+  var roomId = uuid.v1();
+  rooms[roomId] = {players: [], moderators:[], votes: {}, voteValues: data};
+  socket.emit('sessionCreated', roomId);
 };
 
 function onJoinSession(io, socket, data) {
@@ -26,10 +26,12 @@ function onJoinSession(io, socket, data) {
   if(!data.username || !data.type){ return socket.emit('errorMsg', {message: "Missing information"}); }
 
   socket.join(data.roomId);
+  //Save user in room
   rooms[data.roomId][data.type + "s"].push({id: socket.id, username:data.username, type:data.type});
-  socket.emit('joinedSession', {id: socket.id, type: data.type, description: rooms[data.roomId].description, voteValues: rooms[data.roomId].voteValues});
+  //Send previous information from room
+  socket.emit('joinedSession', {id: socket.id, description: rooms[data.roomId].description, voteValues: rooms[data.roomId].voteValues});
 
-  io.to(data.roomId).emit('hideVotes');
+  io.to(data.roomId).emit('hideVotes'); //hide votes if more users joined to room
   io.to(data.roomId).emit('updateUsers', {players: rooms[data.roomId].players, moderators: rooms[data.roomId].moderators});
 };
 
@@ -40,15 +42,16 @@ function updateDescription(socket, data) {
 
 function onVote(io, socket, data) {
   var user = _.findWhere(rooms[data.id].players, {id: data.userId});
-  user.voted = true;
   rooms[data.id].votes[data.userId] = data.vote;
+  user.voted = true;
 
   var numVotes = _.groupBy(rooms[data.id].players, 'voted').true.length;
 
-  //if all user has voted
+  //Reveal votes if all user has voted
   rooms[data.id].revealed = numVotes ==  rooms[data.id].players.length;
   if(rooms[data.id].revealed){ io.to(data.id).emit('updateVotes', rooms[data.id].votes); }
 
+  //update users to see what users already vote
   socket.broadcast.to(data.id).emit('updateUsers', {players: rooms[data.id].players, moderators: rooms[data.id].moderators});
 };
 
@@ -65,16 +68,16 @@ function onClearSession(socket, data){
 
 function onLeaveSession(socket){
   var match, union;
-  var roomId = _.findKey(rooms, function(room){
+  var roomId = _.findKey(rooms, function(room){//Find user in rooms
     union = _.union(room.players, room.moderators);
     match = _.findWhere(union, {id: socket.id});
     if(match){ return room;}
   });
 
-  if(roomId && union.length > 1){
-    rooms[roomId][match.type + "s"]= _.reject(rooms[roomId][match.type + "s"], {id: socket.id});
+  if(roomId && union.length > 1){ //Remove user from rooms and delete rooms if is the last user in the room
+    rooms[roomId][match.type + "s"]= _.reject(rooms[roomId][match.type + "s"], {id: socket.id}); //remove user from room
     socket.broadcast.to(roomId).emit('updateUsers', {players: rooms[roomId].players, moderators: rooms[roomId].moderators});
-    if(match.type == 'player'){
+    if(match.type == 'player'){ //delete votes from user, and update clients
       delete rooms[roomId].votes[socket.id];
       socket.broadcast.to(roomId).emit('updateVotes', rooms[roomId].votes);
     }
