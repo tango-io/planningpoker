@@ -5,7 +5,6 @@ TangoSource Poker Estimate
 
 This project aims to help SCRUM estimation process by using [Planning Poker technique](http://es.wikipedia.org/wiki/Planning_poker) 
 It allows to create game sessions for your sprint estimation where you and all of your teammates can participate in real time.
-More about our project [here]()
 
 ##Requirements
 - [Node >= 0.10.0](http://nodejs.org/)
