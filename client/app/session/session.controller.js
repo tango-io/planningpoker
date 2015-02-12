@@ -3,25 +3,21 @@
 angular.module('pokerestimateApp')
 .controller('SessionCtrl', function (socket, $scope, $location, $routeParams, $modal, userService) {
   $scope.init = function(){
-    $scope.url         = $location.$$absUrl;
-    $scope.socket      = socket.socket;
-    $scope.voteValues  = userService.getVoteValues();
+    $scope.voteValues  = userService.getVoteValues(); //get default points
     $scope.sessionId   = $routeParams.id;
+    $scope.socket      = socket.socket;
     $scope.votes       = {};
-    $scope.currentUser = {};
-    $scope.username    = userService.getUser().username;
-    $scope.userType    = userService.getUser().userType;
+    $scope.currentUser = userService.getUser();
 
-    if($scope.username){
-     $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId, userType: $scope.userType});
+    if($scope.currentUser.username){
+     $scope.currentUser.roomId = $scope.sessionId;
+     $scope.socket.emit('joinSession', $scope.currentUser);
     }else{
-      $scope.type = "player";
+      $scope.userType = "player";//default option in modal
       var modalInstance = $modal.open({templateUrl: 'app/templates/modals/username.html', keyboard:false, scope: this});
       modalInstance.result.then(function (data) {
-        $scope.username = data.username;
-        $scope.userType = data.type;
-        userService.setUser({username: data.username, userType: data.userType});
-        $scope.socket.emit('joinSession', {username: $scope.username, id: $scope.sessionId, userType: data.userType});
+        $scope.currentUser = {username: data.username, type: data.type};
+        $scope.socket.emit('joinSession', {username: $scope.currentUser.username, id: $scope.sessionId, type: data.type});
       });
     }
 
@@ -40,7 +36,7 @@ angular.module('pokerestimateApp')
     },
 
     onJoinedSession: function (data){
-      $scope.id  = data.id;
+      $scope.currentUser.id  = data.id;
       $scope.description = data.description;
       $scope.voteValues = data.voteValues;
     },
@@ -48,12 +44,13 @@ angular.module('pokerestimateApp')
     onUpdateUsers:  function (data){
       $scope.players = data.players;
       $scope.moderators = data.moderators;
-      $scope.currentUser = _.findWhere(_.union(data.players, data.moderators), {socketId: $scope.id});
+      //
+      $scope.currentUser = _.findWhere(_.union(data.players, data.moderators), {id: $scope.currentUser.id});
     },
 
     onError: function(){
       var modalInstance = $modal.open({templateUrl: 'app/templates/modals/error.html', keyboard:false});
-      modalInstance.result.then(function (username) {
+      modalInstance.result.then(function () {
         $location.path("/");
       });
     },
@@ -71,7 +68,7 @@ angular.module('pokerestimateApp')
   };
 
   $scope.updateDescription = function(){
-    if($scope.userType == 'moderator'){
+    if($scope.type == 'moderator'){
       $scope.socket.emit('updateDescription', {id: $scope.sessionId, description: $scope.description});
     }
   };
@@ -97,8 +94,8 @@ angular.module('pokerestimateApp')
   $scope.setVote = function(vote){
     if(!$scope.showVotes){
       $scope.currentUser.voted = true;
-      $scope.votes[$scope.id] = vote;
-      $scope.socket.emit('vote', {id:$scope.sessionId, userId: $scope.id, vote:vote});
+      $scope.votes[$scope.currentUser.id] = vote;
+      $scope.socket.emit('vote', {id:$scope.sessionId, userId: $scope.currentUser.id, vote:vote});
     }
   };
 
