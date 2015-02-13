@@ -111,7 +111,7 @@ angular.module('pokerestimateApp')
   };
 
   //remove user from room when they leave the page
-  //$scope.$on('$locationChangeStart', function (event, next, current) {
-  //  socket.emit('leaveSession');
-  //});
+  $scope.$on('$locationChangeStart', function (event, next, current) {
+    socket.emit('leaveSession');
+  });
 });
