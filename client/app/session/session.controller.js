@@ -104,6 +104,10 @@ angular.module('pokerestimateApp')
     }
   };
 
+  $scope.setCopyMsg = function(msg){
+    $scope.copyMsg = msg;
+  };
+
   //remove user from room when they leave the page
   $scope.$on('$locationChangeStart', function (event, next, current) {
     socket.emit('leaveSession');
