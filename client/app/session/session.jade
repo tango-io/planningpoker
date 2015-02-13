@@ -1,67 +1,63 @@
 include ../templates/header.jade
 .container(ng-controller="SessionCtrl" ng-init="init()")
-  .main-content
-    .row.row-with-padding
-      .large-10.large-centered.columns
-        .row
-          .large-8.columns
-            h5 Your username: {{currentUser.username}}
-            label What are we pointing?
-            textarea(ng-model="description" ng-keyup="updateDescription()" ng-disabled="currentUser.type == 'player'")
-          .large-4.columns.statics(ng-show="showVotes")
-            h5  Statics
-            h3.success(ng-show="unanimous") Harmonious, final point is:
-              span {{finalVote}}
-            h3.error(ng-show="!unanimous") The team disagrees
-            table
-              thead
-                tr
-                  th Point
-                  th Votes
-              tbody
-                tr(ng-repeat="(point, votes) in points")
-                  td {{point}}
-                  td {{votes.length}}
-        .row(hide-for="player" model="currentUser.type")
-          .large-6.columns
-        .row.row-with-padding(hide-for="moderator" model="currentUser.type")
-            button.small.button(ng-click="clearVotes()") Play Again
-          .large-12.large-centered.columns
-            .button-bar
-              ul.button-group
-                li(ng-repeat="vote in voteValues")
-                  button.tiny.button(href="#" ng-click="setVote(vote.value)" ng-disabled="showVotes") {{vote.label}}
-        .row(ng-show="players.length")
-          .large-12.large-centered.columns
-            h5 Players
-            table
-              thead
-                tr
-                  th Name
-                  th Voted
-                  th Point
-              tbody
-                tr(ng-repeat="player in players")
-                 td(ng-class="{active: player.id == currentUser.id}") {{player.username}}
-                 td(ng-class="{active: player.id == currentUser.id}")
-                   i.fa.fa-check(ng-show="player.voted")
-                 td(ng-class="{active: player.id == currentUser.id}") {{votes[player.id]}}
-        .row(ng-show="moderators.length")
-          .large-12.large-centered.columns
-            h5 Moderators
-            table
-              thead
-                tr
-                  th Name
-              tbody
-                tr(ng-repeat="moderator in moderators")
-                 td(ng-class="{active: moderator.socketId == id}") {{moderator.username}}
-        hr
-        .row.share
-          .large-12.large-centered.columns
-            h5 Share this link with your team:
-            a(ng-href="{{url}}") {{url}}
-            h5 Or session Id :
-            a(ng-href="{{url}}") {{sessionId}}
+  .row.row-with-padding
+    .large-3.columns
+      h5 Your username: {{currentUser.username}}
+      .row(ng-show="players.length")
+        .large-12.large-centered.columns
+          h5 Players
+          table
+            thead
+              tr
+                th Name
+                th Voted
+                th Point
+            tbody
+              tr(ng-repeat="player in players")
+               td(ng-class="{active: player.id == currentUser.id}") {{player.username}}
+               td(ng-class="{active: player.id == currentUser.id}")
+                 i.fa.fa-check(ng-show="player.voted")
+               td(ng-class="{active: player.id == currentUser.id}") {{votes[player.id]}}
+      .row(ng-show="moderators.length")
+        .large-12.large-centered.columns
+          h5 Moderators
+          table
+            thead
+              tr
+                th Name
+            tbody
+              tr(ng-repeat="moderator in moderators")
+               td(ng-class="{active: moderator.socketId == id}") {{moderator.username}}
+    .large-9.columns
+      .row
+        .large-8.columns
+          label What are we pointing?
+          textarea(ng-model="description" ng-keyup="updateDescription()" ng-disabled="currentUser.type == 'player'")
+          button.small.button.large-12(ng-click="clearVotes()" hide-for="player" model="currentUser.type") Play Again
+          .button-bar(hide-for="moderator" model="currentUser.type")
+            ul.button-group
+              li(ng-repeat="vote in voteValues")
+                button.tiny.button(href="#" ng-click="setVote(vote.value)" ng-disabled="showVotes") {{vote.label}}
+        .large-4.columns.statics(ng-show="showVotes")
+          h5  Details
+          h4.success(ng-show="unanimous") Harmonious, final point is:
+            span {{finalVote}}
+          h4.error(ng-show="!unanimous") The team disagrees
+          table
+            thead
+              tr
+                th Point
+                th Votes
+            tbody
+              tr(ng-repeat="(point, votes) in points")
+                td {{point}}
+                td {{votes.length}}
+  .row.share
+    hr
+    .large-12.large-centered.columns
+      h5 Share this link with your team:
+      a(ng-href="{{url}}") {{url}}
+      h5 Or session Id :
+      a(ng-href="{{url}}") {{sessionId}}
 
 include ../templates/footer.jade
