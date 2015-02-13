@@ -37,6 +37,15 @@ buttonColor = #556270;
 buttonColorS = #4ECDC4;
 active = rgba(78, 205, 196, 0.31);
 
+// Component styles are injected through grunt
+// injector
+@import 'footer/footer.styl';
+@import 'main/main.styl';
+@import 'mixins.styl';
+@import 'session/session.styl';
+@import 'voteValues/voteValues.styl';
+// endinjector
+
 //Global style
 
 div[ng-view]
@@ -48,29 +57,11 @@ div[ng-view]
 
 .button.showy
   background: buttonColorS
-  &[disabled]
-    background: desaturate(buttonColorS, 30%)
-    &:hover
-      background: desaturate(buttonColorS, 30%)
-  &:hover
-    background: saturate(lighten(buttonColorS, 20%), 30%)
-  &:active
-    background: lighten(buttonColorS, 20%)
-  &:focus
-    background: lighten(buttonColorS, 20%)
+  buttonEvents(buttonColorS)
 
 button.button
   background: buttonColor
-  &[disabled]
-    background: desaturate(buttonColor, 30%)
-    &:hover
-      background: desaturate(buttonColor, 30%)
-  &:hover
-    background: saturate(lighten(buttonColor, 20%), 30%)
-  &:active
-    background: lighten(buttonColor, 20%)
-  &:focus
-    background: lighten(buttonColor, 20%)
+  buttonEvents(buttonColor)
 
 .row-with-padding
   padding-top:30px
@@ -93,12 +84,4 @@ table
 
 .error
   color: red
-
-// Component styles are injected through grunt
-// injector
-@import 'footer/footer.styl';
-@import 'main/main.styl';
-@import 'session/session.styl';
-@import 'voteValues/voteValues.styl';
-// endinjector
 

@@ -1,0 +1,11 @@
+buttonEvents(color)
+  &[disabled]
+    background: desaturate(color, 30%)
+    &:hover
+      background: desaturate(color, 30%)
+  &:hover
+    background: saturate(lighten(color, 20%), 30%)
+  &:active
+    background: lighten(color, 20%)
+  &:focus
+    background: lighten(color, 20%)
