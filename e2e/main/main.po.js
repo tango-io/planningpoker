@@ -6,7 +6,7 @@
 'use strict';
 
 var MainPage = function() {
-  this.container = element(by.css('.main-content'));
+  this.container = element(by.css('#container'));
   this.form = this.container.element(by.css('form[name="startSessionForm"]'));
   this.usernameInput = this.container.element(by.model('currentUser.username'));
 
@@ -16,7 +16,7 @@ var MainPage = function() {
   this.modal = element(by.css('.reveal-modal h3'));
   this.modalBtn = element(by.css('.reveal-modal button'));
 
-  this.goBtn = element(by.buttonText('Go ->'));
+  this.goBtn = element(by.buttonText('Go'));
 
   this.usernameInput_ = this.container.element(by.model('currentUser_.username'));
   this.sessionIdInput = this.container.element(by.model('sessionId'));
