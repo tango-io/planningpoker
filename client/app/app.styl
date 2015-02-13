@@ -10,8 +10,14 @@
   font-weight: normal
   font-style: normal
 
-// Component styles are injected through grunt
+//Variables
+  //pokerBlue = #08C7CF;
+  //pokerBlue = #333;
+  pokerBlue = #0A6CA8;
+  aqua = #00C7B5;
+  aquaLight = #C1EFEB;
 
+// Component styles are injected through grunt
 // injector
 @import 'footer/footer.styl';
 @import 'main/main.styl';
@@ -19,11 +25,30 @@
 @import 'voteValues/voteValues.styl';
 // endinjector
 
-//include-html-table-classes= include-html-classes;
-//table-line-height= rem-calc(1);
+//Foundation overwrites
+.row-with-padding
+  padding-top:30px
+
+//button.button
+//  background: aqua
+//  &[disabled]
+//    background: #73CFC6
+//    &:hover
+//      background: #2fe4d3
+//  &:hover
+//    background: #2fe4d3
+//  &:active
+//    background: #2fe4d3
+//  &:focus
+//    background: #2fe4d3
+
+table
+  border: none
+  tbody tr td
+    line-height: .7rem
 
 .active
-  background: lightsteelblue !important
+  background: aquaLight
 
 .success
   color: green
@@ -31,7 +56,3 @@
 .error
   color: red
 
-//Foundation overwrites
-.row-with-padding
-  grid-row()
-  padding-top:30px

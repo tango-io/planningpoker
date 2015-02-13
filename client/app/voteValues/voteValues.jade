@@ -18,7 +18,7 @@ include ../templates/header.jade
                   td
                     input(type="text" ng-model="vote.value")
                   td
-                    button.btn.tiny
+                    button.button.tiny
                       i.fa.fa-trash(ng-click="removeValue(vote.value)")
                 tr
                   td
@@ -26,10 +26,10 @@ include ../templates/header.jade
                   td
                     input(type="text" ng-model="newVote.value")
                   td
-                    button.btn.tiny
+                    button.button.tiny
                       i.fa.fa-plus(ng-click="addValue(newVote)")
         .row
           .large-2.columns.large-offset-8
-            Button(ng-click="go()") Go ->
+            button.button(ng-click="go()") Go ->
 
 include ../templates/footer.jade
