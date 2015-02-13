@@ -2,7 +2,6 @@ include ../templates/header.jade
 .container(ng-controller="SessionCtrl" ng-init="init()")
   .row.row-with-padding
     .large-3.columns
-      h5 Your username: {{currentUser.username}}
       .row(ng-show="players.length")
         .large-12.large-centered.columns
           h5 Players
