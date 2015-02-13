@@ -66,8 +66,10 @@ angular.module('pokerestimateApp')
       //Group points to get number of votes for each point
       $scope.showVotes = _.isEmpty(votes) ? false : true; //Show or hide statics  depending of existance of botes
       $scope.points    = _.groupBy(votes);
+
       //Show unanimous message only when all votes match and is more than one player
-      $scope.unanimous = _.keys($scope.points).length == 1 && _.keys(votes).length > 1 ? true : false;
+      $scope.showDetailsMsg = _.keys(votes).length > 1;
+      $scope.unanimous      = _.keys($scope.points).length == 1 && $scope.showDetailsMsg ? true : false;
     }
   };
 

@@ -41,7 +41,7 @@ include ../templates/header.jade
         .large-4.columns.statics(ng-show="showVotes")
           h5.title Details
           h4.success(ng-show="unanimous") Harmonious
-          h4.error(ng-show="!unanimous") Disagreement
+          h4.error(ng-show="!unanimous && showDetailsMsg") Disagreement
           table
             thead
               tr
