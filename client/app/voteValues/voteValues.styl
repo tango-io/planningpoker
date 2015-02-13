@@ -1,15 +1,16 @@
-.vote-values-container{
-  table tr input{
-    min-width: 85px
-    margin: 0
-    height: 30px
-  }
-  table button.button{
-    margin: 0
-    font-size: 15px
-    padding: 5px 10px
-  }
-  tr:last-child{
-    background: rgb(239, 239, 239);
-  }
-}
+.vote-values-container
+  table
+    tr
+      &:last-child
+        background: rgb(239, 239, 239);
+      td
+        margin: 0;
+        padding: 5px;
+      input
+        min-width: 85px
+        margin: 0
+        height: 30px
+    button.button
+      margin: 0
+      font-size: 15px
+      padding: 5px 10px

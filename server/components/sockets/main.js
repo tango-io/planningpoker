@@ -22,8 +22,16 @@ function onNewSession(socket, data) {
 };
 
 function onJoinSession(io, socket, data) {
-  if(!rooms[data.roomId]){ return socket.emit('errorMsg', {message: "Session does not exist"}); }
-  if(!data.username || !data.type){ return socket.emit('errorMsg', {message: "Missing information"}); }
+  if(!rooms[data.roomId]){
+  var roomId = uuid.v1();
+  rooms[roomId] = {players: [], moderators:[], votes: {}, voteValues: data};
+  socket.emit('sessionCreated', roomId);
+  data.roomId = roomId;
+  }else{
+    //return socket.emit('errorMsg', {message: "Session does not exist"}); 
+  }
+
+  if(!data.username || !data.type){ return socket.emit('errorMsg', {message: "Missing information"})};
 
   socket.join(data.roomId);
   //Save user in room

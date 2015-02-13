@@ -1,6 +1,6 @@
 include ../templates/header.jade
-.container(ng-controller="VoteValuesCtrl" ng-init="init()")
-  .main-content.vote-values-container
+#container(ng-controller="VoteValuesCtrl" ng-init="init()")
+  .vote-values-container
     .row.row-with-padding
       .large-10.large-centered.columns
         .row
@@ -28,8 +28,8 @@ include ../templates/header.jade
                   td
                     button.button.tiny
                       i.fa.fa-plus(ng-click="addValue(newVote)")
-        .row
-          .large-2.columns.large-offset-8
-            button.button(ng-click="go()") Go ->
+    .row
+      .large-2.columns.large-offset-8
+        button.button.showy(ng-click="go()") Go ->
 
 include ../templates/footer.jade

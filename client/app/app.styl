@@ -10,12 +10,89 @@
   font-weight: normal
   font-style: normal
 
-//Variables
-  //pokerBlue = #08C7CF;
-  //pokerBlue = #333;
-  pokerBlue = #0A6CA8;
-  aqua = #00C7B5;
-  aquaLight = #D6EEF5;
+//Colors
+steadyGray = #E9E9E9;
+route66    = #424242;
+highlight = route66;
+
+//Blue Theme
+//bannerColor = #0A6CA8;
+//buttonColor  = #3299BB;
+//active = rgba(10, 108, 168, 0.4);
+
+//Orange Theme
+//bannerColor    = route66;
+//buttonColor   = #FF9900;
+//blued = #F28D2B;
+//highlight2 = #f90;
+//active = rgba(255, 153, 0, 0.16);
+//.button-group
+//  button.button
+//    background: blued
+
+//Gray Theme
+bannerColor = #556270;
+highlight2 = #4ECDC4;
+buttonColor = #556270;
+buttonColorS = #4ECDC4;
+active = rgba(78, 205, 196, 0.31);
+
+//Global style
+
+div[ng-view]
+  height: 100%
+
+#container{
+  min-height: calc(100% - 220px);
+}
+
+.button.showy
+  background: buttonColorS
+  &[disabled]
+    background: desaturate(buttonColorS, 30%)
+    &:hover
+      background: desaturate(buttonColorS, 30%)
+  &:hover
+    background: saturate(lighten(buttonColorS, 20%), 30%)
+  &:active
+    background: lighten(buttonColorS, 20%)
+  &:focus
+    background: lighten(buttonColorS, 20%)
+
+button.button
+  background: buttonColor
+  &[disabled]
+    background: desaturate(buttonColor, 30%)
+    &:hover
+      background: desaturate(buttonColor, 30%)
+  &:hover
+    background: saturate(lighten(buttonColor, 20%), 30%)
+  &:active
+    background: lighten(buttonColor, 20%)
+  &:focus
+    background: lighten(buttonColor, 20%)
+
+.row-with-padding
+  padding-top:30px
+
+textarea[disabled],
+input[disabled]
+  background: steadyGray
+
+table
+  tbody tr td
+    line-height: .7rem
+  thead, tfoot
+    background: steadyGray
+
+.active
+  background: active;
+
+.success
+  color: green
+
+.error
+  color: red
 
 // Component styles are injected through grunt
 // injector
@@ -24,35 +101,4 @@
 @import 'session/session.styl';
 @import 'voteValues/voteValues.styl';
 // endinjector
-
-//Foundation overwrites
-.row-with-padding
-  padding-top:30px
-
-//button.button
-//  background: aqua
-//  &[disabled]
-//    background: #73CFC6
-//    &:hover
-//      background: #2fe4d3
-//  &:hover
-//    background: #2fe4d3
-//  &:active
-//    background: #2fe4d3
-//  &:focus
-//    background: #2fe4d3
-
-table
-  border: none
-  tbody tr td
-    line-height: .7rem
-
-.active
-  background: aquaLight
-
-.success
-  color: green
-
-.error
-  color: red
 
