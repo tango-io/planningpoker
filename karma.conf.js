@@ -21,6 +21,8 @@ module.exports = function(config) {
       'client/bower_components/lodash/dist/lodash.compat.js',
       'client/bower_components/angular-socket-io/socket.js',
       'client/bower_components/angular-foundation/mm-foundation.js',
+      'client/bower_components/ng-clip/src/ngClip.js',
+      'client/bower_components/zeroclipboard/dist/ZeroClipboard.js',
       'client/app/app.js',
       'client/app/**/*.js',
       'client/components/**/*.js',

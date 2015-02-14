@@ -1,8 +1,7 @@
 'use strict';
-
 var config = require('../../server/config/local.env');
 
-describe('Session View', function() {
+ddescribe('Session View', function() {
   var page;
   var id;
 
@@ -13,8 +12,9 @@ describe('Session View', function() {
 
     page.usernameInput.sendKeys('Arya');
     page.startBtn.click();
+    browser.waitForAngular();
     page.goBtn.click();
-    browser.sleep(3000);
+    browser.waitForAngular();
     browser.getCurrentUrl().then(function(url){
       id = url.split('/')[5];
       expect(url).toMatch('#/sessions/');
@@ -22,11 +22,19 @@ describe('Session View', function() {
   });
 
   it('s able to show data after entering a session', function() {
-    expect(page.usernameText.getText()).toEqual("Your username: Arya");
     expect(page.userList.count()).toEqual(1);
     expect(page.userRow.getText()).toEqual('Arya');
+    expect(page.votesList.count()).toEqual(9);
+  });
+
+  iit('s able to copy link and id to share session', function() {
     browser.getCurrentUrl().then(function(url){
-      expect(page.shareLink.getText()).toEqual(url);
+      expect(page.shareUrl.getAttribute('value')).toEqual(url);
+      expect(page.shareId.getAttribute('value')).toEqual(id);
+      page.shareUrlBtn.click();
+      expect(page.shareTooltip.getText()).toEqual('Copied')
+      page.shareIdBtn.click();
+      expect(page.shareTooltip.getText()).toEqual('Copied')
     });
   });
 
@@ -36,7 +44,7 @@ describe('Session View', function() {
     page.usernameInput.sendKeys('Arya');
     page.startBtn.click();
     page.goBtn.click();
-    browser.sleep(3000);
+    browser.waitForAngular();
     expect(page.userList.count()).toBe(1);
 
     browser.get('/');
@@ -45,17 +53,27 @@ describe('Session View', function() {
     page.moderatorOpt.click();
     page.startBtn.click();
     page.goBtn.click();
-    browser.sleep(3000);
+    browser.waitForAngular();
     expect(page.moderatorsList.count()).toBe(1);
   });
 
   it('s prompts username request if user does not have', function(){
     browser.getCurrentUrl().then(function(url){
-      browser.get(url);
-      expect(page.usernameModalInput.isDisplayed()).toBe(true);
-      page.usernameModalInput.sendKeys('Cersei');
-      page.modalBtn.click();
-      expect(page.usernameText.getText()).toEqual("Your username: Cersei");
+      browser.driver.executeScript('window.open();');
+      var appWindow = browser.getWindowHandle();
+      browser.getAllWindowHandles().then(function (handles) {
+        var newWindowHandle = handles[1];
+        browser.switchTo(newWindowHandle).window(newWindowHandle).then(function () {
+          browser.driver.executeScript('window.focus();');
+          browser.get(url);
+          expect(page.usernameModalInput.isDisplayed()).toBe(true);
+          page.usernameModalInput.sendKeys('Cersei');
+          page.moderatorModalOpt.click();
+          page.modalBtn.click();
+          expect(page.userRow.getText()).toEqual("Arya");
+          expect(page.firstModerator.getText()).toEqual("Cersei");
+        });
+      });
     });
   });
 
@@ -90,13 +108,12 @@ describe('Session View', function() {
       page.moderatorOpt.click();
       page.startBtn.click();
       page.goBtn.click();
-      browser.sleep(3000);
+      browser.waitForAngular();
 
       expect(page.clearBtn.isPresent()).toBe(true);
-      expect(page.showBtn.isPresent()).toBe(true);
       expect(page.numbersList.isPresent()).toBe(false);
       expect(page.descriptionInput.isEnabled()).toBe(true);
-      expect(page.firstObserver.getText()).toBe('Arya');
+      expect(page.firstModerator.getText()).toBe('Arya');
     });
 
     it('s able to clear session', function() {
@@ -107,7 +124,7 @@ describe('Session View', function() {
       page.moderatorOpt.click();
       page.startBtn.click();
       page.goBtn.click();
-      browser.sleep(3000);
+      browser.waitForAngular();
 
       page.descriptionInput.sendKeys('This is an story');
       page.clearBtn.click();
@@ -122,7 +139,7 @@ describe('Session View', function() {
       page.moderatorOpt.click();
       page.startBtn.click();
       page.goBtn.click();
-      browser.sleep(3000);
+      browser.waitForAngular();
       page.descriptionInput.sendKeys('This is an story');
 
       browser.driver.executeScript('window.open();');
