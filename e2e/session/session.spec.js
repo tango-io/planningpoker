@@ -25,9 +25,16 @@ ddescribe('Session View', function() {
     expect(page.userList.count()).toEqual(1);
     expect(page.userRow.getText()).toEqual('Arya');
     expect(page.votesList.count()).toEqual(9);
+  });
+
+  iit('s able to copy link and id to share session', function() {
     browser.getCurrentUrl().then(function(url){
       expect(page.shareUrl.getAttribute('value')).toEqual(url);
       expect(page.shareId.getAttribute('value')).toEqual(id);
+      page.shareUrlBtn.click();
+      expect(page.shareTooltip.getText()).toEqual('Copied')
+      page.shareIdBtn.click();
+      expect(page.shareTooltip.getText()).toEqual('Copied')
     });
   });
 
@@ -94,7 +101,7 @@ ddescribe('Session View', function() {
 
   describe('Session View for moderators', function() {
 
-    iit('s not able to vote or actions related', function(){
+    it('s not able to vote or actions related', function(){
       browser.get('/');
       browser.waitForAngular();
       page.usernameInput.sendKeys('Arya');

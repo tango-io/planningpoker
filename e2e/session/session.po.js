@@ -18,6 +18,9 @@ var MainPage = function() {
 
   this.shareUrl = element(by.model('url'));
   this.shareId = element(by.model('sessionId'));
+  this.shareUrlBtn = element.all(by.css('.share .button')).first();
+  this.shareIdBtn = element.all(by.css('.share .button')).last();
+  this.shareTooltip = element(by.css('.share span.tooltip'));
 
   this.numbers = element(by.repeater('vote in voteValues').row(0));
 
