@@ -17,7 +17,7 @@ angular.module('pokerestimateApp')
       if($scope.currentUser.sessionType == "pointing"){
         $location.path("/voteValues");
       }else{
-        socket.emit('newSession');
+        socket.emit('newSession', 'retrospective');
       }
     }else{
       //Set submitted to true to show form errors in start form

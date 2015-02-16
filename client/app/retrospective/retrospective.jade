@@ -1,5 +1,18 @@
 include ../templates/header.jade
-#container(ng-controller="RetrospectiveCtrl" ng-init="init()")
+#container.retrospective(ng-controller="RetrospectiveCtrl" ng-init="init()")
   .row.row-with-padding
-    h4 Holi
+    .large-3.columns
+      h5.title What went well?
+        button.button.tiny.showy
+          i.fa.fa-plus
+    .large-3.columns
+      h5.title What went bad?
+        button.button.tiny.showy
+          i.fa.fa-plus
+    .large-4.columns
+      h5.title What can we improve?
+        button.button.tiny.showy
+          i.fa.fa-plus
+    .large-2.columns
+      h5.title Players
 include ../templates/footer.jade

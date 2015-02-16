@@ -17,7 +17,11 @@ exports.register = function(socket, io) {
 
 function onNewSession(socket, data) {
   var roomId = uuid.v1();
-  rooms[roomId] = {players: [], moderators:[], votes: {}, voteValues: data};
+  if(data == 'retrospective'){
+    rooms[roomId] = {players: [], moderators:[], votes: {}, voteValues: data};
+  }else{
+    rooms[roomId] = {players: [], moderators:[], good: [], bad: [], improvements: []};
+  }
   socket.emit('sessionCreated', roomId);
 };
 
@@ -28,11 +32,17 @@ function onJoinSession(io, socket, data) {
   socket.join(data.roomId);
   //Save user in room
   rooms[data.roomId][data.type + "s"].push({id: socket.id, username:data.username, type:data.type});
-  //Send previous information from room
-  socket.emit('joinedSession', {id: socket.id, description: rooms[data.roomId].description, voteValues: rooms[data.roomId].voteValues});
 
-  io.to(data.roomId).emit('hideVotes'); //hide votes if more users joined to room
-  io.to(data.roomId).emit('updateUsers', {players: rooms[data.roomId].players, moderators: rooms[data.roomId].moderators});
+  //Send previous information from room
+  if(data.sessionType == 'retrospective'){
+    socket.emit('joinedSession', {id: socket.id, session:_.pick(rooms[data.roomId], 'good', 'bad', 'improvements')});
+    io.to(data.roomId).emit('updateUsers', {players: rooms[data.roomId].players, moderators: rooms[data.roomId].moderators});
+  }else{
+    socket.emit('joinedSession', {id: socket.id, description: rooms[data.roomId].description, voteValues: rooms[data.roomId].voteValues});
+
+    io.to(data.roomId).emit('hideVotes'); //hide votes if more users joined to room
+    io.to(data.roomId).emit('updateUsers', {players: rooms[data.roomId].players, moderators: rooms[data.roomId].moderators});
+  }
 };
 
 function updateDescription(socket, data) {
