@@ -1,34 +1,40 @@
 include ../templates/header.jade
 #container(ng-init="init()")
-  .row.row-with-padding
-    .large-4.large-centered.columns
-      form(name="startSessionForm" novalidate)
-        input(type="text" name="username" ng-model="currentUser.username" placeholder="Enter a username" required)
-        span.error(ng-show="submitted && startSessionForm.$invalid") Please enter a username
-  .row.start
-    .large-4.large-centered.columns
-      .row.collapse
-        .large-8.columns
-          select(ng-model="currentUser.type")
-            option(value="player") Player
-            option(value="moderator") Scrum Master / Moderator
-        .large-4.columns
-          button.button.showy.postfix(ng-click="startSession()") Start
-    hr
-  .row.row-with-padding
-    .large-4.large-centered.columns
-      form(name="joinSessionForm" novalidate)
-        input(type="text" name="username" ng-model="currentUser_.username" placeholder="Enter a username" required)
-        span.error(ng-show="submitted_ && joinSessionForm.username.$invalid") Please enter a username
-        input(type="text" name="sessionId" ng-model="sessionId" placeholder="Enter a session id" required)
-        span.error(ng-show="submitted_ && joinSessionForm.sessionId.$invalid") Please enter a session id
-  .row.join
-    .large-4.large-centered.columns
-      .row.collapse
-        .large-8.columns
-          select(ng-model="currentUser_.type")
-            option(value="player") Player
-            option(value="moderator") Scrum Master / Moderator
-        .large-4.columns
-          button.button.showy.postfix(ng-click="joinSession()") Join
+  .row
+    .large-5.columns.join
+      .row.row-with-padding
+        .large-10.large-centered.columns
+          h3 Join Session
+          form(name="joinSessionForm" novalidate)
+            input(type="text" name="username" ng-model="currentUser_.username" placeholder="Enter a username" required)
+            span.error(ng-show="submitted_ && joinSessionForm.username.$invalid") Please enter a username
+            input(type="text" name="sessionId" ng-model="sessionId" placeholder="Enter a session id" required)
+            span.error(ng-show="submitted_ && joinSessionForm.sessionId.$invalid") Please enter a session id
+            select(ng-model="currentUser.sessionType")
+              option(value="pointing") Pointing Session
+              option(value="retrospective") Retrospective Session
+          .row.collapse
+            .large-8.columns
+              select(ng-model="currentUser_.type")
+                option(value="player") Player
+                option(value="moderator") Scrum Master / Moderator
+            .large-4.columns
+              button.button.showy.postfix(ng-click="joinSession()") Join
+    .large-5.columns.start
+      .row.row-with-padding
+        .large-10.large-centered.columns
+          h3 Start Session
+          form(name="startSessionForm" novalidate)
+            input(type="text" name="username" ng-model="currentUser.username" placeholder="Enter a username" required)
+            span.error(ng-show="submitted && startSessionForm.$invalid") Please enter a username
+            select(ng-model="currentUser.sessionType")
+              option(value="pointing") Pointing Session
+              option(value="retrospective") Retrospective Session
+          .row.collapse
+            .large-8.columns
+              select(ng-model="currentUser.type")
+                option(value="player") Player
+                option(value="moderator") Scrum Master / Moderator
+            .large-4.columns
+              button.button.showy.postfix(ng-click="startSession()") Start
 include ../templates/footer.jade

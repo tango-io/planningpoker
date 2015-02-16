@@ -5,8 +5,8 @@ angular.module('pokerestimateApp')
 
   //Setting default options and clearing user in userservice
   $scope.init = function(){
-    $scope.currentUser  = {username:"", type:"player"};
-    $scope.currentUser_ = {username:"", type:"player"};
+    $scope.currentUser  = {username:"", type:"player", sessionType: 'pointing'};
+    $scope.currentUser_ = {username:"", type:"player", sessionType: 'pointing'};
     userService.setUser($scope.currentUser);
   };
 
