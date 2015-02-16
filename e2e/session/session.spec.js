@@ -72,6 +72,9 @@ ddescribe('Session View', function() {
           page.modalBtn.click();
           expect(page.userRow.getText()).toEqual("Arya");
           expect(page.firstModerator.getText()).toEqual("Cersei");
+          browser.driver.close().then(function () {
+            browser.switchTo().window(appWindow);
+          });
         });
       });
     });
@@ -89,7 +92,6 @@ ddescribe('Session View', function() {
     it('s not able to write description, clear or show votes', function() {
       page.numbers.click();
       expect(page.clearBtn.isPresent()).toBe(false);
-      expect(page.showBtn.isPresent()).toBe(false);
       expect(page.descriptionInput.isEnabled()).toBe(false);
     });
 
