@@ -27,7 +27,7 @@ ddescribe('Session View', function() {
     expect(page.votesList.count()).toEqual(9);
   });
 
-  iit('s able to copy link and id to share session', function() {
+  it('s able to copy link and id to share session', function() {
     browser.getCurrentUrl().then(function(url){
       expect(page.shareUrl.getAttribute('value')).toEqual(url);
       expect(page.shareId.getAttribute('value')).toEqual(id);
