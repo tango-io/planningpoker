@@ -18,9 +18,9 @@ exports.register = function(socket, io) {
 function onNewSession(socket, data) {
   var roomId = uuid.v1();
   if(data == 'retrospective'){
-    rooms[roomId] = {players: [], moderators:[], votes: {}, voteValues: data};
-  }else{
     rooms[roomId] = {players: [], moderators:[], good: [], bad: [], improvements: []};
+  }else{
+    rooms[roomId] = {players: [], moderators:[], votes: {}, voteValues: data};
   }
   socket.emit('sessionCreated', roomId);
 };

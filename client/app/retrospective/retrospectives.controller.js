@@ -19,6 +19,18 @@ angular.module('pokerestimateApp')
         socket.emit('joinSession', {roomId: $scope.sessionId, username: data.username, type: data.userType});
       });
     }
+
+    $scope.session = {good: [], bad: [], improvements:[]};
+    $scope.inputMode = {};
+  };
+
+  $scope.add = function(type){
+    $scope.session[type].push($scope.newEntry);
+    $scope.newEntry = "";
+  };
+
+  $scope.toggleInputMode = function(type){
+    $scope.inputMode[type] = !$scope.inputMode[type];
   };
 
   $scope.listeners = {
