@@ -10,7 +10,7 @@ include ../templates/header.jade
             span.error(ng-show="submitted_ && joinSessionForm.username.$invalid") Please enter a username
             input(type="text" name="sessionId" ng-model="sessionId" placeholder="Enter a session id" required)
             span.error(ng-show="submitted_ && joinSessionForm.sessionId.$invalid") Please enter a session id
-            select(ng-model="currentUser.sessionType")
+            select(ng-model="currentUser_.sessionType")
               option(value="pointing") Pointing Session
               option(value="retrospective") Retrospective Session
           .row.collapse
