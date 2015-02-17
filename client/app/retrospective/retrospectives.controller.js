@@ -20,7 +20,7 @@ angular.module('pokerestimateApp')
       });
     }
 
-    $scope.session = {good: [], bad: [], improvements:[]};
+    $scope.session = {good: ["sample"], bad: [], improvements:[]};
     $scope.inputMode = {};
   };
 
@@ -31,6 +31,23 @@ angular.module('pokerestimateApp')
 
   $scope.toggleInputMode = function(type){
     $scope.inputMode[type] = !$scope.inputMode[type];
+  };
+
+  $scope.remove = function(type, entry){
+    $scope.session[type] =  _.without($scope.session[type], entry);
+  };
+
+  $scope.edit = function(entry){
+    entry = "bal";
+    console.log('asldkjasd', entry, $scope.session.good);
+    //$scope.editEntry = entry;
+    //var modalInstance = $modal.open({templateUrl: 'app/templates/modals/entry.html', keyboard:false, scope: this});
+    //modalInstance.result.then(function (data) {
+    //  safeApply($scope, function(){
+    //    entry = data.editEntry;
+    //    console.log("klajsd", entry, $scope.session.good);
+    //  });
+    //});
   };
 
   $scope.listeners = {

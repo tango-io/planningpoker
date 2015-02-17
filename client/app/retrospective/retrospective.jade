@@ -5,10 +5,12 @@ include ../templates/header.jade
       h5.title What went well?
         button.button.tiny.showy(ng-click="toggleInputMode('good')")
           i.fa(ng-class="{'fa-plus': !inputMode.good, 'fa-minus': inputMode.good}")
-      input(type="text" ng-model="newEntry" placeholder="Some example..." ng-enter="add('good')" ng-show="inputMode.good")
+      textarea(type="text" ng-model="newEntry" placeholder="Some example..." ng-enter="add('good')" ng-show="inputMode.good")
       ul
         li(ng-repeat="entry in session.good track by $index")
-          {{entry}}
+          span {{entry}}
+          i.fa.fa-pencil(ng-click="edit(entry)")
+          i.fa.fa-times(ng-click="remove('good', entry)")
     .large-3.columns
       h5.title What went bad?
         button.button.tiny.showy
