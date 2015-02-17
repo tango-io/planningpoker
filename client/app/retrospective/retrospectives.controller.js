@@ -20,7 +20,7 @@ angular.module('pokerestimateApp')
       });
     }
 
-    $scope.session = {good: ["sample"], bad: [], improvements:[]};
+    //$scope.session = {good: ["sample"], bad: [], improvements:[]};
     $scope.inputMode = {};
     $scope.newEntry = {};
   };

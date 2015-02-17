@@ -8,7 +8,7 @@ include ../templates/header.jade
        textarea(ng-model="newEntry.good" placeholder="Some example..." ng-enter="add('good')" ng-show="inputMode.good")
       ul
         li(ng-repeat="entry in session.good track by $index")
-          span {{entry}}
+          span.left {{entry}}
           i.fa.fa-pencil(ng-click="edit($index, 'good')")
           i.fa.fa-times(ng-click="remove('good', entry)")
     .large-3.columns
@@ -31,6 +31,9 @@ include ../templates/header.jade
           span {{entry}}
           i.fa.fa-pencil(ng-click="edit($index, 'improvements')")
           i.fa.fa-times(ng-click="remove('improvements', entry)")
-    .large-2.columns
+    .large-2.columns.players
       h5.title Players
+      ul
+        li(ng-repeat="player in players")
+          span(ng-class="{active: player.id == currentUser.id}") {{player.username}}
 include ../templates/footer.jade

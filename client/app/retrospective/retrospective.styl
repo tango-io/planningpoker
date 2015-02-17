@@ -10,6 +10,11 @@
     list-style: none
     li
       width: 100%
+      clear: both
+      span
+        text-overflow: ellipsis
+        overflow: hidden
+        max-width: 79%
       i.fa
         margin: 5px;
         float: right
@@ -17,6 +22,12 @@
         &:hover
           cursor: pointer
           color: buttonColorS
+  .players
+    ul li span
+      width: 100%;
+      padding: 2px 4px;
+      display: block;
+      max-width: none;
 .entry-modal
   button
     margin-right: 10px
