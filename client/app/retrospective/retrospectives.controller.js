@@ -22,10 +22,11 @@ angular.module('pokerestimateApp')
 
     $scope.session = {good: ["sample"], bad: [], improvements:[]};
     $scope.inputMode = {};
+    $scope.newEntry = {};
   };
 
   $scope.add = function(type){
-    $scope.session[type].push($scope.newEntry);
+    $scope.session[type].push($scope.newEntry[type]);
     $scope.newEntry = "";
   };
 
