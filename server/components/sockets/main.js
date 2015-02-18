@@ -87,7 +87,7 @@ function onLeaveSession(socket){
   if(roomId && union.length > 1){ //Remove user from rooms and delete rooms if is the last user in the room
     rooms[roomId][match.type + "s"]= _.reject(rooms[roomId][match.type + "s"], {id: socket.id}); //remove user from room
     socket.broadcast.to(roomId).emit('updateUsers', {players: rooms[roomId].players, moderators: rooms[roomId].moderators});
-    if(match.type == 'player'){ //delete votes from user, and update clients
+    if(match.type == 'player' && rooms[roomId].votes){ //delete votes from user, and update clients
       delete rooms[roomId].votes[socket.id];
       socket.broadcast.to(roomId).emit('updateVotes', rooms[roomId].votes);
     }
