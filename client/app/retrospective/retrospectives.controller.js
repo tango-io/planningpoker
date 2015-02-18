@@ -16,18 +16,21 @@ angular.module('pokerestimateApp')
       var modalInstance = $modal.open({templateUrl: 'app/templates/modals/username.html', keyboard:false, scope: this});
       modalInstance.result.then(function (data) {
         $scope.currentUser = {username: data.username, type: data.userType};
-        socket.emit('joinSession', {roomId: $scope.sessionId, username: data.username, type: data.userType});
+        //socket.emit('joinSession', {roomId: $scope.sessionId, username: data.username, type: data.userType, sessionType: 'retrospective'});
       });
     }
 
-    //$scope.session = {good: ["sample"], bad: [], improvements:[]};
     $scope.inputMode = {};
     $scope.newEntry = {};
+    $scope.session = {good: [], bad:[], improvements:[]};
   };
 
   $scope.add = function(type){
-    $scope.session[type].push($scope.newEntry[type]);
-    $scope.newEntry = "";
+    if($scope.newEntry[type]){
+      $scope.session[type].push({text: $scope.newEntry[type]});
+      //socket.emit('newMessage', {id: $scope.sessionId, msg: {text: $scope.newEntry[type], username: $scope.currentUser.username}, type: type});
+      $scope.newEntry[type] = "";
+    }
   };
 
   $scope.toggleInputMode = function(type){
@@ -38,11 +41,11 @@ angular.module('pokerestimateApp')
     $scope.session[type] =  _.without($scope.session[type], entry);
   };
 
-  $scope.edit = function($index, type){
-    $scope.editEntry = $scope.session[type][$index];
+  $scope.edit = function(type, entry){
+    $scope.editEntry = entry.text;
     var modalInstance = $modal.open({templateUrl: 'app/templates/modals/entry.html', keyboard:false, scope: this});
     modalInstance.result.then(function (data) {
-        $scope.session[type][$index] = data.editEntry;
+      entry.text = data.editEntry;
     });
   };
 

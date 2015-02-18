@@ -7,9 +7,9 @@ include ../templates/header.jade
           i.fa(ng-class="{'fa-plus': !inputMode.good, 'fa-minus': inputMode.good}")
        textarea(ng-model="newEntry.good" placeholder="Some example..." ng-enter="add('good')" ng-show="inputMode.good")
       ul
-        li(ng-repeat="entry in session.good track by $index")
-          span.left {{entry}}
-          i.fa.fa-pencil(ng-click="edit($index, 'good')")
+        li(ng-repeat="entry in session.good")
+          span.left {{entry.text}}
+          i.fa.fa-pencil(ng-click="edit('good', entry)")
           i.fa.fa-times(ng-click="remove('good', entry)")
     .large-3.columns
       h5.title What went bad?
@@ -17,8 +17,8 @@ include ../templates/header.jade
           i.fa(ng-class="{'fa-plus': !inputMode.bad, 'fa-minus': inputMode.bad}")
       textarea(ng-model="newEntry.bad" placeholder="Some example..." ng-enter="add('bad')" ng-show="inputMode.bad")
       ul
-        li(ng-repeat="entry in session.bad track by $index")
-          span {{entry}}
+        li(ng-repeat="entry in session.bad")
+          span {{entry.text}}
           i.fa.fa-pencil(ng-click="edit($index, 'bad')")
           i.fa.fa-times(ng-click="remove('bad', entry)")
     .large-4.columns
@@ -27,10 +27,11 @@ include ../templates/header.jade
           i.fa(ng-class="{'fa-plus': !inputMode.improvements, 'fa-minus': inputMode.improvements}")
       textarea(ng-model="newEntry.improvements" placeholder="Some example..." ng-enter="add('improvements')" ng-show="inputMode.improvements")
       ul
-        li(ng-repeat="entry in session.improvements track by $index")
-          span {{entry}}
-          i.fa.fa-pencil(ng-click="edit($index, 'improvements')")
-          i.fa.fa-times(ng-click="remove('improvements', entry)")
+        li(ng-repeat="entry in session.improvements")
+          span {{entry.text}}
+          .right(ng-hide="entry.disable")
+            i.fa.fa-pencil(ng-click="edit($index, 'improvements')")
+            i.fa.fa-times(ng-click="remove('improvements', entry)")
     .large-2.columns.players
       h5.title Players
       ul
