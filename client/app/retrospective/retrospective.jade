@@ -9,8 +9,9 @@ include ../templates/header.jade
       ul
         li(ng-repeat="entry in session.good")
           span.left {{entry.text}}
-          i.fa.fa-pencil(ng-click="edit('good', entry)")
-          i.fa.fa-times(ng-click="remove('good', entry)")
+          .right(ng-hide="entry.disabled")
+            i.fa.fa-pencil(ng-click="edit('good', entry)")
+            i.fa.fa-times(ng-click="remove('good', entry)")
     .large-3.columns
       h5.title What went bad?
         button.button.tiny.showy(ng-click="toggleInputMode('bad')")
@@ -19,8 +20,9 @@ include ../templates/header.jade
       ul
         li(ng-repeat="entry in session.bad")
           span {{entry.text}}
-          i.fa.fa-pencil(ng-click="edit($index, 'bad')")
-          i.fa.fa-times(ng-click="remove('bad', entry)")
+          .right(ng-hide="entry.disabled")
+            i.fa.fa-pencil(ng-click="edit($index, 'bad')")
+            i.fa.fa-times(ng-click="remove('bad', entry)")
     .large-4.columns
       h5.title What can we improve?
         button.button.tiny.showy(ng-click="toggleInputMode('improvements')")
@@ -29,7 +31,7 @@ include ../templates/header.jade
       ul
         li(ng-repeat="entry in session.improvements")
           span {{entry.text}}
-          .right(ng-hide="entry.disable")
+          .right(ng-hide="entry.disabled")
             i.fa.fa-pencil(ng-click="edit($index, 'improvements')")
             i.fa.fa-times(ng-click="remove('improvements', entry)")
     .large-2.columns.players

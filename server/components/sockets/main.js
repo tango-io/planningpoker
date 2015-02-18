@@ -12,9 +12,9 @@ exports.register = function(socket, io) {
   socket.on('revealVotes', function(data){onRevealVotes(io, socket, data);});
   socket.on('clearSession', function(data){onClearSession(socket, data)});
   socket.on('leaveSession', function(data){onLeaveSession(socket);});
+  socket.on('newMessage', function(data){onNewMessagge(socket, data);});
   socket.on('disconnect', function(data){onLeaveSession(socket);});
 };
-
 function onNewSession(socket, data) {
   var roomId = uuid.v1();
   if(data == 'retrospective'){
@@ -35,7 +35,8 @@ function onJoinSession(io, socket, data) {
 
   //Send previous information from room
   if(data.sessionType == 'retrospective'){
-    socket.emit('joinedSession', {id: socket.id, session:_.pick(rooms[data.roomId], 'good', 'bad', 'improvements')});
+    console.log('_________', getRetrospectiveData(rooms[data.roomId]));
+    socket.emit('joinedSession', {id: socket.id, session: getRetrospectiveData(rooms[data.roomId])});
     io.to(data.roomId).emit('updateUsers', {players: rooms[data.roomId].players, moderators: rooms[data.roomId].moderators});
   }else{
     socket.emit('joinedSession', {id: socket.id, description: rooms[data.roomId].description, voteValues: rooms[data.roomId].voteValues});
@@ -63,6 +64,25 @@ function onVote(io, socket, data) {
 
   //update users to see what users already vote
   socket.broadcast.to(data.id).emit('updateUsers', {players: rooms[data.id].players, moderators: rooms[data.id].moderators});
+};
+
+function getRetrospectiveData(data){
+  return {good: hideText(data.good), bad: hideText(data.bad), improvements: hideText(data.improvements)}
+};
+
+function hideText(data){
+  if(!data.length){ return [];}
+  console.log('_+_+_+_+', data);
+
+  return _.map(function(data){
+    data.text = '________ (' + data.username + ')';
+    return data;
+  });
+};
+
+function onNewMessagge(socket, data) {
+  rooms[data.id][data.type].push({username: data.username, disabled:true,  text: data.text});
+  socket.broadcast.to(data.id).emit('newMessage', {type: data.type, username: data.username});
 };
 
 function onRevealVotes(io, socket, data){

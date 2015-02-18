@@ -16,7 +16,7 @@ angular.module('pokerestimateApp')
       var modalInstance = $modal.open({templateUrl: 'app/templates/modals/username.html', keyboard:false, scope: this});
       modalInstance.result.then(function (data) {
         $scope.currentUser = {username: data.username, type: data.userType};
-        //socket.emit('joinSession', {roomId: $scope.sessionId, username: data.username, type: data.userType, sessionType: 'retrospective'});
+        socket.emit('joinSession', {roomId: $scope.sessionId, username: data.username, type: data.userType, sessionType: 'retrospective'});
       });
     }
 
@@ -28,7 +28,7 @@ angular.module('pokerestimateApp')
   $scope.add = function(type){
     if($scope.newEntry[type]){
       $scope.session[type].push({text: $scope.newEntry[type]});
-      //socket.emit('newMessage', {id: $scope.sessionId, msg: {text: $scope.newEntry[type], username: $scope.currentUser.username}, type: type});
+      socket.emit('newMessage', {id: $scope.sessionId, text: $scope.newEntry[type], username: $scope.currentUser.username, type: type});
       $scope.newEntry[type] = "";
     }
   };
@@ -61,10 +61,15 @@ angular.module('pokerestimateApp')
       $scope.moderators = data.moderators;
       //Need this to update player list when they vote
       $scope.currentUser = _.findWhere(_.union(data.players, data.moderators), {id: $scope.currentUser.id});
+    },
+
+    onNewMessage:  function(data){
+     $scope.session[data.type].push({text: "________ (" + data.username + ")", disabled: true});
     }
   };
 
   socket.on('joinedSession', $scope.listeners.onJoinedSession);
   socket.on('updateUsers',   $scope.listeners.onUpdateUsers);
+  socket.on('newMessage',   $scope.listeners.onNewMessage);
 
 });
