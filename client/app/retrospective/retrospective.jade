@@ -40,6 +40,7 @@ include ../templates/header.jade
       h5.title Players
       ul
         li(ng-repeat="player in players")
+          span(ng-class="{active: player.id == currentUser.id}") {{player.username}}
       h5.title Moderators
       ul
         li(ng-repeat="moderator in moderators")
@@ -47,7 +48,7 @@ include ../templates/header.jade
   .row.row-with-padding.share
     h5.title Share Session with your team
     .large-6.columns
-      .row.collapse.row-with-padding
+      .row.collapse
         label Full Link
         .large-11.columns
           input(type="text" ng-model="url" disabled)
@@ -55,7 +56,7 @@ include ../templates/header.jade
           button.button.showy.postfix(id="share-url" clip-copy='url' clip-click="setCopyMsg('Copied')")
             i.fa.fa-clipboard
     .large-6.columns
-      .row.collapse.row-with-padding
+      .row.collapse
         label Session Id
         .large-11.columns
           input(type="text" ng-model="sessionId" disabled)
