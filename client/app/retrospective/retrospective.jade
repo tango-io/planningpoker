@@ -5,18 +5,23 @@ include ../templates/header.jade
       h5.title What went well?
         button.button.tiny.showy(ng-click="toggleInputMode('good')" ng-hide="reviewMode")
           i.fa(ng-class="{'fa-plus': !inputMode.good, 'fa-minus': inputMode.good}")
-       textarea(ng-model="newEntry.good" placeholder="Some example..." ng-enter="add('good')" ng-show="inputMode.good")
+       textarea(ng-model="newEntry.good" placeholder="Some example..." ng-enter="add('good')" ng-show="inputMode.good && !reviewMode")
+      //list of good things
       ul
         li(ng-repeat="entry in session.good")
-          span.left {{entry.text}}
-          .right(ng-hide="entry.disabled")
-            i.fa.fa-pencil(ng-click="edit('good', entry)")
-            i.fa.fa-times(ng-click="remove('good', entry)")
+          div(ng-if="reviewMode")
+            a.left(ng-click="openEntry(entry)") {{entry.text}}
+            i.fa.fa-check(ng-show="entry.read")
+          div(ng-if="!reviewMode")
+            span.left {{entry.text}}
+            .right(ng-hide="entry.disabled")
+              i.fa.fa-pencil(ng-click="edit('good', entry)")
+              i.fa.fa-times(ng-click="remove('good', entry)")
     .large-3.columns
       h5.title What went bad?
         button.button.tiny.showy(ng-click="toggleInputMode('bad')" ng-hide="reviewMode")
           i.fa(ng-class="{'fa-plus': !inputMode.bad, 'fa-minus': inputMode.bad}")
-      textarea(ng-model="newEntry.bad" placeholder="Some example..." ng-enter="add('bad')" ng-show="inputMode.bad")
+      textarea(ng-model="newEntry.bad" placeholder="Some example..." ng-enter="add('bad')" ng-show="inputMode.bad && !reviewMode")
       ul
         li(ng-repeat="entry in session.bad")
           span {{entry.text}}
@@ -27,7 +32,7 @@ include ../templates/header.jade
       h5.title What can we improve?
         button.button.tiny.showy(ng-click="toggleInputMode('improvements')" ng-hide="reviewMode")
           i.fa(ng-class="{'fa-plus': !inputMode.improvements, 'fa-minus': inputMode.improvements}")
-      textarea(ng-model="newEntry.improvements" placeholder="Some example..." ng-enter="add('improvements')" ng-show="inputMode.improvements")
+      textarea(ng-model="newEntry.improvements" placeholder="Some example..." ng-enter="add('improvements')" ng-show="inputMode.improvements && !reviewMode")
       ul
         li(ng-repeat="entry in session.improvements")
           span {{entry.text}}

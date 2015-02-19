@@ -13,6 +13,8 @@ exports.register = function(socket, io) {
   socket.on('clearSession', function(data){onClearSession(socket, data)});
   socket.on('leaveSession', function(data){onLeaveSession(socket);});
   socket.on('newMessage', function(data){onNewMessagge(socket, data);});
+  socket.on('reveal', function(data){onReveal(socket, data);});
+  socket.on('openModal', function(data){onOpenModal(socket, data);});
   socket.on('disconnect', function(data){onLeaveSession(socket);});
 };
 function onNewSession(socket, data) {
@@ -75,12 +77,6 @@ function hideText(data){
     return entry;
   }) ||[];
 };
-
-function onNewMessagge(socket, data) {
-  rooms[data.id][data.type].push({username: data.username, disabled:true,  text: data.text});
-  socket.broadcast.to(data.id).emit('newMessage', {type: data.type, username: data.username});
-};
-
 function onRevealVotes(io, socket, data){
   rooms[data.id].revealed = true;
   io.to(data.id).emit('updateVotes', rooms[data.id].votes);
@@ -90,6 +86,21 @@ function onClearSession(socket, data){
   rooms[data.id].players = _.map(rooms[data.id].players, function(u){ u.voted = false; return u;});
   rooms[data.id].votes = {};
   socket.broadcast.to(data.id).emit('clearVotes');
+};
+
+function onNewMessagge(socket, data) {
+  rooms[data.id][data.type].push({username: data.username, disabled:true,  text: data.text});
+  socket.broadcast.to(data.id).emit('newMessage', {type: data.type, username: data.username});
+};
+
+function onReveal(socket, data) {
+  console.log("kajsdlkjalkdsj", rooms[data.id]);
+  socket.to(data.id).emit('reveal', {session: _.pick(rooms[data.id], 'good', 'bad', 'improvements')} );
+};
+
+function onOpenModal(socket, data) {
+  console.log("opening", data);
+  socket.broadcast.to(data.id).emit('openModal', {entry: entry});
 };
 
 function onLeaveSession(socket){

@@ -39,6 +39,10 @@ angular.module('pokerestimateApp')
 
   $scope.toggleReviewMode = function(){
     $scope.reviewMode = !$scope.reviewMode;
+    if($scope.reviewMode){
+      console.log("yeeeeep");
+      socket.emit('reveal', {id: $scope.sessionId});
+    }
   };
 
   $scope.remove = function(type, entry){
@@ -51,6 +55,19 @@ angular.module('pokerestimateApp')
     modalInstance.result.then(function (data) {
       entry.text = data.editEntry;
     });
+  };
+
+  $scope.openEntry = function(entry){
+    $scope.editEntry = entry.text;
+    socket.emit('openEntry', {id: $scope.sessionId, entry: entry});
+    var modalInstance = $modal.open({templateUrl: 'app/templates/modals/showEntry.html', keyboard:false, scope: this});
+    modalInstance.result.then(function (data) {
+      //entry.text = data.editEntry;
+    });
+  };
+
+  $scope.setCopyMsg = function(msg){
+    $scope.copyMsg = msg;
   };
 
   $scope.listeners = {
@@ -69,15 +86,35 @@ angular.module('pokerestimateApp')
 
     onNewMessage:  function(data){
      $scope.session[data.type].push({text: "________ (" + data.username + ")", disabled: true});
+    },
+
+    onReveal: function(data){
+      $scope.session = data.session;
+      $scope.reviewMode = true;
+    },
+
+    onOpenEntry: function(entry){
+      console.log("opening", entry);
+      $scope.editEntry = entry.text;
+      var modalInstance = $modal.open({templateUrl: 'app/templates/modals/showEntry.html', keyboard:false, scope: this});
+      modalInstance.result.then(function (data) {
+        //entry.text = data.editEntry;
+      });
+    },
+
+    onError: function(){
+      var modalInstance = $modal.open({templateUrl: 'app/templates/modals/error.html', keyboard:false});
+      modalInstance.result.then(function () {
+        $location.path("/");
+      });
     }
   };
 
   socket.on('joinedSession', $scope.listeners.onJoinedSession);
   socket.on('updateUsers',   $scope.listeners.onUpdateUsers);
-  socket.on('newMessage',   $scope.listeners.onNewMessage);
-
- $scope.setCopyMsg = function(msg){
-   $scope.copyMsg = msg;
- };
+  socket.on('newMessage',    $scope.listeners.onNewMessage);
+  socket.on('errorMsg',      $scope.listeners.onError);
+  socket.on('reveal',        $scope.listeners.onReveal);
+  socket.on('openEntry',     $scope.listeners.onOpenEntry);
 
 });
