@@ -88,12 +88,12 @@ function getRetrospectiveData(data){
 };
 
 function hideText(data){
-  return data;
-  //var some = data;
-  //return _.map(some, function(entry){
-  //  entry.text = '________ (' + entry.username + ')';
-  //  return entry;
-  //}) ||[];
+   var entry;
+   return _.map(data, function(value){
+    entry = _.clone(value);
+    entry.text = '________ (' + entry.username + ')';
+    return entry;
+  }) || [];
 };
 
 function onNewMessagge(socket, data) {
@@ -106,7 +106,6 @@ function onReveal(io, data) {
 };
 
 function onOpenModal(socket, data) {
-  console.log("opening", data);
   socket.broadcast.to(data.id).emit('openModal', {entry: entry});
 };
 
