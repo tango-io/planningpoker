@@ -35,7 +35,6 @@ function onJoinSession(io, socket, data) {
 
   //Send previous information from room
   if(data.sessionType == 'retrospective'){
-    console.log('_________', getRetrospectiveData(rooms[data.roomId]));
     socket.emit('joinedSession', {id: socket.id, session: getRetrospectiveData(rooms[data.roomId])});
     io.to(data.roomId).emit('updateUsers', {players: rooms[data.roomId].players, moderators: rooms[data.roomId].moderators});
   }else{
@@ -71,13 +70,10 @@ function getRetrospectiveData(data){
 };
 
 function hideText(data){
-  if(!data.length){ return [];}
-  console.log('_+_+_+_+', data);
-
-  return _.map(function(data){
-    data.text = '________ (' + data.username + ')';
-    return data;
-  });
+  return _.map(data, function(entry){
+    entry.text = '________ (' + entry.username + ')';
+    return entry;
+  }) ||[];
 };
 
 function onNewMessagge(socket, data) {
