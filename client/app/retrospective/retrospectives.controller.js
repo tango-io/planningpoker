@@ -76,4 +76,8 @@ angular.module('pokerestimateApp')
   socket.on('updateUsers',   $scope.listeners.onUpdateUsers);
   socket.on('newMessage',   $scope.listeners.onNewMessage);
 
+ $scope.setCopyMsg = function(msg){
+   $scope.copyMsg = msg;
+ };
+
 });
