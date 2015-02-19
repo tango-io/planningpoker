@@ -3,7 +3,7 @@ include ../templates/header.jade
   .row.row-with-padding
     .large-3.columns
       h5.title What went well?
-        button.button.tiny.showy(ng-click="toggleInputMode('good')")
+        button.button.tiny.showy(ng-click="toggleInputMode('good')" ng-hide="reviewMode")
           i.fa(ng-class="{'fa-plus': !inputMode.good, 'fa-minus': inputMode.good}")
        textarea(ng-model="newEntry.good" placeholder="Some example..." ng-enter="add('good')" ng-show="inputMode.good")
       ul
@@ -14,7 +14,7 @@ include ../templates/header.jade
             i.fa.fa-times(ng-click="remove('good', entry)")
     .large-3.columns
       h5.title What went bad?
-        button.button.tiny.showy(ng-click="toggleInputMode('bad')")
+        button.button.tiny.showy(ng-click="toggleInputMode('bad')" ng-hide="reviewMode")
           i.fa(ng-class="{'fa-plus': !inputMode.bad, 'fa-minus': inputMode.bad}")
       textarea(ng-model="newEntry.bad" placeholder="Some example..." ng-enter="add('bad')" ng-show="inputMode.bad")
       ul
@@ -25,7 +25,7 @@ include ../templates/header.jade
             i.fa.fa-times(ng-click="remove('bad', entry)")
     .large-4.columns
       h5.title What can we improve?
-        button.button.tiny.showy(ng-click="toggleInputMode('improvements')")
+        button.button.tiny.showy(ng-click="toggleInputMode('improvements')" ng-hide="reviewMode")
           i.fa(ng-class="{'fa-plus': !inputMode.improvements, 'fa-minus': inputMode.improvements}")
       textarea(ng-model="newEntry.improvements" placeholder="Some example..." ng-enter="add('improvements')" ng-show="inputMode.improvements")
       ul
@@ -35,8 +35,14 @@ include ../templates/header.jade
             i.fa.fa-pencil(ng-click="edit($index, 'improvements')")
             i.fa.fa-times(ng-click="remove('improvements', entry)")
     .large-2.columns.players
+      .row.text-center(hide-for="player" model="currentUser.type")
+        button.btn.showy(ng-click="toggleReviewMode()") {{ reviewMode ? 'Hide' : 'Reveal'}}
       h5.title Players
       ul
         li(ng-repeat="player in players")
-          span(ng-class="{active: player.id == currentUser.id}") {{player.username}}
+      h5.title Moderators
+      ul
+        li(ng-repeat="moderator in moderators")
+          span(ng-class="{active: moderator.id == currentUser.id}") {{moderator.username}}
+   span(ng-class="{active: moderator.id == currentUser.id}") {{moderator.username}}
 include ../templates/footer.jade

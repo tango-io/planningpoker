@@ -37,6 +37,10 @@ angular.module('pokerestimateApp')
     $scope.inputMode[type] = !$scope.inputMode[type];
   };
 
+  $scope.toggleReviewMode = function(){
+    $scope.reviewMode = !$scope.reviewMode;
+  };
+
   $scope.remove = function(type, entry){
     $scope.session[type] =  _.without($scope.session[type], entry);
   };
