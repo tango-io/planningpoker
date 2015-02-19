@@ -22,7 +22,6 @@ angular.module('pokerestimateApp')
 
     $scope.inputMode = {};
     $scope.newEntry = {};
-    $scope.session = {good: [], bad:[], improvements:[]};
   };
 
   $scope.add = function(type){
@@ -35,14 +34,6 @@ angular.module('pokerestimateApp')
 
   $scope.toggleInputMode = function(type){
     $scope.inputMode[type] = !$scope.inputMode[type];
-  };
-
-  $scope.toggleReviewMode = function(){
-    $scope.reviewMode = !$scope.reviewMode;
-    if($scope.reviewMode){
-      console.log("yeeeeep");
-      socket.emit('reveal', {id: $scope.sessionId});
-    }
   };
 
   $scope.remove = function(type, entry){
@@ -64,6 +55,15 @@ angular.module('pokerestimateApp')
     modalInstance.result.then(function (data) {
       //entry.text = data.editEntry;
     });
+  };
+
+  $scope.toggleReviewMode = function(){
+    $scope.reviewMode = !$scope.reviewMode;
+    if($scope.reviewMode){
+      socket.emit('reveal', {id: $scope.sessionId});
+    }else{
+    //  socket.emit('hide', {id: $scope.sessionId});
+    }
   };
 
   $scope.setCopyMsg = function(msg){
@@ -91,10 +91,15 @@ angular.module('pokerestimateApp')
     onReveal: function(data){
       $scope.session = data.session;
       $scope.reviewMode = true;
+      console.log("ddddddddd", data);
+    },
+
+    onHide: function(data){
+      $scope.session = data.session;
+      $scope.reviewMode = false;
     },
 
     onOpenEntry: function(entry){
-      console.log("opening", entry);
       $scope.editEntry = entry.text;
       var modalInstance = $modal.open({templateUrl: 'app/templates/modals/showEntry.html', keyboard:false, scope: this});
       modalInstance.result.then(function (data) {
@@ -115,6 +120,7 @@ angular.module('pokerestimateApp')
   socket.on('newMessage',    $scope.listeners.onNewMessage);
   socket.on('errorMsg',      $scope.listeners.onError);
   socket.on('reveal',        $scope.listeners.onReveal);
+  socket.on('hide',          $scope.listeners.onHide);
   socket.on('openEntry',     $scope.listeners.onOpenEntry);
 
 });

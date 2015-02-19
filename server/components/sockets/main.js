@@ -13,7 +13,7 @@ exports.register = function(socket, io) {
   socket.on('clearSession', function(data){onClearSession(socket, data)});
   socket.on('leaveSession', function(data){onLeaveSession(socket);});
   socket.on('newMessage', function(data){onNewMessagge(socket, data);});
-  socket.on('reveal', function(data){onReveal(socket, data);});
+  socket.on('reveal', function(data){onReveal(io, data);});
   socket.on('openModal', function(data){onOpenModal(socket, data);});
   socket.on('disconnect', function(data){onLeaveSession(socket);});
 };
@@ -28,7 +28,12 @@ function onNewSession(socket, data) {
 };
 
 function onJoinSession(io, socket, data) {
-  if(!rooms[data.roomId]){ return socket.emit('errorMsg', {message: "Session does not exist"}); }
+  //if(!rooms[data.roomId]){ return socket.emit('errorMsg', {message: "Session does not exist"}); }
+  if(!rooms[data.roomId]){
+    var roomId = uuid.v1();
+    rooms[roomId] = {players: [], moderators:[], good: [], bad: [], improvements: []};
+  }
+
   if(!data.username || !data.type){ return socket.emit('errorMsg', {message: "Missing information"}); }
 
   socket.join(data.roomId);
@@ -36,56 +41,59 @@ function onJoinSession(io, socket, data) {
   rooms[data.roomId][data.type + "s"].push({id: socket.id, username:data.username, type:data.type});
 
   //Send previous information from room
-  if(data.sessionType == 'retrospective'){
+  //if(data.sessionType == 'retrospective'){
     socket.emit('joinedSession', {id: socket.id, session: getRetrospectiveData(rooms[data.roomId])});
     io.to(data.roomId).emit('updateUsers', {players: rooms[data.roomId].players, moderators: rooms[data.roomId].moderators});
-  }else{
-    socket.emit('joinedSession', {id: socket.id, description: rooms[data.roomId].description, voteValues: rooms[data.roomId].voteValues});
+  //}else{
+  //  socket.emit('joinedSession', {id: socket.id, description: rooms[data.roomId].description, voteValues: rooms[data.roomId].voteValues});
 
-    io.to(data.roomId).emit('hideVotes'); //hide votes if more users joined to room
-    io.to(data.roomId).emit('updateUsers', {players: rooms[data.roomId].players, moderators: rooms[data.roomId].moderators});
-  }
+  //  io.to(data.roomId).emit('hideVotes'); //hide votes if more users joined to room
+  //  io.to(data.roomId).emit('updateUsers', {players: rooms[data.roomId].players, moderators: rooms[data.roomId].moderators});
+  //}
 };
 
-function updateDescription(socket, data) {
-  rooms[data.id].description = data.description;
-  socket.broadcast.to(data.id).emit('descriptionUpdated', data.description);
-};
+//function updateDescription(socket, data) {
+//  rooms[data.id].description = data.description;
+//  socket.broadcast.to(data.id).emit('descriptionUpdated', data.description);
+//};
 
-function onVote(io, socket, data) {
-  var user = _.findWhere(rooms[data.id].players, {id: data.userId});
-  rooms[data.id].votes[data.userId] = data.vote;
-  user.voted = true;
+//function onVote(io, socket, data) {
+//  var user = _.findWhere(rooms[data.id].players, {id: data.userId});
+//  rooms[data.id].votes[data.userId] = data.vote;
+//  user.voted = true;
 
-  var numVotes = _.groupBy(rooms[data.id].players, 'voted').true.length;
+//  var numVotes = _.groupBy(rooms[data.id].players, 'voted').true.length;
 
-  //Reveal votes if all user has voted
-  rooms[data.id].revealed = numVotes ==  rooms[data.id].players.length;
-  if(rooms[data.id].revealed){ io.to(data.id).emit('updateVotes', rooms[data.id].votes); }
+//  //Reveal votes if all user has voted
+//  rooms[data.id].revealed = numVotes ==  rooms[data.id].players.length;
+//  if(rooms[data.id].revealed){ io.to(data.id).emit('updateVotes', rooms[data.id].votes); }
 
-  //update users to see what users already vote
-  socket.broadcast.to(data.id).emit('updateUsers', {players: rooms[data.id].players, moderators: rooms[data.id].moderators});
-};
+//  //update users to see what users already vote
+//  socket.broadcast.to(data.id).emit('updateUsers', {players: rooms[data.id].players, moderators: rooms[data.id].moderators});
+//};
+
+//function onRevealVotes(io, socket, data){
+//  rooms[data.id].revealed = true;
+//  io.to(data.id).emit('updateVotes', rooms[data.id].votes);
+//};
+
+//function onClearSession(socket, data){
+//  rooms[data.id].players = _.map(rooms[data.id].players, function(u){ u.voted = false; return u;});
+//  rooms[data.id].votes = {};
+//  socket.broadcast.to(data.id).emit('clearVotes');
+//};
 
 function getRetrospectiveData(data){
   return {good: hideText(data.good), bad: hideText(data.bad), improvements: hideText(data.improvements)}
 };
 
 function hideText(data){
-  return _.map(_.clone(data), function(entry){
-    entry.text = '________ (' + entry.username + ')';
-    return entry;
-  }) ||[];
-};
-function onRevealVotes(io, socket, data){
-  rooms[data.id].revealed = true;
-  io.to(data.id).emit('updateVotes', rooms[data.id].votes);
-};
-
-function onClearSession(socket, data){
-  rooms[data.id].players = _.map(rooms[data.id].players, function(u){ u.voted = false; return u;});
-  rooms[data.id].votes = {};
-  socket.broadcast.to(data.id).emit('clearVotes');
+  return data;
+  //var some = data;
+  //return _.map(some, function(entry){
+  //  entry.text = '________ (' + entry.username + ')';
+  //  return entry;
+  //}) ||[];
 };
 
 function onNewMessagge(socket, data) {
@@ -93,9 +101,8 @@ function onNewMessagge(socket, data) {
   socket.broadcast.to(data.id).emit('newMessage', {type: data.type, username: data.username});
 };
 
-function onReveal(socket, data) {
-  console.log("kajsdlkjalkdsj", rooms[data.id]);
-  socket.to(data.id).emit('reveal', {session: _.pick(rooms[data.id], 'good', 'bad', 'improvements')} );
+function onReveal(io, data) {
+  io.to(data.id).emit('reveal', {session: _.pick(rooms[data.id], 'good', 'bad', 'improvements')} );
 };
 
 function onOpenModal(socket, data) {
