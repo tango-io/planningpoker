@@ -72,7 +72,7 @@ function getRetrospectiveData(data){
 };
 
 function hideText(data){
-  return _.map(data, function(entry){
+  return _.map(_.clone(data), function(entry){
     entry.text = '________ (' + entry.username + ')';
     return entry;
   }) ||[];
