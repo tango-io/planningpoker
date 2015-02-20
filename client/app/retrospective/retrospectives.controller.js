@@ -52,9 +52,10 @@ angular.module('pokerestimateApp')
     socket.emit('openEntry', {id: $scope.sessionId, entry: entry});
     $scope.editEntry = entry.text;
     var modalInstance = $modal.open({templateUrl: 'app/templates/modals/showEntry.html', keyboard:false, scope: this});
-    //modalInstance.result.then(function (data) {
-    //  entry.text = data.editEntry;
-    //});
+
+    modalInstance.result.then(function (data) {
+      socket.emit('closeEntry', {id: $scope.sessionId});
+    });
   };
 
   $scope.toggleReviewMode = function(){
@@ -120,10 +121,11 @@ angular.module('pokerestimateApp')
 
     onOpenEntry: function(data){
       $scope.editEntry = data.entry.text;
-      var modalInstance = $modal.open({templateUrl: 'app/templates/modals/showEntry.html', keyboard:false, scope: $scope});
-     //modalInstance.result.then(function (data) {
-        //entry.text = data.editEntry;
-      //);
+      $scope.entryModal = $modal.open({templateUrl: 'app/templates/modals/showEntry.html', keyboard:false, scope: $scope});
+    },
+
+    onCloseEntry: function(data){
+      $scope.entryModal.close();
     },
 
     onError: function(){
@@ -141,5 +143,6 @@ angular.module('pokerestimateApp')
   socket.on('reveal',        $scope.listeners.onReveal);
   socket.on('hide',          $scope.listeners.onHide);
   socket.on('openEntry',     $scope.listeners.onOpenEntry);
+  socket.on('closeEntry',    $scope.listeners.onCloseEntry);
 
 });
