@@ -70,6 +70,24 @@ angular.module('pokerestimateApp')
     $scope.copyMsg = msg;
   };
 
+    function getRetrospectiveData(data){
+      return {good: hideText(data.good), bad: hideText(data.bad), improvements: hideText(data.improvements)}
+    };
+
+    function hideText(data){
+      var entry;
+      return _.map(data, function(value){
+        console.log(value.username, $scope.currentUser.username)
+        if(value.username != $scope.currentUser.username){
+          entry = _.clone(value);
+          entry.text = '________ (' + entry.username + ')';
+          return entry;
+        }else{
+          return value;
+        }
+      }) || [];
+    };
+
   $scope.listeners = {
     onJoinedSession: function (data){
       // Set previous data from room
@@ -91,13 +109,14 @@ angular.module('pokerestimateApp')
     onReveal: function(data){
       $scope.session = data.session;
       $scope.reviewMode = true;
-      console.log("ddddddddd", data);
     },
 
     onHide: function(data){
-      $scope.session = data.session;
+      //$scope.session = data.session;
       $scope.reviewMode = false;
+      $scope.session  = getRetrospectiveData($scope.session);
     },
+
 
     onOpenEntry: function(entry){
       $scope.editEntry = entry.text;
