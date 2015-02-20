@@ -49,12 +49,12 @@ angular.module('pokerestimateApp')
   };
 
   $scope.openEntry = function(entry){
-    $scope.editEntry = entry.text;
     socket.emit('openEntry', {id: $scope.sessionId, entry: entry});
+    $scope.editEntry = entry.text;
     var modalInstance = $modal.open({templateUrl: 'app/templates/modals/showEntry.html', keyboard:false, scope: this});
-    //modalInstance.result.then(function (data) {
-      //entry.text = data.editEntry;
-    //});
+    modalInstance.result.then(function (data) {
+      entry.text = data.editEntry;
+    });
   };
 
   $scope.toggleReviewMode = function(){
@@ -120,8 +120,8 @@ angular.module('pokerestimateApp')
 
     onOpenEntry: function(entry){
       $scope.editEntry = entry.text;
-      var modalInstance = $modal.open({templateUrl: 'app/templates/modals/showEntry.html', keyboard:false, scope: this});
-      //modalInstance.result.then(function (data) {
+      var modalInstance = $modal.open({templateUrl: 'app/templates/modals/showEntry.html', keyboard:false});
+     //modalInstance.result.then(function (data) {
         //entry.text = data.editEntry;
       //);
     },
