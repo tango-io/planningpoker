@@ -78,7 +78,7 @@ angular.module('pokerestimateApp')
       var entry;
       return _.map(data, function(value){
         console.log(value.username, $scope.currentUser.username)
-        if(value.username != $scope.currentUser.username){
+        if(value.id != $scope.currentUser.id){
           entry = _.clone(value);
           entry.text = '________ (' + entry.username + ')';
           return entry;

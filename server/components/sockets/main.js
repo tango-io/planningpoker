@@ -98,7 +98,7 @@ function hideText(data){
 };
 
 function onNewMessagge(socket, data) {
-  rooms[data.id][data.type].push({username: data.username, disabled:true,  text: data.text});
+  rooms[data.id][data.type].push({username: data.username, disabled:true,  text: data.text, id: socket.id});
   socket.broadcast.to(data.id).emit('newMessage', {type: data.type, username: data.username});
 };
 
