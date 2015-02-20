@@ -14,6 +14,7 @@ exports.register = function(socket, io) {
   socket.on('leaveSession', function(data){onLeaveSession(socket);});
   socket.on('newMessage', function(data){onNewMessagge(socket, data);});
   socket.on('reveal', function(data){onReveal(io, data);});
+  socket.on('hide', function(data){onHide(socket, data);});
   socket.on('openModal', function(data){onOpenModal(socket, data);});
   socket.on('disconnect', function(data){onLeaveSession(socket);});
 };
@@ -103,6 +104,11 @@ function onNewMessagge(socket, data) {
 
 function onReveal(io, data) {
   io.to(data.id).emit('reveal', {session: _.pick(rooms[data.id], 'good', 'bad', 'improvements')} );
+};
+
+function onHide(socket, data) {
+  console.log("kajsdlkjalkdsj", rooms[data.id]);
+  socket.to(data.id).emit('hide', {session: getRetrospectiveData(rooms[data.id])} );
 };
 
 function onOpenModal(socket, data) {

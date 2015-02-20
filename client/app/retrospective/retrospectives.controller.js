@@ -62,7 +62,7 @@ angular.module('pokerestimateApp')
     if($scope.reviewMode){
       socket.emit('reveal', {id: $scope.sessionId});
     }else{
-    //  socket.emit('hide', {id: $scope.sessionId});
+      socket.emit('hide', {id: $scope.sessionId});
     }
   };
 
