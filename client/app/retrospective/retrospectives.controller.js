@@ -97,6 +97,49 @@ angular.module('pokerestimateApp')
       }) || [];
     };
 
+    $scope.next = function(entry){
+
+      var indexG = _.indexOf($scope.session.good, entry) ;
+      var indexB = _.indexOf($scope.session.bad, entry)
+      var indexI = _.indexOf($scope.session.improvements, entry);
+
+      if(indexG != -1 && $scope.session.good[indexG + 1]){
+        $scope.editEntry = $scope.session.good[indexG + 1];
+        socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: 'good', index: indexG + 1});
+      }
+
+      if(indexB != -1 && $scope.session.bad[indexG + 1]){
+        $scope.editEntry = $scope.session.bad[indexB + 1];
+        socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: 'bad', index: indexB + 1});
+      }
+
+      if(indexI != -1 && $scope.session.improvements[indexG + 1]){
+        $scope.editEntry = $scope.session.improvements[indexI + 1];
+        socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: 'improvements', index: indexB + 1});
+      }
+    };
+
+    $scope.previous = function(entry){
+      var indexG = _.indexOf($scope.session.good, entry) ;
+      var indexB = _.indexOf($scope.session.bad, entry)
+      var indexI = _.indexOf($scope.session.improvements, entry);
+
+      if(indexG != -1 && $scope.session.good[indexG - 1]){
+        $scope.editEntry = $scope.session.good[indexG - 1];
+        socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: 'good', index: indexG - 1});
+      }
+
+      if(indexB != -1 && $scope.session.good[indexB - 1]){
+        $scope.editEntry = $scope.session.good[indexB - 1];
+        socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: 'bad', index: indexB - 1});
+      }
+
+      if(indexI != -1 && $scope.session.good[indexI - 1]){
+        $scope.editEntry = $scope.session.good[indexI - 1];
+        socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: 'improvements', index: indexB - 1});
+      }
+    };
+
   $scope.listeners = {
     onJoinedSession: function (data){
       // Set previous data from room
@@ -136,6 +179,11 @@ angular.module('pokerestimateApp')
       $scope.entryModal.close();
     },
 
+    onMoveCurrentEntry: function(data){
+      console.log("ddddddddddd", data);
+      $scope.editEntry = $scope.session[data.type][data.index];
+    },
+
     onEntryUpdated: function(e){
       var o = _.pick($scope.session, 'good', 'bad', 'improvements');
       var a = _.union(o.good, o.bad, o.improvements);
@@ -163,5 +211,6 @@ angular.module('pokerestimateApp')
   socket.on('hide',          $scope.listeners.onHide);
   socket.on('openEntry',     $scope.listeners.onOpenEntry);
   socket.on('entryUpdated',  $scope.listeners.onEntryUpdated);
+  socket.on('moveCurrentEntry',    $scope.listeners.onMoveCurrentEntry);
   socket.on('closeEntry',    $scope.listeners.onCloseEntry);
 });

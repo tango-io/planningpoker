@@ -18,6 +18,7 @@ exports.register = function(socket, io) {
   socket.on('openEntry', function(data){onOpenEntry(socket, data);});
   socket.on('closeEntry', function(data){onCloseEntry(socket, data);});
   socket.on('updateEntry', function(data){onUpdateEntry(socket, data);});
+  socket.on('moveCurrentEntry', function(data){onMoveCurrentEntry(socket, data);});
   socket.on('disconnect', function(data){onLeaveSession(socket);});
 };
 function onNewSession(socket, data) {
@@ -118,6 +119,10 @@ function onOpenEntry(socket, data) {
 
 function onCloseEntry(socket, data) {
   socket.broadcast.to(data.id).emit('closeEntry');
+};
+
+function onMoveCurrentEntry(socket, data) {
+  socket.broadcast.to(data.id).emit('moveCurrentEntry', data);
 };
 
 function onUpdateEntry(socket, data) {
