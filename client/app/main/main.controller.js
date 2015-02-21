@@ -5,8 +5,9 @@ angular.module('pokerestimateApp')
 
   //Setting default options and clearing user in userservice
   $scope.init = function(){
-    $scope.currentUser  = {username:"", type:"player", sessionType: 'pointing'};
-    $scope.currentUser_ = {username:"", type:"player", sessionType: 'pointing'};
+    $scope.sessionType  = "pointing";
+    $scope.currentUser  = {username:"", type:"player"};
+    $scope.currentUser_ = {username:"", type:"player"};
     userService.setUser($scope.currentUser);
   };
 
@@ -14,7 +15,7 @@ angular.module('pokerestimateApp')
     if($scope.currentUser.username){
       userService.setUser($scope.currentUser);
 
-      if($scope.currentUser.sessionType == "pointing"){
+      if($scope.sessionType == "pointing"){
         $location.path("/voteValues");
       }else{
         socket.emit('newSession', 'retrospective');
@@ -26,7 +27,7 @@ angular.module('pokerestimateApp')
   };
 
   $scope.joinSession = function(){
-    var url = $scope.currentUser.sessionType == "pointing" ? '/sessions/' : '/retrospectives/' + $scope.sessionId;
+    var url = ($scope.sessionType == "pointing" ? '/sessions/' : '/retrospectives/') + $scope.sessionId;
     if($scope.currentUser_.username && $scope.sessionId){
       userService.setUser($scope.currentUser_);
       $location.path(url);
@@ -36,6 +37,7 @@ angular.module('pokerestimateApp')
     }
   };
 
+  //Redirect to retrospective page after create a session
   socket.on('sessionCreated', function (roomId){
     $location.path('retrospectives/' + roomId);
   });

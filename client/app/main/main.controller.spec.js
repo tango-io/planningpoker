@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: MainCtrl', function () {
+ddescribe('Controller: MainCtrl', function () {
 
   // load the controller's module
   beforeEach(module('pokerestimateApp'));
@@ -8,7 +8,7 @@ describe('Controller: MainCtrl', function () {
   beforeEach(module('userServiceMock'));
 
   var MainCtrl,
-      scope;
+  scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function (_socket_, _userService_, $location, $controller, $rootScope) {
@@ -30,13 +30,6 @@ describe('Controller: MainCtrl', function () {
     expect(scope.currentUser_.type).toBe("player");
   }));
 
-  it('does not go to vote values page without username', inject(function (userService, $location) {
-    spyOn(userService, 'setUser');
-    scope.startSession();
-    expect(userService.setUser).not.toHaveBeenCalledWith();
-     expect($location.path()).toBe('');
-  }));
-
   it('sets submitted to true when starts a session without username', inject(function () {
     scope.startSession();
     expect(scope.submitted).toBe(true);
@@ -55,12 +48,6 @@ describe('Controller: MainCtrl', function () {
     scope.currentUser.username = "tester";
     scope.startSession();
     expect(userService.setUser).toHaveBeenCalledWith({ username : 'tester', type : 'moderator' });
-  }));
-
-  it('goes to vote values start session', inject(function ($location) {
-    scope.currentUser.username = "tester";
-    scope.startSession();
-     expect($location.path()).toBe('/voteValues');
   }));
 
   it('does not join a session without username or session id', inject(function (userService, socket) {
@@ -95,10 +82,40 @@ describe('Controller: MainCtrl', function () {
     expect(userService.setUser).toHaveBeenCalledWith( { username : 'Tester', type : 'player' });
   }));
 
-  it('reditects to session/:id when user joins a session', inject(function ($location) {
-    scope.currentUser_.username = "tester";
-    scope.sessionId = "some-1231";
-    scope.joinSession();
-    expect($location.path()).toBe('/sessions/some-1231')
-  }));
+  describe("Pointing Sessions", function(){
+    it('does not go to vote values page without username', inject(function (userService, $location) {
+      spyOn(userService, 'setUser');
+      scope.startSession();
+      expect(userService.setUser).not.toHaveBeenCalledWith();
+       expect($location.path()).toBe('');
+    }));
+
+    it('goes to vote values start session', inject(function ($location) {
+      scope.currentUser.username = "tester";
+      scope.startSession();
+       expect($location.path()).toBe('/voteValues');
+    }));
+
+
+    it('reditects to session/:id when user joins a session', inject(function ($location) {
+      scope.currentUser_.username = "tester";
+      scope.sessionId = "some-1231";
+      scope.joinSession();
+      expect($location.path()).toBe('/sessions/some-1231')
+    }));
+  });
+
+  xdescribe("Retrospective Sessions", function(){
+    it('starts session as player', inject(function (userService, $location) {
+    }));
+
+    it('starts session as moderator', inject(function ($location) {
+    }));
+
+    it('reditects to retrospectives/:id when user creates a session', inject(function ($location) {
+    }));
+
+    it('reditects to retrospectives/:id when user joins a session', inject(function ($location) {
+    }));
+  });
 });
