@@ -41,16 +41,25 @@ angular.module('pokerestimateApp')
   };
 
   $scope.edit = function(type, entry){
-    $scope.editEntry = entry.text;
+    $scope.editEntry = entry;
     var modalInstance = $modal.open({templateUrl: 'app/templates/modals/entry.html', keyboard:false, scope: this});
     modalInstance.result.then(function (data) {
-      entry.text = data.editEntry;
+      entry.text = data.editEntry.text;
     });
+  };
+
+  $scope.toggleRead = function(entry){
+    entry.read = !entry.read;
+    $scope.update(entry);
+  };
+
+  $scope.update = function(entry){
+    socket.emit('updateEntry', {id: $scope.sessionId, entry: entry});
   };
 
   $scope.openEntry = function(entry){
     socket.emit('openEntry', {id: $scope.sessionId, entry: entry});
-    $scope.editEntry = entry.text;
+    $scope.editEntry = entry;
     var modalInstance = $modal.open({templateUrl: 'app/templates/modals/showEntry.html', keyboard:false, scope: this});
 
     modalInstance.result.then(function (data) {
@@ -78,7 +87,6 @@ angular.module('pokerestimateApp')
     function hideText(data){
       var entry;
       return _.map(data, function(value){
-        console.log(value.username, $scope.currentUser.username)
         if(value.id != $scope.currentUser.id){
           entry = _.clone(value);
           entry.text = '________ (' + entry.username + ')';
@@ -120,12 +128,23 @@ angular.module('pokerestimateApp')
 
 
     onOpenEntry: function(data){
-      $scope.editEntry = data.entry.text;
+      $scope.editEntry = data.entry;
       $scope.entryModal = $modal.open({templateUrl: 'app/templates/modals/showEntry.html', keyboard:false, scope: $scope});
     },
 
     onCloseEntry: function(data){
       $scope.entryModal.close();
+    },
+
+    onEntryUpdated: function(e){
+      var o = _.pick($scope.session, 'good', 'bad', 'improvements');
+      var a = _.union(o.good, o.bad, o.improvements);
+      var entry = _.findWhere(a, {text: e.text});
+      entry.text = e.text;
+      entry.read = e.read;
+      if($scope.editEntry.text == e.text){
+        $scope.editEntry.read = e.read;
+      }
     },
 
     onError: function(){
@@ -143,6 +162,6 @@ angular.module('pokerestimateApp')
   socket.on('reveal',        $scope.listeners.onReveal);
   socket.on('hide',          $scope.listeners.onHide);
   socket.on('openEntry',     $scope.listeners.onOpenEntry);
+  socket.on('entryUpdated',  $scope.listeners.onEntryUpdated);
   socket.on('closeEntry',    $scope.listeners.onCloseEntry);
-
 });

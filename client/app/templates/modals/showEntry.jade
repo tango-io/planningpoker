@@ -1,5 +1,5 @@
 div.entry-modal
- textarea(ng-model="editEntry")
- button.button(ng-click='read') Mark as read
- button.button(ng-click='remove()') Delete
+ textarea(ng-model="editEntry.text")
+ button.button(ng-click='toggleRead(editEntry)') {{ editEntry.read ? 'Mark as unread' : 'Mark as read' }}
+ button.button(ng-click='remove(editEntry)') Delete
  button.button.showy(ng-click='$close(this)') Close

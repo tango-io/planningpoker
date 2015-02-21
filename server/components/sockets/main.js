@@ -17,6 +17,7 @@ exports.register = function(socket, io) {
   socket.on('hide', function(data){onHide(io, data);});
   socket.on('openEntry', function(data){onOpenEntry(socket, data);});
   socket.on('closeEntry', function(data){onCloseEntry(socket, data);});
+  socket.on('updateEntry', function(data){onUpdateEntry(socket, data);});
   socket.on('disconnect', function(data){onLeaveSession(socket);});
 };
 function onNewSession(socket, data) {
@@ -117,6 +118,15 @@ function onOpenEntry(socket, data) {
 
 function onCloseEntry(socket, data) {
   socket.broadcast.to(data.id).emit('closeEntry');
+};
+
+function onUpdateEntry(socket, data) {
+  var o = _.pick(rooms[data.id], 'good', 'bad', 'improvements');
+  var a = _.union(o.good, o.bad, o.improvements);
+  var entry = _.findWhere(a, {text: data.entry.text});
+  entry.read = data.entry.read;
+  entry.text = data.entry.text;
+  socket.broadcast.to(data.id).emit('entryUpdated', entry);
 };
 
 function onLeaveSession(socket){
