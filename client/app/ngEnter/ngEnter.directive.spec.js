@@ -1,6 +1,6 @@
 'use strict';
 
-ddescribe('Directive: ngEnter', function () {
+describe('Directive: ngEnter', function () {
 
   // load the directive's module
   beforeEach(module('pokerestimateApp'));
