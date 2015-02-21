@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: RetrospectivesCtrl', function () {
+describe('Controller: RetrospectiveCtrl', function () {
 
   // load the controller's module
   beforeEach(module('pokerestimateApp'));
@@ -10,7 +10,7 @@ describe('Controller: RetrospectivesCtrl', function () {
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    RetrospectivesCtrl = $controller('RetrospectivesCtrl', {
+    RetrospectivesCtrl = $controller('RetrospectiveCtrl', {
       $scope: scope
     });
   }));
