@@ -9,6 +9,10 @@ angular.module('pokerestimateApp')
     $scope.currentUser  = {username:"", type:"player"};
     $scope.currentUser_ = {username:"", type:"player"};
     userService.setUser($scope.currentUser);
+
+    //Redirect to retrospective page after create a session
+    socket.on('sessionCreated', $scope.listeners.onSessionCreated);
+
   };
 
   $scope.startSession = function(){
@@ -27,7 +31,7 @@ angular.module('pokerestimateApp')
   };
 
   $scope.joinSession = function(){
-    var url = ($scope.sessionType == "pointing" ? '/sessions/' : '/retrospectives/') + $scope.sessionId;
+    var url = ($scope.sessionType_ == "pointing" ? '/sessions/' : '/retrospectives/') + $scope.sessionId;
     if($scope.currentUser_.username && $scope.sessionId){
       userService.setUser($scope.currentUser_);
       $location.path(url);
@@ -37,9 +41,10 @@ angular.module('pokerestimateApp')
     }
   };
 
-  //Redirect to retrospective page after create a session
-  socket.on('sessionCreated', function (roomId){
-    $location.path('retrospectives/' + roomId);
-  });
+  $scope.listeners = {
+    onSessionCreated: function(roomId){
+      $location.path('retrospectives/' + roomId);
+    }
+  };
 
 });
