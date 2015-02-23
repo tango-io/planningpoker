@@ -32,7 +32,9 @@ var MainPage = function() {
   this.playerOpt = element(by.cssContainingText('.start option', 'Player'));
 
   this.joinModeratorOpt = element(by.cssContainingText('.join option', 'Scrum Master \/ Moderator'));
+
+  this.retrospectiveOpt = element(by.cssContainingText('.start option', 'Retrospective'));
+  this.retrospectiveJoinOpt = element(by.cssContainingText('.join option', 'Retrospective'));
 };
 
 module.exports = new MainPage();
-
