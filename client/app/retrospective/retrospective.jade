@@ -22,12 +22,17 @@ include ../templates/header.jade
         button.button.tiny.showy(ng-click="toggleInputMode('bad')" ng-hide="reviewMode")
           i.fa(ng-class="{'fa-plus': !inputMode.bad, 'fa-minus': inputMode.bad}")
       textarea(ng-model="newEntry.bad" placeholder="Some example..." ng-enter="add('bad')" ng-show="inputMode.bad && !reviewMode")
+      //list of bad things
       ul
-        li(ng-repeat="entry in session.bad")
-          span {{entry.text}}
-          .right(ng-hide="entry.disabled")
-            i.fa.fa-pencil(ng-click="edit($index, 'bad')")
-            i.fa.fa-times(ng-click="remove('bad', entry)")
+       li(ng-repeat="entry in session.bad")
+          div(ng-if="reviewMode")
+            a.left(ng-click="openEntry('bad', entry)") {{entry.text}}
+            i.fa.fa-check(ng-show="entry.read")
+          div(ng-if="!reviewMode")
+            span.left {{entry.text}}
+            .right(ng-show="currentUser.id == entry.userId")
+              i.fa.fa-pencil(ng-click="edit('bad', entry)")
+              i.fa.fa-times(ng-click="remove('bad', entry)")
     .large-4.columns
       h5.title What can we improve?
         button.button.tiny.showy(ng-click="toggleInputMode('improvements')" ng-hide="reviewMode")
@@ -35,10 +40,14 @@ include ../templates/header.jade
       textarea(ng-model="newEntry.improvements" placeholder="Some example..." ng-enter="add('improvements')" ng-show="inputMode.improvements && !reviewMode")
       ul
         li(ng-repeat="entry in session.improvements")
-          span {{entry.text}}
-          .right(ng-hide="entry.disabled")
-            i.fa.fa-pencil(ng-click="edit($index, 'improvements')")
-            i.fa.fa-times(ng-click="remove('improvements', entry)")
+          div(ng-if="reviewMode")
+            a.left(ng-click="openEntry('improvements', entry)") {{entry.text}}
+            i.fa.fa-check(ng-show="entry.read")
+          div(ng-if="!reviewMode")
+            span.left {{entry.text}}
+            .right(ng-show="currentUser.id == entry.userId")
+              i.fa.fa-pencil(ng-click="edit('improvements', entry)")
+              i.fa.fa-times(ng-click="remove('improvements', entry)")
     .large-2.columns.players
       .row.text-center(hide-for="player" model="currentUser.type")
         button.btn.showy(ng-click="toggleReviewMode()") {{ reviewMode ? 'Hide' : 'Reveal'}}

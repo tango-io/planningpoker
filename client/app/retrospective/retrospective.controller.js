@@ -51,12 +51,13 @@ angular.module('pokerestimateApp')
 
     //$timeout(function(){
       socket.emit('deleteEntry', {id: $scope.sessionId, type: type, entry: entry});
-      $scope.session[type] =  _.without($scope.session[type], entry);
+      $scope.session[type] =  _.reject($scope.session[type], {id: entry.id});
     //}, 1000);
   };
 
   $scope.edit = function(type, entry){
     $scope.editEntry = entry.text;
+    $scope.entryType = type;
     var modalInstance = $modal.open({templateUrl: 'app/templates/modals/entry.html', keyboard:false, scope: this});
     modalInstance.result.then(function (data) {
       entry.text = data.editEntry;
@@ -65,7 +66,7 @@ angular.module('pokerestimateApp')
   };
 
   $scope.update = function(entry){
-    socket.emit('updateEntry', {id: $scope.sessionId, entry: entry});
+    socket.emit('updateEntry', {id: $scope.sessionId, entry: entry, entryType: $scope.entryType});
   };
 
   $scope.openEntry = function(type, entry){
@@ -171,7 +172,6 @@ angular.module('pokerestimateApp')
       // Set previous data from room
       $scope.currentUser.id  = data.id;
       $scope.session = data.session;
-      console.log("yeeep", data);
     },
 
     onUpdateUsers:  function (data){
@@ -213,14 +213,12 @@ angular.module('pokerestimateApp')
       $scope.editEntry = $scope.session[data.type][data.index];
     },
 
-    onEntryUpdated: function(e){
-      var o = _.pick($scope.session, 'good', 'bad', 'improvements');
-      var a = _.union(o.good, o.bad, o.improvements);
-      var entry = _.findWhere(a, {text: e.text});
-      entry.text = e.text;
-      entry.read = e.read;
-      if($scope.editEntry.text == e.text){
-        $scope.editEntry.read = e.read;
+    onEntryUpdated: function(data){
+      var entry = _.findWhere($scope.session[data.entryType], {id: data.entry.id});
+      entry.text = data.entry.text;
+      entry.read = data.entry.read;
+      if($scope.editEntry.text == data.entry.text){
+        $scope.editEntry.read = data.entry.read;
       }
     },
 

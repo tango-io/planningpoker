@@ -126,7 +126,7 @@ function onOpenEntry(socket, data) {
 
 function onDeleteEntry(socket, data) {
   console.log('----', rooms[data.id], data.type);
-  rooms[data.id][data.type] =  _.reject(rooms[data.id][data.type], {text: data.entry.text});
+  rooms[data.id][data.type] =  _.reject(rooms[data.id][data.type], {id: data.entry.id});
   socket.broadcast.to(data.id).emit('deleteEntry', data);
 };
 
@@ -135,12 +135,10 @@ function onMoveCurrentEntry(socket, data) {
 };
 
 function onUpdateEntry(socket, data) {
-  var o = _.pick(rooms[data.id], 'good', 'bad', 'improvements');
-  var a = _.union(o.good, o.bad, o.improvements);
-  var entry = _.findWhere(a, {id: data.entry.id});
-  entry.read = data.entry.read ;
+  var entry = _.findWhere(rooms[data.id][data.entryType], {id: data.entry.id});
+  entry.read = data.entry.read;
   entry.text = data.entry.text;
-  socket.broadcast.to(data.id).emit('entryUpdated', entry);
+  socket.broadcast.to(data.id).emit('entryUpdated', data);
 };
 
 function onLeaveSession(socket){
