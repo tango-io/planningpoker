@@ -10,8 +10,7 @@ angular.module('pokerestimateApp')
     $scope.newEntry    = {};
 
     if(userService.getUser().username){
-      $scope.currentUser.roomId = $scope.sessionId;
-      socket.emit('joinSession', $scope.currentUser);
+      socket.emit('joinSession', {roomId: $scope.sessionId, username: $scope.currentUser.username, type: $scope.currentUser.type, sessionType: 'retrospective'});
     }else{
       //open modal to ask for username and type when user joins
       $scope.userType = "player"; //default option in modal
@@ -36,7 +35,7 @@ angular.module('pokerestimateApp')
 
   $scope.add = function(type){
     if($scope.newEntry[type]){
-      var entry = {text: $scope.newEntry[type], username: $scope.username};
+      var entry = {text: $scope.newEntry[type], username: $scope.currentUser.username, userId: $scope.currentUser.id};
       $scope.session[type].push(entry);
       socket.emit('newEntry', {id: $scope.sessionId, entry: entry, type: type});
       $scope.newEntry[type] = "";
@@ -48,10 +47,10 @@ angular.module('pokerestimateApp')
   };
 
   $scope.edit = function(type, entry){
-    $scope.editEntry = entry;
+    $scope.editEntry = entry.text;
     var modalInstance = $modal.open({templateUrl: 'app/templates/modals/entry.html', keyboard:false, scope: this});
     modalInstance.result.then(function (data) {
-      entry.text = data.editEntry.text;
+      entry.text = data.editEntry;
     });
   };
 
@@ -98,7 +97,7 @@ angular.module('pokerestimateApp')
   function hideText(data){
     var entry;
     return _.map(data, function(value){
-      if(value.id != $scope.currentUser.id){
+      if(value.userId != $scope.currentUser.id){
         entry = _.clone(value);
         entry.text = '________ (' + entry.username + ')';
         return entry;

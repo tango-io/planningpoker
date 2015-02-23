@@ -14,7 +14,7 @@ include ../templates/header.jade
             i.fa.fa-check(ng-show="entry.read")
           div(ng-if="!reviewMode")
             span.left {{entry.text}}
-            .right(ng-hide="entry.disabled")
+            .right(ng-show="currentUser.id == entry.userId")
               i.fa.fa-pencil(ng-click="edit('good', entry)")
               i.fa.fa-times(ng-click="remove('good', entry)")
     .large-3.columns

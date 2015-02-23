@@ -40,6 +40,7 @@ function onNewSession(socket, data) {
 };
 
 function onJoinSession(io, socket, data) {
+  console.log("ajdlaksd", data)
   if(!rooms[data.roomId]){ return socket.emit('errorMsg', {message: "Session does not exist"}); }
   if(!data.username || !data.type){ return socket.emit('errorMsg', {message: "Missing information"}); }
 
@@ -49,6 +50,7 @@ function onJoinSession(io, socket, data) {
 
   //Send previous information from room
   if(data.sessionType == 'retrospective'){
+    console.log("lkajsd", getRetrospectiveData(rooms[data.roomId]));
     socket.emit('joinedSession', {id: socket.id, session: getRetrospectiveData(rooms[data.roomId])});
     io.to(data.roomId).emit('updateUsers', {players: rooms[data.roomId].players, moderators: rooms[data.roomId].moderators});
   }else{
@@ -105,7 +107,11 @@ function hideText(data){
 
 function onNewEntry(socket, data) {
   rooms[data.id][data.type].push(_.extend(data.entry, {disabled: true, userId: socket.id}));
-  socket.broadcast.to(data.id).emit('newEntry', {type: data.type, username: data.username});
+  socket.broadcast.to(data.id).emit('newEntry', {type: data.type, username: data.entry.username});
+};
+
+function onCloseEntry(socket, data) {
+  socket.broadcast.to(data.id).emit('closeEntry');
 };
 
 function onRemove(socket, data) {
