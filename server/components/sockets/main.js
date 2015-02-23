@@ -5,29 +5,37 @@ var uuid  = require('node-uuid'),
     rooms = {};
 
 exports.register = function(socket, io) {
-  socket.on('newSession', function(data){ onNewSession(socket, data);});
-  socket.on('joinSession', function(data){ onJoinSession(io, socket, data);});
-  socket.on('updateDescription', function(data){ updateDescription(socket, data);});
-  socket.on('vote', function(data){ onVote(io, socket, data);});
-  socket.on('revealVotes', function(data){onRevealVotes(io, socket, data);});
-  socket.on('clearSession', function(data){onClearSession(socket, data)});
+  socket.on('newSession',   function(data){onNewSession(socket, data);});
+  socket.on('joinSession',  function(data){onJoinSession(io, socket, data);});
   socket.on('leaveSession', function(data){onLeaveSession(socket);});
-  socket.on('newMessage', function(data){onNewMessagge(socket, data);});
-  socket.on('reveal', function(data){onReveal(io, data);});
-  socket.on('hide', function(data){onHide(io, data);});
-  socket.on('openEntry', function(data){onOpenEntry(socket, data);});
-  socket.on('closeEntry', function(data){onCloseEntry(socket, data);});
-  socket.on('updateEntry', function(data){onUpdateEntry(socket, data);});
+  socket.on('disconnect',   function(data){onLeaveSession(socket);});
+
+  //Pointing sessions listeners
+  socket.on('updateDescription', function(data){updateDescription(socket, data);});
+  socket.on('vote',              function(data){onVote(io, socket, data);});
+  socket.on('revealVotes',       function(data){onRevealVotes(io, socket, data);});
+  socket.on('clearSession',      function(data){onClearSession(socket, data)});
+
+//Retrospective sessions listeners
+  socket.on('reveal',           function(data){onReveal(io, data);});
+  socket.on('hide',             function(data){onHide(io, data);});
+  socket.on('newEntry',         function(data){onNewEntry(socket, data);});
+  socket.on('updateEntry',      function(data){onUpdateEntry(socket, data);});
+  socket.on('deleteEntry',      function(data){onDeleteEntry(socket, data);});
+  socket.on('closeEntry',       function(data){onCloseEntry(socket, data);});
+  socket.on('openEntry',        function(data){onOpenEntry(socket, data);});
   socket.on('moveCurrentEntry', function(data){onMoveCurrentEntry(socket, data);});
-  socket.on('disconnect', function(data){onLeaveSession(socket);});
 };
+
 function onNewSession(socket, data) {
   var roomId = uuid.v1();
+
   if(data == 'retrospective'){
     rooms[roomId] = {players: [], moderators:[], good: [], bad: [], improvements: []};
   }else{
     rooms[roomId] = {players: [], moderators:[], votes: {}, voteValues: data};
   }
+
   socket.emit('sessionCreated', roomId);
 };
 
@@ -95,9 +103,14 @@ function hideText(data){
   }) || [];
 };
 
-function onNewMessagge(socket, data) {
-  rooms[data.id][data.type].push({username: data.username, disabled:true,  text: data.text, id: socket.id});
-  socket.broadcast.to(data.id).emit('newMessage', {type: data.type, username: data.username});
+function onNewEntry(socket, data) {
+  rooms[data.id][data.type].push(_.extend(data.entry, {disabled: true, userId: socket.id}));
+  socket.broadcast.to(data.id).emit('newEntry', {type: data.type, username: data.username});
+};
+
+function onRemove(socket, data) {
+  socket.broadcast.to(data.id).emit('remove', data.entry);
+  rooms[data.id].session[data.type] =  _.without(rooms[data.id][type], data.entry);
 };
 
 function onReveal(io, data) {
@@ -112,8 +125,10 @@ function onOpenEntry(socket, data) {
   socket.broadcast.to(data.id).emit('openEntry', {entry: data.entry});
 };
 
-function onCloseEntry(socket, data) {
-  socket.broadcast.to(data.id).emit('closeEntry');
+function onEditEntry(socket, data) {
+};
+
+function onUpdateEntry(socket, data) {
 };
 
 function onMoveCurrentEntry(socket, data) {

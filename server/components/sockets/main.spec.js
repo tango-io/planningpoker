@@ -66,7 +66,6 @@ describe('sockets', function() {
         done();
       });
     });
-
     client1.emit('newSession');
   });
 
@@ -97,22 +96,6 @@ describe('sockets', function() {
     });
   });
 
-  it('emits hide votes when user joins in a session', function(done) {
-    client1.emit('newSession');
-    client1.on('sessionCreated', function(id){
-
-      client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
-
-      client1.on('updateUsers', function(){
-        client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
-
-        client1.on('hideVotes', function(data){
-          done();
-        });
-      });
-    });
-  });
-
   it('emits update users when a user join in a session', function(done) {
     client1.emit('newSession');
     client1.on('sessionCreated', function(id){
@@ -127,80 +110,6 @@ describe('sockets', function() {
           data.players[1].username.should.be.exactly('Another tester');
           done();
         })
-      });
-    });
-  });
-
-  it('updates description for all clients', function(done) {
-    client1.emit('newSession');
-
-    client1.on('sessionCreated', function(id){
-
-      client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
-      client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
-
-      client2.once('joinedSession', function(){
-        client2.on('descriptionUpdated', function(data){
-          data.should.be.exactly('Hello');
-          done();
-        });
-        client1.emit('updateDescription', {id: id, description: 'Hello'});
-      });
-    });
-  });
-
-  it('updates vote flag when a user votes', function(done) {
-    client1.emit('newSession');
-    client1.on('sessionCreated', function(id){
-      client1.emit('joinSession', {roomId: id, username: 'Tester', type:'player'});
-
-      client1.once('updateUsers', function(data){
-        client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
-
-        client2.once('updateUsers', function(data){
-
-          client1.emit('vote', {id: id, userId: client1.id, vote: 3 });
-
-          client2.once('updateUsers', function(data){
-            data.players[0].voted.should.be.ok;
-            done();
-          });
-        });
-      });
-    });
-  });
-
-  it('emits to reveal votes when all clients has voted', function(done) {
-    client1.on('sessionCreated', function(id){
-      client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
-      client1.once('joinedSession', function(){
-        client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
-        client2.once('joinedSession', function(){
-          client2.on('updateVotes', function(data){
-            data[client1.id].should.be.exactly(4);
-            data[client2.id].should.be.exactly(5);
-            done();
-          });
-          client1.emit('vote', {id: id, userId: client1.id, vote: 4 });
-          client2.emit('vote', {id: id, userId: client2.id, vote: 5 });
-        });
-      });
-    });
-    client1.emit('newSession');
-  });
-
-  it('emits clear votes after clearing a session', function(done) {
-    client1.emit('newSession');
-    client1.on('sessionCreated', function(id){
-
-      client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
-      client2.emit('joinSession', {roomId: id, username: 'Another tester', type:'player'});
-
-      client2.once('joinedSession', function(){
-        client2.on('clearVotes', function(data){
-          done();
-        });
-        client1.emit('clearSession', {id: id});
       });
     });
   });
@@ -226,26 +135,163 @@ describe('sockets', function() {
     });
   });
 
-  it('updates votes after a client leaves', function(done) {
-    client1.emit('newSession');
-    client1.on('sessionCreated', function(id){
-      client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
-      client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
+  describe('Pointing session events', function(){
 
-      client2.once('joinedSession', function(){
-        client1.emit('vote', {id: id, userId: client1.id, vote: 7 });
-        client2.emit('vote', {id: id, userId: client2.id, vote: 5 });
+    it('emits hide votes when user joins in a session', function(done) {
+      client1.emit('newSession');
+      client1.on('sessionCreated', function(id){
 
-        client1.once('updateVotes', function(data){
-          client1.on('updateVotes', function(data){
-            var votesLength = _.keys(data).length
-            votesLength.should.be.exactly(1);
+        client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
+
+        client1.on('updateUsers', function(){
+          client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
+
+          client1.on('hideVotes', function(data){
             done();
           });
-
-          client2.emit('leaveSession', {id: id, username: 'Another tester', type: 'player'});
         });
       });
+    });
+
+    it('updates description for all clients', function(done) {
+      client1.emit('newSession');
+
+      client1.on('sessionCreated', function(id){
+
+        client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
+        client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
+
+        client2.once('joinedSession', function(){
+          client2.on('descriptionUpdated', function(data){
+            data.should.be.exactly('Hello');
+            done();
+          });
+          client1.emit('updateDescription', {id: id, description: 'Hello'});
+        });
+      });
+    });
+
+    it('updates vote flag when a user votes', function(done) {
+      client1.emit('newSession');
+      client1.on('sessionCreated', function(id){
+        client1.emit('joinSession', {roomId: id, username: 'Tester', type:'player'});
+
+        client1.once('updateUsers', function(data){
+          client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
+
+          client2.once('updateUsers', function(data){
+
+            client1.emit('vote', {id: id, userId: client1.id, vote: 3 });
+
+            client2.once('updateUsers', function(data){
+              data.players[0].voted.should.be.ok;
+              done();
+            });
+          });
+        });
+      });
+    });
+
+    it('emits to reveal votes when all clients has voted', function(done) {
+      client1.on('sessionCreated', function(id){
+        client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
+        client1.once('joinedSession', function(){
+          client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
+          client2.once('joinedSession', function(){
+            client2.on('updateVotes', function(data){
+              data[client1.id].should.be.exactly(4);
+              data[client2.id].should.be.exactly(5);
+              done();
+            });
+            client1.emit('vote', {id: id, userId: client1.id, vote: 4 });
+            client2.emit('vote', {id: id, userId: client2.id, vote: 5 });
+          });
+        });
+      });
+      client1.emit('newSession');
+    });
+
+    it('emits clear votes after clearing a session', function(done) {
+      client1.emit('newSession');
+      client1.on('sessionCreated', function(id){
+
+        client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
+        client2.emit('joinSession', {roomId: id, username: 'Another tester', type:'player'});
+
+        client2.once('joinedSession', function(){
+          client2.on('clearVotes', function(data){
+            done();
+          });
+          client1.emit('clearSession', {id: id});
+        });
+      });
+    });
+
+    it('updates votes after a client leaves', function(done) {
+      client1.emit('newSession');
+      client1.on('sessionCreated', function(id){
+        client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
+        client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
+
+        client2.once('joinedSession', function(){
+          client1.emit('vote', {id: id, userId: client1.id, vote: 7 });
+          client2.emit('vote', {id: id, userId: client2.id, vote: 5 });
+
+          client1.once('updateVotes', function(data){
+            client1.on('updateVotes', function(data){
+              var votesLength = _.keys(data).length
+              votesLength.should.be.exactly(1);
+              done();
+            });
+
+            client2.emit('leaveSession', {id: id, username: 'Another tester', type: 'player'});
+          });
+        });
+      });
+    });
+  });
+
+  describe('Retrospective session events', function(){
+    it('set default values in new sessionlistener', function(done) {
+    });
+
+    it('emits joined session and update users in join session', function(done) {
+    });
+
+    it('saves entry on corresponding type in new entry', function(done) {
+    });
+
+    it('emits new entry on new entry function', function(done) {
+    });
+
+    it('emits reveal on reveal function', function(done) {
+    });
+
+    it('emits hide on hide function', function(done) {
+    });
+
+    it('emits remove on remove function', function(done) {
+    });
+
+    it('removes entry on remove function', function(done) {
+    });
+
+    it('emits open entry on open entry function', function(done) {
+    });
+
+    it('emits close entry on close entry function', function(done) {
+    });
+
+    it('emits move current entry on current entry function', function(done) {
+    });
+
+    it('remove and emits remove on remove function', function(done) {
+    });
+
+    it('update and emits update entry on update function', function(done) {
+    });
+
+    it('removes users and entries from user on leave session', function(done) {
     });
   });
 });
