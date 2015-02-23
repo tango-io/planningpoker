@@ -130,12 +130,12 @@ angular.module('pokerestimateApp')
       socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: 'good', index: indexG + 1});
     }
 
-    if(indexB != -1 && $scope.session.bad[indexG + 1]){
+    if(indexB != -1 && $scope.session.bad[indexB + 1]){
       $scope.editEntry = $scope.session.bad[indexB + 1];
       socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: 'bad', index: indexB + 1});
     }
 
-    if(indexI != -1 && $scope.session.improvements[indexG + 1]){
+    if(indexI != -1 && $scope.session.improvements[indexI + 1]){
       $scope.editEntry = $scope.session.improvements[indexI + 1];
       socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: 'improvements', index: indexB + 1});
     }
@@ -151,13 +151,13 @@ angular.module('pokerestimateApp')
       socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: 'good', index: indexG - 1});
     }
 
-    if(indexB != -1 && $scope.session.good[indexB - 1]){
-      $scope.editEntry = $scope.session.good[indexB - 1];
+    if(indexB != -1 && $scope.session.bad[indexB - 1]){
+      $scope.editEntry = $scope.session.bad[indexB - 1];
       socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: 'bad', index: indexB - 1});
     }
 
-    if(indexI != -1 && $scope.session.good[indexI - 1]){
-      $scope.editEntry = $scope.session.good[indexI - 1];
+    if(indexI != -1 && $scope.session.improvements[indexI - 1]){
+      $scope.editEntry = $scope.session.improvements[indexI - 1];
       socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: 'improvements', index: indexB - 1});
     }
   };
