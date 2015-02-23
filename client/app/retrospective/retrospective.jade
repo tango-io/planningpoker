@@ -10,7 +10,7 @@ include ../templates/header.jade
       ul
         li(ng-repeat="entry in session.good")
           div(ng-if="reviewMode")
-            a.left(ng-click="openEntry('good', entry)") {{entry.text}}
+            a.left(ng-click="openEntry('good', entry)") {{entry.text}}({{entry.username}})
             i.fa.fa-check(ng-show="entry.read")
           div(ng-if="!reviewMode")
             span.left {{entry.text}}
@@ -26,7 +26,7 @@ include ../templates/header.jade
       ul
        li(ng-repeat="entry in session.bad")
           div(ng-if="reviewMode")
-            a.left(ng-click="openEntry('bad', entry)") {{entry.text}}
+            a.left(ng-click="openEntry('bad', entry)") {{entry.text}}({{entry.username}})
             i.fa.fa-check(ng-show="entry.read")
           div(ng-if="!reviewMode")
             span.left {{entry.text}}
@@ -41,7 +41,7 @@ include ../templates/header.jade
       ul
         li(ng-repeat="entry in session.improvements")
           div(ng-if="reviewMode")
-            a.left(ng-click="openEntry('improvements', entry)") {{entry.text}}
+            a.left(ng-click="openEntry('improvements', entry)") {{entry.text}}({{entry.username}})
             i.fa.fa-check(ng-show="entry.read")
           div(ng-if="!reviewMode")
             span.left {{entry.text}}
