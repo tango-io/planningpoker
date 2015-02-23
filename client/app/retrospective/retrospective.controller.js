@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pokerestimateApp')
-.controller('RetrospectiveCtrl', function ($scope, socket, $location, userService, $routeParams, $modal) {
+.controller('RetrospectiveCtrl', function ($scope, socket, $location, userService, $routeParams, $modal, $timeout) {
   $scope.init = function(){
     $scope.currentUser = userService.getUser(); //get user name and type
     $scope.url         = $location.$$absUrl;// Url to share with the team
@@ -27,6 +27,7 @@ angular.module('pokerestimateApp')
     socket.on('reveal',           $scope.listeners.onReveal);
     socket.on('hide',             $scope.listeners.onHide);
     socket.on('newEntry',         $scope.listeners.onNewEntry);
+    socket.on('deleteEntry',      $scope.listeners.onDeleteEntry);
     socket.on('entryUpdated',     $scope.listeners.onEntryUpdated);
     socket.on('moveCurrentEntry', $scope.listeners.onMoveCurrentEntry);
     socket.on('openEntry',        $scope.listeners.onOpenEntry);
@@ -35,7 +36,7 @@ angular.module('pokerestimateApp')
 
   $scope.add = function(type){
     if($scope.newEntry[type]){
-      var entry = {text: $scope.newEntry[type], username: $scope.currentUser.username, userId: $scope.currentUser.id};
+      var entry = {id: $scope.session[type].length, text: $scope.newEntry[type], username: $scope.currentUser.username, userId: $scope.currentUser.id};
       $scope.session[type].push(entry);
       socket.emit('newEntry', {id: $scope.sessionId, entry: entry, type: type});
       $scope.newEntry[type] = "";
@@ -43,7 +44,15 @@ angular.module('pokerestimateApp')
   };
 
   $scope.remove = function(type, entry){
-    $scope.session[type] =  _.without($scope.session[type], entry);
+    //if($scope.entryModal){ $scope.next(entry); }
+    //if($scope.entryModal && $scope.session[type].length <= 1){
+    //  $scope.entryModal.close();
+    //}
+
+    //$timeout(function(){
+      socket.emit('deleteEntry', {id: $scope.sessionId, type: type, entry: entry});
+      $scope.session[type] =  _.without($scope.session[type], entry);
+    //}, 1000);
   };
 
   $scope.edit = function(type, entry){
@@ -51,6 +60,7 @@ angular.module('pokerestimateApp')
     var modalInstance = $modal.open({templateUrl: 'app/templates/modals/entry.html', keyboard:false, scope: this});
     modalInstance.result.then(function (data) {
       entry.text = data.editEntry;
+      $scope.update(entry);
     });
   };
 
@@ -58,12 +68,13 @@ angular.module('pokerestimateApp')
     socket.emit('updateEntry', {id: $scope.sessionId, entry: entry});
   };
 
-  $scope.openEntry = function(entry){
+  $scope.openEntry = function(type, entry){
     socket.emit('openEntry', {id: $scope.sessionId, entry: entry});
     $scope.editEntry = entry;
-    var modalInstance = $modal.open({templateUrl: 'app/templates/modals/showEntry.html', keyboard:false, scope: this});
+    $scope.entryType = type;
+    $scope.entryModal = $modal.open({templateUrl: 'app/templates/modals/showEntry.html', keyboard:false, scope: this});
 
-    modalInstance.result.then(function (data) {
+    $scope.entryModal.result.then(function (data) {
       socket.emit('closeEntry', {id: $scope.sessionId});
     });
   };
@@ -183,6 +194,10 @@ angular.module('pokerestimateApp')
       //$scope.session = data.session;
       $scope.reviewMode = false;
       $scope.session  = getRetrospectiveData($scope.session);
+    },
+
+    onDeleteEntry: function(data){
+      $scope.session[data.type] =  _.reject($scope.session[data.type], {id: data.entry.id});
     },
 
     onOpenEntry: function(data){

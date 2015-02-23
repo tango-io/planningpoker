@@ -40,7 +40,6 @@ function onNewSession(socket, data) {
 };
 
 function onJoinSession(io, socket, data) {
-  console.log("ajdlaksd", data)
   if(!rooms[data.roomId]){ return socket.emit('errorMsg', {message: "Session does not exist"}); }
   if(!data.username || !data.type){ return socket.emit('errorMsg', {message: "Missing information"}); }
 
@@ -50,7 +49,6 @@ function onJoinSession(io, socket, data) {
 
   //Send previous information from room
   if(data.sessionType == 'retrospective'){
-    console.log("lkajsd", getRetrospectiveData(rooms[data.roomId]));
     socket.emit('joinedSession', {id: socket.id, session: getRetrospectiveData(rooms[data.roomId])});
     io.to(data.roomId).emit('updateUsers', {players: rooms[data.roomId].players, moderators: rooms[data.roomId].moderators});
   }else{
@@ -114,11 +112,6 @@ function onCloseEntry(socket, data) {
   socket.broadcast.to(data.id).emit('closeEntry');
 };
 
-function onRemove(socket, data) {
-  socket.broadcast.to(data.id).emit('remove', data.entry);
-  rooms[data.id].session[data.type] =  _.without(rooms[data.id][type], data.entry);
-};
-
 function onReveal(io, data) {
   io.to(data.id).emit('reveal', {session: _.pick(rooms[data.id], 'good', 'bad', 'improvements')} );
 };
@@ -131,10 +124,10 @@ function onOpenEntry(socket, data) {
   socket.broadcast.to(data.id).emit('openEntry', {entry: data.entry});
 };
 
-function onEditEntry(socket, data) {
-};
-
-function onUpdateEntry(socket, data) {
+function onDeleteEntry(socket, data) {
+  console.log('----', rooms[data.id], data.type);
+  rooms[data.id][data.type] =  _.reject(rooms[data.id][data.type], {text: data.entry.text});
+  socket.broadcast.to(data.id).emit('deleteEntry', data);
 };
 
 function onMoveCurrentEntry(socket, data) {
@@ -144,8 +137,8 @@ function onMoveCurrentEntry(socket, data) {
 function onUpdateEntry(socket, data) {
   var o = _.pick(rooms[data.id], 'good', 'bad', 'improvements');
   var a = _.union(o.good, o.bad, o.improvements);
-  var entry = _.findWhere(a, {text: data.entry.text});
-  entry.read = data.entry.read;
+  var entry = _.findWhere(a, {id: data.entry.id});
+  entry.read = data.entry.read ;
   entry.text = data.entry.text;
   socket.broadcast.to(data.id).emit('entryUpdated', entry);
 };
