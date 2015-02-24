@@ -253,45 +253,224 @@ describe('sockets', function() {
 
   describe('Retrospective session events', function(){
     it('set default values in new sessionlistener', function(done) {
+
+      client1.on('sessionCreated', function(sessionId){
+        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+      });
+
+      client1.on('joinedSession', function(data){
+        data.session.should.have.property('good').with.lengthOf(0);
+        data.session.should.have.property('bad').with.lengthOf(0);
+        data.session.should.have.property('improvements').with.lengthOf(0);
+        done();
+      });
+
+      client1.emit('newSession', 'retrospective');
     });
 
-    it('emits joined session and update users in join session', function(done) {
-    });
+    it('emits new entry entry on corresponding type in new entry', function(done) {
+      var id;
 
-    it('saves entry on corresponding type in new entry', function(done) {
-    });
+      client1.on('sessionCreated', function(sessionId){
+        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = sessionId;
+      });
 
-    it('emits new entry on new entry function', function(done) {
+      client1.on('joinedSession', function(data){
+        client1.emit('newEntry', {id: id, type:'good', entry:{ username: 'Tester', text:'Test'}});
+      });
+
+      client2.on('newEntry', function(data){
+        data.type.should.be.exactly('good');
+        data.username.should.be.exactly('Tester');
+        done();
+      });
+
+      client1.emit('newSession', 'retrospective');
     });
 
     it('emits reveal on reveal function', function(done) {
+      var id;
+
+      client1.on('sessionCreated', function(sessionId){
+        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = sessionId;
+      });
+
+      client1.on('joinedSession', function(data){
+        client1.emit('newEntry', {id: id, type:'good', entry:{ username: 'Tester', text:'TestG'}});
+        client1.emit('newEntry', {id: id, type:'bad', entry:{ username: 'Tester', text:'TestB'}});
+        client1.emit('newEntry', {id: id, type:'improvements', entry:{ username: 'Tester', text:'TestI'}});
+        client1.emit('reveal', {id: id, type:'good', entry:{ username: 'Tester', text:'Test'}});
+      });
+
+      client2.on('reveal', function(data){
+        data.session.good[0].should.have.property('username', 'Tester');
+        data.session.good[0].should.have.property('text', 'TestG');
+        data.session.good[0].should.have.property('userId', client1.id);
+        data.session.bad[0].should.have.property('text', 'TestB');
+        data.session.improvements[0].should.have.property('text', 'TestI');
+        done();
+      });
+
+      client1.emit('newSession', 'retrospective');
     });
 
     it('emits hide on hide function', function(done) {
+      var id;
+      client1.on('sessionCreated', function(sessionId){
+        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = sessionId;
+      });
+
+      client1.on('joinedSession', function(data){
+        client1.emit('hide', {id: id, type:'good', entry: {id: 0}});
+      });
+
+      client2.on('hide', function(data){
+        done();
+      });
+
+      client1.emit('newSession', 'retrospective');
     });
 
     it('emits remove on remove function', function(done) {
-    });
+      var id;
+      client1.on('sessionCreated', function(sessionId){
+        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = sessionId;
+      });
 
-    it('removes entry on remove function', function(done) {
+      client1.on('joinedSession', function(data){
+        client1.emit('newEntry', {id: id, type:'good', entry:{username: 'Tester', text:'TestG', id:0}});
+        client1.emit('deleteEntry', {id: id, type:'good', entry: {id: 0}});
+      });
+
+      client2.on('deleteEntry', function(data){
+        data.should.have.property('id', id);
+        data.should.have.property('type', 'good');
+        data.entry.should.have.property('id', 0);
+        done();
+      });
+
+      client1.emit('newSession', 'retrospective');
     });
 
     it('emits open entry on open entry function', function(done) {
+      var id;
+      client1.on('sessionCreated', function(sessionId){
+        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = sessionId;
+      });
+
+      client1.on('joinedSession', function(data){
+        client1.emit('openEntry', {id: id, type:'good', entry: {id: 0}});
+      });
+
+      client2.on('openEntry', function(data){
+        data.entry.should.have.property('id', 0);
+        done();
+      });
+
+      client1.emit('newSession', 'retrospective');
     });
 
     it('emits close entry on close entry function', function(done) {
+      var id;
+      client1.on('sessionCreated', function(sessionId){
+        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = sessionId;
+      });
+
+      client1.on('joinedSession', function(data){
+        client1.emit('closeEntry', {id: id});
+      });
+
+      client2.on('closeEntry', function(data){
+        done();
+      });
+
+      client1.emit('newSession', 'retrospective');
     });
 
     it('emits move current entry on current entry function', function(done) {
-    });
+      var id;
+      client1.on('sessionCreated', function(sessionId){
+        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = sessionId;
+      });
 
-    it('remove and emits remove on remove function', function(done) {
+      client1.on('joinedSession', function(data){
+        client1.emit('moveCurrentEntry', {id: id, type: 'good', entry:{ id: 0}});
+      });
+
+      client2.on('moveCurrentEntry', function(data){
+        data.should.have.property('type', 'good');
+        data.entry.should.have.property('id', 0);
+        done();
+      });
+
+      client1.emit('newSession', 'retrospective');
     });
 
     it('update and emits update entry on update function', function(done) {
+      var id;
+      client1.on('sessionCreated', function(sessionId){
+        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = sessionId;
+      });
+
+      client1.on('joinedSession', function(data){
+        client1.emit('newEntry', {id: id, type:'good', entry:{username: 'Tester', text:'TestG', id:0}});
+        client1.emit('updateEntry', {id: id, entryType: 'good', entry:{ id: 0, read: true}});
+      });
+
+      client2.on('entryUpdated', function(data){
+        data.should.have.property('entryType', 'good');
+        data.entry.should.have.property('read', true);
+        data.entry.should.have.property('id', 0);
+        done();
+      });
+
+      client1.emit('newSession', 'retrospective');
     });
 
     it('removes users and entries from user on leave session', function(done) {
+      var id, pass;
+      var that = this;
+      client1.on('sessionCreated', function(sessionId){
+        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = sessionId;
+      });
+
+      client2.once('updateUsers', function(data){
+        client1.on('joinedSession', function(data){
+          client1.emit('newEntry', {id: id, type:'good', entry:{username: 'Tester', text:'TestG', id:0}});
+          client1.emit('leaveSession', {id: id, entryType: 'good', entry:{ id: 0, read: true}});
+
+          client2.on('updateUsers', function(data){
+            data.players.length.should.be.exactly(1);
+            if(pass == true){ done(); };
+            pass= true;
+          });
+
+          client2.on('updateEntries', function(data){
+            data.good.length.should.be.exactly(0);
+            if(pass == true){ done() };
+            pass = true;
+          });
+        });
+      });
+      client1.emit('newSession', 'retrospective');
     });
   });
 });
