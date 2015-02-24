@@ -6,14 +6,13 @@ angular.module('pokerestimateApp')
   //Setting default options and clearing user in userservice
   $scope.init = function(){
     $scope.sessionType  = "pointing";
-    $scope.sessionType_  = "pointing";
     $scope.currentUser  = {username:"", type:"player"};
+    $scope.sessionType_ = "pointing";
     $scope.currentUser_ = {username:"", type:"player"};
     userService.setUser($scope.currentUser);
 
     //Redirect to retrospective page after create a session
     socket.on('sessionCreated', $scope.listeners.onSessionCreated);
-
   };
 
   $scope.startSession = function(){
@@ -32,10 +31,10 @@ angular.module('pokerestimateApp')
   };
 
   $scope.joinSession = function(){
-    var url = ($scope.sessionType_ == "pointing" ? '/sessions/' : '/retrospectives/') + $scope.sessionId;
+    var type = ($scope.sessionType_ == "pointing" ? '/sessions/' : '/retrospectives/');
     if($scope.currentUser_.username && $scope.sessionId){
       userService.setUser($scope.currentUser_);
-      $location.path(url);
+      $location.path(type + $scope.sessionId);
     }else{
       //Set submitted_ to true to show errors in join form
       $scope.submitted_ = true;
@@ -45,7 +44,7 @@ angular.module('pokerestimateApp')
   $scope.listeners = {
     onSessionCreated: function(data){
       var type = data.data == 'retrospective' ? 'retrospectives' : 'sessions';
-     $location.path('/'+type+'/' + data.id);
+     $location.path('/'+ type +'/' + data.id);
     }
   };
 });

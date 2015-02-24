@@ -2,6 +2,8 @@
 
 angular.module('pokerestimateApp')
 .controller('RetrospectiveCtrl', function ($scope, socket, $location, userService, $routeParams, $modal, $timeout) {
+  var modalPath = 'app/templates/modals/';
+
   $scope.init = function(){
     $scope.currentUser = userService.getUser(); //get user name and type
     $scope.url         = $location.$$absUrl;// Url to share with the team
@@ -14,7 +16,7 @@ angular.module('pokerestimateApp')
     }else{
       //open modal to ask for username and type when user joins
       $scope.userType = "player"; //default option in modal
-      var modalInstance = $modal.open({templateUrl: 'app/templates/modals/username.html', keyboard:false, scope: this});
+      var modalInstance = $modal.open({templateUrl: modalPath + 'username.html', keyboard:false, scope: this});
       modalInstance.result.then(function (data) {
         $scope.currentUser = {username: data.username, type: data.userType};
         socket.emit('joinSession', {roomId: $scope.sessionId, username: data.username, type: data.userType, sessionType: 'retrospective'});
@@ -36,8 +38,15 @@ angular.module('pokerestimateApp')
   };
 
   $scope.add = function(type){
-    if($scope.newEntry[type]){
-      var entry = {id: $scope.session[type].length, text: $scope.newEntry[type], username: $scope.currentUser.username, userId: $scope.currentUser.id};
+    if($scope.newEntry[type]){ //avoid empty values
+
+      var entry = {
+        id: $scope.session[type].length,
+        text: $scope.newEntry[type],
+        username: $scope.currentUser.username,
+        userId: $scope.currentUser.id,
+      };
+
       $scope.session[type].push(entry);
       socket.emit('newEntry', {id: $scope.sessionId, entry: entry, type: type});
       $scope.newEntry[type] = "";
@@ -46,15 +55,15 @@ angular.module('pokerestimateApp')
 
   $scope.remove = function(type, entry){
     socket.emit('deleteEntry', {id: $scope.sessionId, type: type, entry: entry});
-    $scope.session[type] =  _.reject($scope.session[type], {id: entry.id});
+    $scope.session[type] =  _.without($scope.session[type], entry);
   };
 
   $scope.edit = function(type, entry){
-    $scope.editEntry = entry.text;
+    $scope.currentEntry = angular.copy(entry);
     $scope.entryType = type;
-    var modalInstance = $modal.open({templateUrl: 'app/templates/modals/entry.html', keyboard:false, scope: this});
+    var modalInstance = $modal.open({templateUrl: modalPath + 'editEntry.html', keyboard:false, scope: this});
     modalInstance.result.then(function (data) {
-      entry.text = data.editEntry;
+      entry.text = data.currentEntry.text;
       $scope.update(entry);
     });
   };
@@ -65,9 +74,9 @@ angular.module('pokerestimateApp')
 
   $scope.openEntry = function(type, entry){
     socket.emit('openEntry', {id: $scope.sessionId, entry: entry});
-    $scope.editEntry = entry;
+    $scope.currentEntry = entry;
     $scope.entryType = type;
-    $scope.entryModal = $modal.open({templateUrl: 'app/templates/modals/showEntry.html', keyboard:false, scope: this});
+    $scope.entryModal = $modal.open({templateUrl: modalPath + 'showEntry.html', keyboard:false, scope: this});
 
     $scope.entryModal.result.then(function (data) {
       socket.emit('closeEntry', {id: $scope.sessionId});
@@ -114,45 +123,22 @@ angular.module('pokerestimateApp')
   };
 
   $scope.next = function(entry){
+    var type  = $scope.entryType;
+    var index = _.indexOf($scope.session[type], entry);
 
-    var indexG = _.indexOf($scope.session.good, entry) ;
-    var indexB = _.indexOf($scope.session.bad, entry)
-    var indexI = _.indexOf($scope.session.improvements, entry);
-
-    if(indexG != -1 && $scope.session.good[indexG + 1]){
-      $scope.editEntry = $scope.session.good[indexG + 1];
-      socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: 'good', index: indexG + 1});
-    }
-
-    if(indexB != -1 && $scope.session.bad[indexB + 1]){
-      $scope.editEntry = $scope.session.bad[indexB + 1];
-      socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: 'bad', index: indexB + 1});
-    }
-
-    if(indexI != -1 && $scope.session.improvements[indexI + 1]){
-      $scope.editEntry = $scope.session.improvements[indexI + 1];
-      socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: 'improvements', index: indexB + 1});
+    if(index != -1 && $scope.session[type][index + 1]){
+      $scope.currentEntry = $scope.session[type][index + 1];
+      socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: type, index: index + 1});
     }
   };
 
   $scope.previous = function(entry){
-    var indexG = _.indexOf($scope.session.good, entry) ;
-    var indexB = _.indexOf($scope.session.bad, entry)
-    var indexI = _.indexOf($scope.session.improvements, entry);
+    var type  = $scope.entryType;
+    var index = _.indexOf($scope.session[type], entry);
 
-    if(indexG != -1 && $scope.session.good[indexG - 1]){
-      $scope.editEntry = $scope.session.good[indexG - 1];
-      socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: 'good', index: indexG - 1});
-    }
-
-    if(indexB != -1 && $scope.session.bad[indexB - 1]){
-      $scope.editEntry = $scope.session.bad[indexB - 1];
-      socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: 'bad', index: indexB - 1});
-    }
-
-    if(indexI != -1 && $scope.session.improvements[indexI - 1]){
-      $scope.editEntry = $scope.session.improvements[indexI - 1];
-      socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: 'improvements', index: indexB - 1});
+    if(index != -1 && $scope.session[type][index - 1]){
+      $scope.currentEntry = $scope.session[type][index - 1];
+      socket.emit('moveCurrentEntry', {id: $scope.sessionId, type: type, index: index - 1});
     }
   };
 
@@ -176,7 +162,7 @@ angular.module('pokerestimateApp')
     },
 
     onNewEntry:  function(data){
-      $scope.session[data.type].push({text: "________ (" + data.username + ")", disabled: true});
+      $scope.session[data.type].push({text: "________ (" + data.username + ")"});
     },
 
     onReveal: function(data){
@@ -185,7 +171,6 @@ angular.module('pokerestimateApp')
     },
 
     onHide: function(data){
-      //$scope.session = data.session;
       $scope.reviewMode = false;
       $scope.session  = getRetrospectiveData($scope.session);
     },
@@ -196,7 +181,7 @@ angular.module('pokerestimateApp')
 
     onOpenEntry: function(data){
       $scope.editEntry = data.entry;
-      $scope.entryModal = $modal.open({templateUrl: 'app/templates/modals/showEntry.html', keyboard:false, scope: $scope});
+      $scope.entryModal = $modal.open({templateUrl: modalPath + 'showEntry.html', keyboard:false, scope: $scope});
     },
 
     onCloseEntry: function(data){
@@ -217,15 +202,11 @@ angular.module('pokerestimateApp')
     },
 
     onUpdateEntries: function(data){
-      if($scope.reviewMode){
-        $scope.session  = data;
-      }else{
-        $scope.session  = getRetrospectiveData(data);
-      }
+      $scope.session =  $scope.reviewMode ? $scope.session : getRetrospectiveData(data);
     },
 
     onError: function(){
-      var modalInstance = $modal.open({templateUrl: 'app/templates/modals/error.html', keyboard:false});
+      var modalInstance = $modal.open({templateUrl:  modalPath + 'error.html', keyboard:false});
       modalInstance.result.then(function () {
         $location.path("/");
       });

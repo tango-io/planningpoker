@@ -50,14 +50,15 @@ function onJoinSession(io, socket, data) {
   //Send previous information from room
   if(data.sessionType == 'retrospective'){
     socket.emit('joinedSession', {id: socket.id, session: getRetrospectiveData(rooms[data.roomId])});
-    io.to(data.roomId).emit('updateUsers', {players: rooms[data.roomId].players, moderators: rooms[data.roomId].moderators});
-  }else{
-    socket.emit('joinedSession', {id: socket.id, description: rooms[data.roomId].description, voteValues: rooms[data.roomId].voteValues});
-
-    io.to(data.roomId).emit('hideVotes'); //hide votes if more users joined to room
-    io.to(data.roomId).emit('updateUsers', {players: rooms[data.roomId].players, moderators: rooms[data.roomId].moderators});
+    return io.to(data.roomId).emit('updateUsers', {players: rooms[data.roomId].players, moderators: rooms[data.roomId].moderators});
   }
+
+  socket.emit('joinedSession', {id: socket.id, description: rooms[data.roomId].description, voteValues: rooms[data.roomId].voteValues});
+  io.to(data.roomId).emit('hideVotes'); //hide votes if more users joined to room
+  io.to(data.roomId).emit('updateUsers', {players: rooms[data.roomId].players, moderators: rooms[data.roomId].moderators});
 };
+
+//Pointing listeners
 
 function updateDescription(socket, data) {
   rooms[data.id].description = data.description;
@@ -90,6 +91,7 @@ function onClearSession(socket, data){
   socket.broadcast.to(data.id).emit('clearVotes');
 };
 
+//Retrospective listeners
 function getRetrospectiveData(data){
   return {good: hideText(data.good), bad: hideText(data.bad), improvements: hideText(data.improvements)}
 };
@@ -104,7 +106,7 @@ function hideText(data){
 };
 
 function onNewEntry(socket, data) {
-  rooms[data.id][data.type].push(_.extend(data.entry, {disabled: true, userId: socket.id}));
+  rooms[data.id][data.type].push(data.entry);
   socket.broadcast.to(data.id).emit('newEntry', {type: data.type, username: data.entry.username});
 };
 
