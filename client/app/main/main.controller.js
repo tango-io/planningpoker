@@ -43,9 +43,9 @@ angular.module('pokerestimateApp')
   };
 
   $scope.listeners = {
-    onSessionCreated: function(roomId){
-      $location.path('retrospectives/' + roomId);
+    onSessionCreated: function(data){
+      var type = data.data == 'retrospective' ? 'retrospectives' : 'sessions';
+     $location.path('/'+type+'/' + data.id);
     }
   };
-
 });

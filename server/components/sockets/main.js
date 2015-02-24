@@ -36,7 +36,7 @@ function onNewSession(socket, data) {
     rooms[roomId] = {players: [], moderators:[], votes: {}, voteValues: data};
   }
 
-  socket.emit('sessionCreated', roomId);
+  socket.emit('sessionCreated', {id: roomId, data: data});
 };
 
 function onJoinSession(io, socket, data) {
