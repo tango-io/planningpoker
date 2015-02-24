@@ -443,7 +443,29 @@ describe('sockets', function() {
       client1.emit('newSession', 'retrospective');
     });
 
-    it('removes users and entries from user on leave session', function(done) {
+    it('removes entries from user on leave session', function(done) {
+      var id, pass;
+      var that = this;
+      client1.on('sessionCreated', function(sessionId){
+        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = sessionId;
+      });
+
+      client1.on('joinedSession', function(data){
+        client1.emit('newEntry', {id: id, type:'good', entry:{username: 'Tester', text:'TestG', id:0}});
+        client1.emit('leaveSession', {id: id, entryType: 'good', entry:{ id: 0, read: true}});
+
+        client2.on('updateEntries', function(data){
+          data.good.length.should.be.exactly(0);
+          done();
+        });
+      });
+
+      client1.emit('newSession', 'retrospective');
+    });
+
+    it('removes users from user on leave session', function(done) {
       var id, pass;
       var that = this;
       client1.on('sessionCreated', function(sessionId){
@@ -457,17 +479,11 @@ describe('sockets', function() {
           client1.emit('newEntry', {id: id, type:'good', entry:{username: 'Tester', text:'TestG', id:0}});
           client1.emit('leaveSession', {id: id, entryType: 'good', entry:{ id: 0, read: true}});
 
-          client2.on('updateUsers', function(data){
+          client2.once('updateUsers', function(data){
             data.players.length.should.be.exactly(1);
-            if(pass == true){ done(); };
-            pass= true;
+            done();
           });
 
-          client2.on('updateEntries', function(data){
-            data.good.length.should.be.exactly(0);
-            if(pass == true){ done() };
-            pass = true;
-          });
         });
       });
       client1.emit('newSession', 'retrospective');
