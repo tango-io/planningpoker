@@ -45,15 +45,8 @@ angular.module('pokerestimateApp')
   };
 
   $scope.remove = function(type, entry){
-    //if($scope.entryModal){ $scope.next(entry); }
-    //if($scope.entryModal && $scope.session[type].length <= 1){
-    //  $scope.entryModal.close();
-    //}
-
-    //$timeout(function(){
-      socket.emit('deleteEntry', {id: $scope.sessionId, type: type, entry: entry});
-      $scope.session[type] =  _.reject($scope.session[type], {id: entry.id});
-    //}, 1000);
+    socket.emit('deleteEntry', {id: $scope.sessionId, type: type, entry: entry});
+    $scope.session[type] =  _.reject($scope.session[type], {id: entry.id});
   };
 
   $scope.edit = function(type, entry){
