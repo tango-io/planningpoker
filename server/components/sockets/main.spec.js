@@ -40,8 +40,8 @@ describe('sockets', function() {
   });
 
   it('emits an event when session is created', function(done) {
-    client1.on('sessionCreated', function(sessionId){
-      sessionId.should.match(/^.{8}-.{4}-.{4}-.{4}-.{12}/)
+    client1.on('sessionCreated', function(data){
+      data.id.should.match(/^.{8}-.{4}-.{4}-.{4}-.{12}/)
       done();
     });
 
@@ -58,8 +58,8 @@ describe('sockets', function() {
   });
 
   it('emits an error if client does not send correct information', function(done) {
-    client1.on('sessionCreated', function(sessionId){
-      client2.emit('joinSession', {roomId:sessionId, username: 'tester'});
+    client1.on('sessionCreated', function(data){
+      client2.emit('joinSession', {roomId:data.id, username: 'tester'});
 
       client2.on('errorMsg', function(data){
         data.message.should.be.exactly("Missing information");
@@ -70,11 +70,11 @@ describe('sockets', function() {
   });
 
   it('saves players and moderators', function(done) {
-    client1.on('sessionCreated', function(sessionId){
-      client1.emit('joinSession', {roomId: sessionId, username:'player1', type: 'player'});
+    client1.on('sessionCreated', function(data){
+      client1.emit('joinSession', {roomId: data.id, username:'player1', type: 'player'});
 
       client1.once('joinedSession', function(){
-        client2.emit('joinSession', {roomId: sessionId, username:'moderator1', type: 'moderator'});
+        client2.emit('joinSession', {roomId: data.id, username:'moderator1', type: 'moderator'});
         client2.once('joinedSession', function(){
           client2.on('updateUsers', function(data){
             data.players[0].username.should.be.exactly('player1');
@@ -98,13 +98,13 @@ describe('sockets', function() {
 
   it('emits update users when a user join in a session', function(done) {
     client1.emit('newSession');
-    client1.on('sessionCreated', function(id){
+    client1.on('sessionCreated', function(data){
 
-      client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
+      client1.emit('joinSession', {roomId: data.id, username: 'Tester', type: 'player'});
 
-      client1.on('updateUsers', function(data){
+      client1.on('updateUsers', function(){
 
-        client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
+        client2.emit('joinSession', {roomId: data.id, username: 'Another tester', type: 'player'});
         client1.on('updateUsers', function(data){
           data.players[0].username.should.be.exactly('Tester');
           data.players[1].username.should.be.exactly('Another tester');
@@ -116,15 +116,15 @@ describe('sockets', function() {
 
   it('updates users after a client leaves', function(done) {
     client1.emit('newSession');
-    client1.on('sessionCreated', function(id){
+    client1.on('sessionCreated', function(data){
 
-      client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
+      client1.emit('joinSession', {roomId: data.id, username: 'Tester', type: 'player'});
 
-      client1.once('updateUsers', function(data){
-        client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
+      client1.once('updateUsers', function(){
+        client2.emit('joinSession', {roomId: data.id, username: 'Another tester', type: 'player'});
 
-        client1.once('updateUsers', function(data){
-          client2.emit('leaveSession', {roomId: id, username: 'Another tester', type: 'player'});
+        client1.once('updateUsers', function(){
+          client2.emit('leaveSession', {roomId: data.id, username: 'Another tester', type: 'player'});
 
           client1.once('updateUsers', function(data){
             data.players.length.should.be.exactly(1);
@@ -139,12 +139,12 @@ describe('sockets', function() {
 
     it('emits hide votes when user joins in a session', function(done) {
       client1.emit('newSession');
-      client1.on('sessionCreated', function(id){
+      client1.on('sessionCreated', function(data){
 
-        client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
+        client1.emit('joinSession', {roomId: data.id, username: 'Tester', type: 'player'});
 
         client1.on('updateUsers', function(){
-          client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
+          client2.emit('joinSession', {roomId: data.id, username: 'Another tester', type: 'player'});
 
           client1.on('hideVotes', function(data){
             done();
@@ -156,32 +156,32 @@ describe('sockets', function() {
     it('updates description for all clients', function(done) {
       client1.emit('newSession');
 
-      client1.on('sessionCreated', function(id){
+      client1.on('sessionCreated', function(data){
 
-        client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
-        client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
+        client1.emit('joinSession', {roomId: data.id, username: 'Tester', type: 'player'});
+        client2.emit('joinSession', {roomId: data.id, username: 'Another tester', type: 'player'});
 
         client2.once('joinedSession', function(){
           client2.on('descriptionUpdated', function(data){
             data.should.be.exactly('Hello');
             done();
           });
-          client1.emit('updateDescription', {id: id, description: 'Hello'});
+          client1.emit('updateDescription', {id: data.id, description: 'Hello'});
         });
       });
     });
 
     it('updates vote flag when a user votes', function(done) {
       client1.emit('newSession');
-      client1.on('sessionCreated', function(id){
-        client1.emit('joinSession', {roomId: id, username: 'Tester', type:'player'});
+      client1.on('sessionCreated', function(data){
+        client1.emit('joinSession', {roomId: data.id, username: 'Tester', type:'player'});
 
-        client1.once('updateUsers', function(data){
-          client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
+        client1.once('updateUsers', function(){
+          client2.emit('joinSession', {roomId: data.id, username: 'Another tester', type: 'player'});
 
-          client2.once('updateUsers', function(data){
+          client2.once('updateUsers', function(){
 
-            client1.emit('vote', {id: id, userId: client1.id, vote: 3 });
+            client1.emit('vote', {id: data.id, userId: client1.id, vote: 3 });
 
             client2.once('updateUsers', function(data){
               data.players[0].voted.should.be.ok;
@@ -193,18 +193,18 @@ describe('sockets', function() {
     });
 
     it('emits to reveal votes when all clients has voted', function(done) {
-      client1.on('sessionCreated', function(id){
-        client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
+      client1.on('sessionCreated', function(data){
+        client1.emit('joinSession', {roomId: data.id, username: 'Tester', type: 'player'});
         client1.once('joinedSession', function(){
-          client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
+          client2.emit('joinSession', {roomId: data.id, username: 'Another tester', type: 'player'});
           client2.once('joinedSession', function(){
             client2.on('updateVotes', function(data){
               data[client1.id].should.be.exactly(4);
               data[client2.id].should.be.exactly(5);
               done();
             });
-            client1.emit('vote', {id: id, userId: client1.id, vote: 4 });
-            client2.emit('vote', {id: id, userId: client2.id, vote: 5 });
+            client1.emit('vote', {id: data.id, userId: client1.id, vote: 4 });
+            client2.emit('vote', {id: data.id, userId: client2.id, vote: 5 });
           });
         });
       });
@@ -213,29 +213,29 @@ describe('sockets', function() {
 
     it('emits clear votes after clearing a session', function(done) {
       client1.emit('newSession');
-      client1.on('sessionCreated', function(id){
+      client1.on('sessionCreated', function(data){
 
-        client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
-        client2.emit('joinSession', {roomId: id, username: 'Another tester', type:'player'});
+        client1.emit('joinSession', {roomId: data.id, username: 'Tester', type: 'player'});
+        client2.emit('joinSession', {roomId: data.id, username: 'Another tester', type:'player'});
 
         client2.once('joinedSession', function(){
           client2.on('clearVotes', function(data){
             done();
           });
-          client1.emit('clearSession', {id: id});
+          client1.emit('clearSession', {id: data.id});
         });
       });
     });
 
     it('updates votes after a client leaves', function(done) {
       client1.emit('newSession');
-      client1.on('sessionCreated', function(id){
-        client1.emit('joinSession', {roomId: id, username: 'Tester', type: 'player'});
-        client2.emit('joinSession', {roomId: id, username: 'Another tester', type: 'player'});
+      client1.on('sessionCreated', function(data){
+        client1.emit('joinSession', {roomId: data.id, username: 'Tester', type: 'player'});
+        client2.emit('joinSession', {roomId: data.id, username: 'Another tester', type: 'player'});
 
         client2.once('joinedSession', function(){
-          client1.emit('vote', {id: id, userId: client1.id, vote: 7 });
-          client2.emit('vote', {id: id, userId: client2.id, vote: 5 });
+          client1.emit('vote', {id: data.id, userId: client1.id, vote: 7 });
+          client2.emit('vote', {id: data.id, userId: client2.id, vote: 5 });
 
           client1.once('updateVotes', function(data){
             client1.on('updateVotes', function(data){
@@ -244,7 +244,7 @@ describe('sockets', function() {
               done();
             });
 
-            client2.emit('leaveSession', {id: id, username: 'Another tester', type: 'player'});
+            client2.emit('leaveSession', {id: data.id, username: 'Another tester', type: 'player'});
           });
         });
       });
@@ -254,8 +254,8 @@ describe('sockets', function() {
   describe('Retrospective session events', function(){
     it('set default values in new sessionlistener', function(done) {
 
-      client1.on('sessionCreated', function(sessionId){
-        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+      client1.on('sessionCreated', function(data){
+        client1.emit('joinSession', {roomId: data.id, username: 'Tester', type: 'player', sessionType: 'retrospective'});
       });
 
       client1.on('joinedSession', function(data){
@@ -271,10 +271,10 @@ describe('sockets', function() {
     it('emits new entry entry on corresponding type in new entry', function(done) {
       var id;
 
-      client1.on('sessionCreated', function(sessionId){
-        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
-        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
-        id = sessionId;
+      client1.on('sessionCreated', function(data){
+        client1.emit('joinSession', {roomId: data.id, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: data.id, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = data.id;
       });
 
       client1.on('joinedSession', function(data){
@@ -293,10 +293,10 @@ describe('sockets', function() {
     it('emits reveal on reveal function', function(done) {
       var id;
 
-      client1.on('sessionCreated', function(sessionId){
-        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
-        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
-        id = sessionId;
+      client1.on('sessionCreated', function(data){
+        client1.emit('joinSession', {roomId: data.id, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: data.id, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = data.id;
       });
 
       client1.on('joinedSession', function(data){
@@ -320,10 +320,10 @@ describe('sockets', function() {
 
     it('emits hide on hide function', function(done) {
       var id;
-      client1.on('sessionCreated', function(sessionId){
-        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
-        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
-        id = sessionId;
+      client1.on('sessionCreated', function(data){
+        client1.emit('joinSession', {roomId: data.id, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: data.id, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = data.id;
       });
 
       client1.on('joinedSession', function(data){
@@ -339,10 +339,10 @@ describe('sockets', function() {
 
     it('emits remove on remove function', function(done) {
       var id;
-      client1.on('sessionCreated', function(sessionId){
-        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
-        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
-        id = sessionId;
+      client1.on('sessionCreated', function(data){
+        client1.emit('joinSession', {roomId: data.id, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: data.id, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = data.id;
       });
 
       client1.on('joinedSession', function(data){
@@ -362,10 +362,10 @@ describe('sockets', function() {
 
     it('emits open entry on open entry function', function(done) {
       var id;
-      client1.on('sessionCreated', function(sessionId){
-        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
-        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
-        id = sessionId;
+      client1.on('sessionCreated', function(data){
+        client1.emit('joinSession', {roomId: data.id, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: data.id, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = data.id;
       });
 
       client1.on('joinedSession', function(data){
@@ -382,10 +382,10 @@ describe('sockets', function() {
 
     it('emits close entry on close entry function', function(done) {
       var id;
-      client1.on('sessionCreated', function(sessionId){
-        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
-        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
-        id = sessionId;
+      client1.on('sessionCreated', function(data){
+        client1.emit('joinSession', {roomId: data.id, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: data.id, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = data.id;
       });
 
       client1.on('joinedSession', function(data){
@@ -401,10 +401,10 @@ describe('sockets', function() {
 
     it('emits move current entry on current entry function', function(done) {
       var id;
-      client1.on('sessionCreated', function(sessionId){
-        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
-        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
-        id = sessionId;
+      client1.on('sessionCreated', function(data){
+        client1.emit('joinSession', {roomId: data.id, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: data.id, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = data.id;
       });
 
       client1.on('joinedSession', function(data){
@@ -422,10 +422,10 @@ describe('sockets', function() {
 
     it('update and emits update entry on update function', function(done) {
       var id;
-      client1.on('sessionCreated', function(sessionId){
-        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
-        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
-        id = sessionId;
+      client1.on('sessionCreated', function(data){
+        client1.emit('joinSession', {roomId: data.id, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: data.id, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = data.id;
       });
 
       client1.on('joinedSession', function(data){
@@ -446,10 +446,10 @@ describe('sockets', function() {
     it('removes entries from user on leave session', function(done) {
       var id, pass;
       var that = this;
-      client1.on('sessionCreated', function(sessionId){
-        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
-        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
-        id = sessionId;
+      client1.on('sessionCreated', function(data){
+        client1.emit('joinSession', {roomId: data.id, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: data.id, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = data.id;
       });
 
       client1.on('joinedSession', function(data){
@@ -468,10 +468,10 @@ describe('sockets', function() {
     it('removes users from user on leave session', function(done) {
       var id, pass;
       var that = this;
-      client1.on('sessionCreated', function(sessionId){
-        client1.emit('joinSession', {roomId: sessionId, username: 'Tester', type: 'player', sessionType: 'retrospective'});
-        client2.emit('joinSession', {roomId: sessionId, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
-        id = sessionId;
+      client1.on('sessionCreated', function(data){
+        client1.emit('joinSession', {roomId: data.id, username: 'Tester', type: 'player', sessionType: 'retrospective'});
+        client2.emit('joinSession', {roomId: data.id, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
+        id = data.id;
       });
 
       client2.once('updateUsers', function(data){

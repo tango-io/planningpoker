@@ -119,8 +119,10 @@ describe('Controller: MainCtrl', function () {
     }));
 
     it('reditects to retrospectives/:id on session created listener', inject(function (socket, $location) {
-     scope.listeners.onSessionCreated('some-1231');
+      scope.listeners.onSessionCreated({id: 'some-1231', data:'retrospective'});
       expect($location.path()).toBe('/retrospectives/some-1231')
+      scope.listeners.onSessionCreated({id: 'some-1231'});
+      expect($location.path()).toBe('/sessions/some-1231')
     }));
 
     it('reditects to retrospectives/:id when user joins a session', inject(function ($location) {
