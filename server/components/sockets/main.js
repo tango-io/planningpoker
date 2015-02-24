@@ -125,7 +125,6 @@ function onOpenEntry(socket, data) {
 };
 
 function onDeleteEntry(socket, data) {
-  console.log('----', rooms[data.id], data.type);
   rooms[data.id][data.type] =  _.reject(rooms[data.id][data.type], {id: data.entry.id});
   socket.broadcast.to(data.id).emit('deleteEntry', data);
 };
@@ -155,6 +154,13 @@ function onLeaveSession(socket){
     if(match.type == 'player' && rooms[roomId].votes){ //delete votes from user, and update clients
       delete rooms[roomId].votes[socket.id];
       socket.broadcast.to(roomId).emit('updateVotes', rooms[roomId].votes);
+    }
+
+    if(rooms[roomId].good){ //delete entries from user, and update clients
+      rooms[roomId].improvements  = _.reject(rooms[roomId].improvements, {userId: socket.id});
+      rooms[roomId].good  = _.reject(rooms[roomId].good, {userId: socket.id});
+      rooms[roomId].bad  = _.reject(rooms[roomId.bad], {userId: socket.id});
+      socket.broadcast.to(roomId).emit('updateEntries', _.pick(rooms[roomId], 'good', 'bad', 'improvements'));
     }
   }else{
     delete rooms[roomId];

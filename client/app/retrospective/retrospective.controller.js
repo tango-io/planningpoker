@@ -31,6 +31,7 @@ angular.module('pokerestimateApp')
     socket.on('entryUpdated',     $scope.listeners.onEntryUpdated);
     socket.on('moveCurrentEntry', $scope.listeners.onMoveCurrentEntry);
     socket.on('openEntry',        $scope.listeners.onOpenEntry);
+    socket.on('updateEntries',    $scope.listeners.onUpdateEntries);
     socket.on('closeEntry',       $scope.listeners.onCloseEntry);
   };
 
@@ -219,6 +220,14 @@ angular.module('pokerestimateApp')
       entry.read = data.entry.read;
       if($scope.editEntry.text == data.entry.text){
         $scope.editEntry.read = data.entry.read;
+      }
+    },
+
+    onUpdateEntries: function(data){
+      if($scope.reviewMode){
+        $scope.session  = data;
+      }else{
+        $scope.session  = getRetrospectiveData(data);
       }
     },
 
