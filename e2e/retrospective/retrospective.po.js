@@ -13,7 +13,6 @@ var MainPage = function() {
   this.startBtn = element(by.buttonText('Start'));
 
   this.userList = element.all(by.repeater('player in players'));
-  this.votesList = element.all(by.repeater('vote in voteValues'));
   this.userRow = element(by.repeater('player in players').row(0));
 
   this.shareUrl = element(by.model('url'));
@@ -22,22 +21,9 @@ var MainPage = function() {
   this.shareIdBtn = element.all(by.css('.share .button')).last();
   this.shareTooltip = element(by.css('.share span.tooltip'));
 
-  this.numbers = element(by.repeater('vote in voteValues').row(0));
-
-  this.number = element(by.repeater('vote in voteValues').row(0).column('vote'));
-
-  this.statics = element(by.css('.statics'));
-  this.staticsList = element.all(by.repeater('(point, votes) in points'));
-  this.staticsRow = element(by.repeater('(point, votes) in points').row(0));
-
-  this.descriptionInput = element(by.model('description'));
-
   this.usernameInput_ = this.container.element(by.model('currentUser_.username'));
   this.sessionIdInput = this.container.element(by.model('sessionId'));
   this.joinBtn = element(by.buttonText('Join'));
-
-  this.clearBtn = element(by.buttonText('Play Again'));
-  this.goBtn = element(by.buttonText('Go'));
 
   this.modal = element(by.css('.reveal-modal'));
   this.usernameModalInput = this.modal.element(by.model('username'));
@@ -47,10 +33,48 @@ var MainPage = function() {
  this.moderatorOpt = element(by.cssContainingText('.start option', 'Scrum Master \/ Moderator'));
  this.moderatorsList = element.all(by.repeater('moderator in moderators'));
  this.firstModerator= element(by.repeater('moderator in moderators').row(0).column('username'));
- this.numbersList = element(by.css('[ng-repeat = "vote in voteValues]"'));
 
  this.retrospectiveOpt = element(by.cssContainingText('.start option', 'Retrospective'));
  this.retrospectiveJoinOpt = element(by.cssContainingText('.join option', 'Retrospective'));
+
+ this.goodColumn = element(by.cssContainingText('.retrospective .columns h5', 'What went well?'));
+ this.badColumn = element(by.cssContainingText('.retrospective .columns h5', 'What went bad?'));
+ this.improvementsColumn = element(by.cssContainingText('.retrospective .columns h5', 'What can we improve?'));
+
+ this.addGoodBtn = element(by.css('[ng-click="toggleInputMode(\'good\')"]'));
+ this.addBadBtn = element(by.css('[ng-click="toggleInputMode(\'bad\')"]'));
+ this.addImpBtn = element(by.css('[ng-click="toggleInputMode(\'improvements\')"]'));
+
+ this.newGoodEntry = element(by.model('newEntry.good'));
+ this.newBadEntry = element(by.model('newEntry.bad'));
+ this.newImpEntry = element(by.model('newEntry.improvements'));
+
+ this.editEntry = this.modal.element(by.model('editEntry'));
+ this.showEntry = this.modal.element(by.model('editEntry.text'));
+
+ this.okBtn = this.modal.element(by.buttonText('OK'));
+ this.closeBtn = this.modal.element(by.buttonText('Close'));
+ this.cancelBtn = this.modal.element(by.buttonText('Cancel'));
+ this.nextBtn = this.modal.element(by.buttonText('Next'));
+ this.previousBtn = this.modal.element(by.buttonText('Previous'));
+
+ this.revealBtn = element(by.buttonText('Reveal'));
+ this.readBtn = element(by.buttonText('Mark as read'));
+ this.unReadBtn = element(by.buttonText('Mark as unread'));
+
+ this.goodList = element.all(by.css('[ng-repeat="entry in session.good"] div'));
+ this.badList = element.all(by.css('[ng-repeat="entry in session.bad"] div'));
+ this.impList = element.all(by.css('[ng-repeat="entry in session.improvements"] div'));
+
+ this.goodCheck = element.all(by.css('[ng-repeat="entry in session.good"] div .fa-check'));
+
+ this.goodEdit = element.all(by.css('[ng-repeat="entry in session.good"] div .fa-pencil'));
+ this.badEdit = element.all(by.css('[ng-repeat="entry in session.bad"] div .fa-pencil'));
+ this.impEdit = element.all(by.css('[ng-repeat="entry in session.improvements"] div .fa-pencil'));
+
+ this.goodRemove = element.all(by.css('[ng-repeat="entry in session.good"] div .fa-times'));
+ this.badRemove = element.all(by.css('[ng-repeat="entry in session.bad"] div .fa-times'));
+ this.impRemove = element.all(by.css('[ng-repeat="entry in session.improvements"] div .fa-times'));
 };
 
 module.exports = new MainPage();

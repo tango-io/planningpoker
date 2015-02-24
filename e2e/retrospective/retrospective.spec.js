@@ -1,12 +1,12 @@
 'use strict';
 var config = require('../../server/config/local.env');
 
-describe('Retrospective View', function() {
+ddescribe('Retrospective View', function() {
   var page;
   var id;
 
   beforeEach(function() {
-    page = require('./session.po');
+    page = require('./retrospective.po');
     browser.get('/');
     browser.waitForAngular();
 
@@ -22,6 +22,12 @@ describe('Retrospective View', function() {
   });
 
   it('s able to show data after entering a session', function() {
+    expect(page.goodColumn.isPresent()).toBe(true);
+    expect(page.badColumn.isPresent()).toBe(true);
+    expect(page.improvementsColumn.isPresent()).toBe(true);
+    expect(page.addGoodBtn.isPresent()).toBe(true);
+    expect(page.addBadBtn.isPresent()).toBe(true);
+    expect(page.addImpBtn.isPresent()).toBe(true);
   });
 
   it('s prompts username request if user does not have', function(){
@@ -53,11 +59,11 @@ describe('Retrospective View', function() {
       expect(page.shareId.getAttribute('value')).toEqual(id);
       page.shareUrlBtn.click();
       browser.sleep(1000);
-      expect(page.shareTooltip.getText()).toEqual('Copied')
+      expect(page.shareTooltip.getText()).toEqual('Copied');
       page.shareIdBtn.click();
       browser.sleep(1000);
-      expect(page.shareTooltip.getText()).toEqual('Copied')
-      expect(page.shareTooltip.getText()).toEqual('Copied')
+      expect(page.shareTooltip.getText()).toEqual('Copied');
+      expect(page.shareTooltip.getText()).toEqual('Copied');
     });
   });
 
@@ -67,47 +73,193 @@ describe('Retrospective View', function() {
     browser.waitForAngular();
     page.usernameInput.sendKeys('Arya');
     page.moderatorOpt.click();
+    page.retrospectiveOpt.click();
     page.startBtn.click();
-    page.goBtn.click();
     browser.sleep(1000);
     expect(page.moderatorsList.count()).toBe(1);
   });
 
   it('s able to add entries in all categories', function() {
+    page.addGoodBtn.click();
+    page.newGoodEntry.sendKeys('awesome!');
+    browser.actions().sendKeys(protractor.Key.ENTER).perform();
+    page.addBadBtn.click();
+    page.newBadEntry.sendKeys('sad!');
+    browser.actions().sendKeys(protractor.Key.ENTER).perform();
+    page.addImpBtn.click();
+    page.newImpEntry.sendKeys('it will be better next time!');
+    browser.actions().sendKeys(protractor.Key.ENTER).perform();
+
+    expect(page.goodList.first().getText()).toBe('awesome!');
+    expect(page.badList.first().getText()).toBe('sad!');
+    expect(page.impList.first().getText()).toBe('it will be better next time!');
   });
 
   it('s able to edit entries in all categories', function() {
+    page.addGoodBtn.click();
+    page.newGoodEntry.sendKeys('awesome!');
+    browser.actions().sendKeys(protractor.Key.ENTER).perform();
+    page.goodEdit.click();
+    page.editEntry.clear();
+    page.editEntry.sendKeys('super awesome!');
+    page.okBtn.click();
+    browser.sleep(1000);
+
+    page.addBadBtn.click();
+    page.newBadEntry.sendKeys('sad!');
+    browser.actions().sendKeys(protractor.Key.ENTER).perform();
+    page.badEdit.click();
+    page.editEntry.clear();
+    page.editEntry.sendKeys('super sad!');
+    page.okBtn.click();
+    browser.sleep(1000);
+
+    page.addImpBtn.click();
+    page.newImpEntry.sendKeys('it will be better next time!');
+    browser.actions().sendKeys(protractor.Key.ENTER).perform();
+    page.impEdit.click();
+    page.editEntry.clear();
+    page.editEntry.sendKeys('it will be much better next time!');
+    page.okBtn.click();
+    browser.sleep(1000);
+
+    expect(page.goodList.first().getText()).toBe('super awesome!');
+    expect(page.badList.first().getText()).toBe('super sad!');
+    expect(page.impList.first().getText()).toBe('it will be much better next time!');
+  });
+
+  it('s able to cancel edit entries', function() {
+    page.addGoodBtn.click();
+    page.newGoodEntry.sendKeys('awesome!');
+    browser.actions().sendKeys(protractor.Key.ENTER).perform();
+    page.goodEdit.click();
+    page.editEntry.clear();
+    page.editEntry.sendKeys('super awesome!');
+    page.cancelBtn.click();
+    expect(page.goodList.first().getText()).toBe('awesome!');
   });
 
   it('s able to remove entries in all categories', function() {
+    page.addGoodBtn.click();
+    page.newGoodEntry.sendKeys('awesome!');
+    browser.actions().sendKeys(protractor.Key.ENTER).perform();
+    page.goodRemove.click();
+
+    page.addBadBtn.click();
+    page.newBadEntry.sendKeys('sad!');
+    browser.actions().sendKeys(protractor.Key.ENTER).perform();
+    page.badRemove.click();
+
+    page.addImpBtn.click();
+    page.newImpEntry.sendKeys('it will be better next time!');
+    browser.actions().sendKeys(protractor.Key.ENTER).perform();
+    page.impRemove.click();
+
+    expect(page.goodList.count()).toBe(0);
+    expect(page.badList.count()).toBe(0);
+    expect(page.impList.count()).toBe(0);
   });
 
-  it('s able to open an entry from all categories', function() {
-  });
-
-  it('s able to go to next entry in reveal mode', function() {
-  });
-
-  it('s able to go to previous entry in reveal mode', function() {
-  });
-
-  it('s able to mark or unmark entry as read', function() {
-  });
-
-  describe('Session View for players', function() {
+  describe('session view for players', function() {
     it('s not able to reveal entries', function() {
+      expect(page.revealBtn.isPresent()).toBe(false);
     });
 
-    it('s not able select share mode', function() {
-    });
+    //it('s not able select share mode', function() {
+    //});
   });
 
   describe('Session View for moderators', function() {
+    beforeEach(function(){
+      browser.get('/');
+      page.usernameInput.sendKeys('Arya');
+      page.moderatorOpt.click();
+      page.retrospectiveOpt.click();
+      page.startBtn.click();
+    });
 
     it('s able to reveal entries', function(){
+      expect(page.revealBtn.isPresent()).toBe(true);
     });
 
-    it('s able to select share mode', function() {
+    it('s able to open an entry from all categories', function() {
+      page.addGoodBtn.click();
+      page.addBadBtn.click();
+      page.addImpBtn.click();
+      page.newGoodEntry.sendKeys('awesome!');
+      browser.actions().sendKeys(protractor.Key.ENTER).perform();
+      page.newBadEntry.sendKeys('sad entry!');
+      browser.actions().sendKeys(protractor.Key.ENTER).perform();
+      page.newImpEntry.sendKeys('it will be better next time!');
+      browser.actions().sendKeys(protractor.Key.ENTER).perform();
+
+      page.revealBtn.click();
+
+      page.goodList.first().click();
+      expect(page.modal.isPresent()).toBe(true);
+      expect(page.showEntry.getAttribute('value')).toBe('awesome!');
+      expect(page.nextBtn.isPresent()).toBe(true);
+      expect(page.previousBtn.isPresent()).toBe(true);
+      expect(page.readBtn.isPresent()).toBe(true);
+      page.closeBtn.click();
+
+      page.impList.first().click();
+      expect(page.modal.isPresent()).toBe(true);
+      expect(page.showEntry.getAttribute('value')).toBe('it will be better next time!');
+      expect(page.nextBtn.isPresent()).toBe(true);
+      expect(page.previousBtn.isPresent()).toBe(true);
+      expect(page.readBtn.isPresent()).toBe(true);
+      page.closeBtn.click();
+
+      page.badList.first().click();
+      expect(page.modal.isPresent()).toBe(true);
+      expect(page.showEntry.getAttribute('value')).toBe('sad entry!');
+      expect(page.nextBtn.isPresent()).toBe(true);
+      expect(page.previousBtn.isPresent()).toBe(true);
+      expect(page.readBtn.isPresent()).toBe(true);
+      page.closeBtn.click();
     });
+
+    it('s able to go to next and previous entry in reveal mode', function() {
+      page.addGoodBtn.click();
+      page.newGoodEntry.sendKeys('awesome!');
+      browser.actions().sendKeys(protractor.Key.ENTER).perform();
+      page.newGoodEntry.sendKeys('second entry!');
+      browser.actions().sendKeys(protractor.Key.ENTER).perform();
+
+      page.revealBtn.click();
+
+      page.goodList.first().click();
+      expect(page.showEntry.getAttribute('value')).toBe('awesome!');
+      page.nextBtn.click();
+      expect(page.showEntry.getAttribute('value')).toBe('second entry!');
+      page.previousBtn.click();
+      expect(page.showEntry.getAttribute('value')).toBe('awesome!');
+    });
+
+    it('s able to mark or unmark entry as read', function() {
+      page.addGoodBtn.click();
+      page.newGoodEntry.sendKeys('awesome!');
+      browser.actions().sendKeys(protractor.Key.ENTER).perform();
+
+      page.revealBtn.click();
+
+      page.goodList.first().click();
+      expect(page.showEntry.getAttribute('value')).toBe('awesome!');
+
+      page.readBtn.click();
+      page.closeBtn.click();
+
+      expect(page.goodCheck.first().isDisplayed()).toBe(true);
+
+      page.goodList.first().click();
+      page.unReadBtn.click();
+      page.closeBtn.click();
+
+      expect(page.goodCheck.first().isDisplayed()).toBe(false);
+    });
+
+    //  it('s able to select share mode', function() {
+    //  });
   });
 });
