@@ -1,7 +1,7 @@
 'use strict';
 var config = require('../../server/config/local.env');
 
-ddescribe('Retrospective View', function() {
+describe('Retrospective View', function() {
   var page;
   var id;
 
@@ -58,10 +58,10 @@ ddescribe('Retrospective View', function() {
       expect(page.shareUrl.getAttribute('value')).toEqual(url);
       expect(page.shareId.getAttribute('value')).toEqual(id);
       page.shareUrlBtn.click();
-      browser.sleep(1000);
+      browser.sleep(2000);
       expect(page.shareTooltip.getText()).toEqual('Copied');
       page.shareIdBtn.click();
-      browser.sleep(1000);
+      browser.sleep(2000);
       expect(page.shareTooltip.getText()).toEqual('Copied');
       expect(page.shareTooltip.getText()).toEqual('Copied');
     });
@@ -164,9 +164,6 @@ ddescribe('Retrospective View', function() {
     it('s not able to reveal entries', function() {
       expect(page.revealBtn.isPresent()).toBe(false);
     });
-
-    //it('s not able select share mode', function() {
-    //});
   });
 
   describe('Session View for moderators', function() {
@@ -202,6 +199,7 @@ ddescribe('Retrospective View', function() {
       expect(page.previousBtn.isPresent()).toBe(true);
       expect(page.readBtn.isPresent()).toBe(true);
       page.closeBtn.click();
+      browser.sleep(10000);
 
       page.impList.first().click();
       expect(page.modal.isPresent()).toBe(true);
@@ -210,6 +208,7 @@ ddescribe('Retrospective View', function() {
       expect(page.previousBtn.isPresent()).toBe(true);
       expect(page.readBtn.isPresent()).toBe(true);
       page.closeBtn.click();
+      browser.sleep(10000);
 
       page.badList.first().click();
       expect(page.modal.isPresent()).toBe(true);
@@ -249,6 +248,7 @@ ddescribe('Retrospective View', function() {
 
       page.readBtn.click();
       page.closeBtn.click();
+      browser.sleep(10000);
 
       expect(page.goodCheck.first().isDisplayed()).toBe(true);
 
@@ -258,8 +258,5 @@ ddescribe('Retrospective View', function() {
 
       expect(page.goodCheck.first().isDisplayed()).toBe(false);
     });
-
-    //  it('s able to select share mode', function() {
-    //  });
   });
 });

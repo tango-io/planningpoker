@@ -49,8 +49,8 @@ var MainPage = function() {
  this.newBadEntry = element(by.model('newEntry.bad'));
  this.newImpEntry = element(by.model('newEntry.improvements'));
 
- this.editEntry = this.modal.element(by.model('editEntry'));
- this.showEntry = this.modal.element(by.model('editEntry.text'));
+ this.editEntry = this.modal.element(by.model('currentEntry.text'));
+ this.showEntry = this.modal.element(by.model('currentEntry.text'));
 
  this.okBtn = this.modal.element(by.buttonText('OK'));
  this.closeBtn = this.modal.element(by.buttonText('Close'));

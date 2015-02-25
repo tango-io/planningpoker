@@ -24,7 +24,7 @@ angular.module('modalMock', [])
       editOpen: {
         result: {
           then: function(cb) {
-            return cb({editEntry: 'entry updated'});
+            return cb({currentEntry: {text: 'entry updated'}});
           }
         }
       },

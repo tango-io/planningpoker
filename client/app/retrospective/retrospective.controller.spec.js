@@ -146,7 +146,7 @@ describe('Controller: RetrospectiveCtrl', function () {
   });
 
   it('opens a modal on edit function', inject(function ($modal) {
-    var fakeResponse = $modal.open();
+    var fakeResponse = $modal.fakeResponses.editOpen;
     $modal.open.andReturn(fakeResponse);
 
     scope.edit('good', {text: "new"});
@@ -154,20 +154,24 @@ describe('Controller: RetrospectiveCtrl', function () {
     expect($modal.open).toHaveBeenCalled();
   }));
 
-  it('sets editEntry in edit function', function () {
-    scope.edit('good', {text: "new"});
-    expect(scope.editEntry).toEqual("new");
-    expect(scope.entryType).toEqual("good");
-  });
+  it('sets currentEntry in edit function', inject(function ($modal) {
+    var fakeResponse = $modal.fakeResponses.editOpen;
+    $modal.open.andReturn(fakeResponse);
 
-  it('sets editEntry values in edit function on result promise', inject(function ($modal) {
+    scope.edit('good', {text: "new"});
+
+    $modal.open.andReturn(fakeResponse);
+    expect(scope.currentEntry.text).toEqual("new");
+    expect(scope.entryType).toEqual("good");
+  }));
+
+  it('sets currentEntry values in edit function on result promise', inject(function ($modal) {
     spyOn(scope, 'update');
     scope.session = {good: [], bad: [], improvements: []};
     scope.newEntry = {good: "new good entry"};
     scope.currentUser = {username: 'Tester'};
     var fakeResponse = $modal.fakeResponses.editOpen;
     $modal.open.andReturn(fakeResponse);
-
     scope.add('good');
 
     scope.edit('good', scope.session.good[0]);
@@ -207,7 +211,7 @@ describe('Controller: RetrospectiveCtrl', function () {
     scope.openEntry('good', {text: "new"});
 
     expect($modal.open).toHaveBeenCalled();
-    expect(scope.editEntry.text).toEqual("new");
+    expect(scope.currentEntry.text).toEqual("new");
     expect(scope.entryType).toEqual("good");
   }));
 
@@ -265,17 +269,17 @@ describe('Controller: RetrospectiveCtrl', function () {
   it('changes next entry as edit entry in next function', function () {
     scope.session = {good: [{text: 'text', username: 'Tester'}, {text: 'second', username: 'Tester'}], bad: [], improvements: []};
     scope.openEntry('good', scope.session.good[0]);
-    expect(scope.editEntry).toBe(scope.session.good[0])
+    expect(scope.currentEntry).toBe(scope.session.good[0])
     scope.next(scope.session.good[0]);
-    expect(scope.editEntry).toBe(scope.session.good[1])
+    expect(scope.currentEntry).toBe(scope.session.good[1])
   });
 
   it('changes previous entry as edit entry in previous function', function () {
     scope.session = {good: [{text: 'text', username: 'Tester'}, {text: 'second', username: 'Tester'}], bad: [], improvements: []};
     scope.openEntry('good', scope.session.good[0]);
-    expect(scope.editEntry).toBe(scope.session.good[0])
+    expect(scope.currentEntry).toBe(scope.session.good[0])
     scope.next(scope.session.good[1]);
-    expect(scope.editEntry).toBe(scope.session.good[0])
+    expect(scope.currentEntry).toBe(scope.session.good[0])
   });
 
   it('emits move current entry in next and previous function', inject(function (socket) {

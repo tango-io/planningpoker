@@ -309,7 +309,6 @@ describe('sockets', function() {
       client2.on('reveal', function(data){
         data.session.good[0].should.have.property('username', 'Tester');
         data.session.good[0].should.have.property('text', 'TestG');
-        data.session.good[0].should.have.property('userId', client1.id);
         data.session.bad[0].should.have.property('text', 'TestB');
         data.session.improvements[0].should.have.property('text', 'TestI');
         done();
@@ -452,9 +451,9 @@ describe('sockets', function() {
         id = data.id;
       });
 
-      client1.on('joinedSession', function(data){
-        client1.emit('newEntry', {id: id, type:'good', entry:{username: 'Tester', text:'TestG', id:0}});
-        client1.emit('leaveSession', {id: id, entryType: 'good', entry:{ id: 0, read: true}});
+      client1.on('joinedSession', function(){
+        client1.emit('newEntry', {id: id, type:'good', entry:{username: 'Tester', text:'TestG', id:0, userId: client1.id}});
+        client1.emit('leaveSession');
 
         client2.on('updateEntries', function(data){
           data.good.length.should.be.exactly(0);
@@ -474,10 +473,10 @@ describe('sockets', function() {
         id = data.id;
       });
 
-      client2.once('updateUsers', function(data){
-        client1.on('joinedSession', function(data){
+      client2.once('updateUsers', function(){
+        client1.on('joinedSession', function(){
           client1.emit('newEntry', {id: id, type:'good', entry:{username: 'Tester', text:'TestG', id:0}});
-          client1.emit('leaveSession', {id: id, entryType: 'good', entry:{ id: 0, read: true}});
+          client1.emit('leaveSession');
 
           client2.once('updateUsers', function(data){
             data.players.length.should.be.exactly(1);
