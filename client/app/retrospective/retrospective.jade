@@ -2,7 +2,7 @@ include ../templates/header.jade
 #container.retrospective(ng-controller="RetrospectiveCtrl" ng-init="init()")
   .row.row-with-padding.retrospective
     .large-3.columns
-      h5.title Mad
+      h5.title Prouds
         button.button.tiny.showy(ng-click="toggleInputMode('good')" ng-hide="reviewMode")
           i.fa(ng-class="{'fa-plus': !inputMode.good, 'fa-minus': inputMode.good}")
        textarea(ng-model="newEntry.good" placeholder="Some example..." ng-enter="add('good')" ng-show="inputMode.good && !reviewMode")
@@ -18,7 +18,7 @@ include ../templates/header.jade
               i.fa.fa-pencil(ng-click="edit('good', entry)")
               i.fa.fa-times(ng-click="remove('good', entry)")
     .large-3.columns
-      h5.title Sad
+      h5.title Sorries
         button.button.tiny.showy(ng-click="toggleInputMode('bad')" ng-hide="reviewMode")
           i.fa(ng-class="{'fa-plus': !inputMode.bad, 'fa-minus': inputMode.bad}")
       textarea(ng-model="newEntry.bad" placeholder="Some example..." ng-enter="add('bad')" ng-show="inputMode.bad && !reviewMode")
@@ -34,7 +34,7 @@ include ../templates/header.jade
               i.fa.fa-pencil(ng-click="edit('bad', entry)")
               i.fa.fa-times(ng-click="remove('bad', entry)")
     .large-4.columns
-      h5.title Glad
+      h5.title Ideas
         button.button.tiny.showy(ng-click="toggleInputMode('improvements')" ng-hide="reviewMode")
           i.fa(ng-class="{'fa-plus': !inputMode.improvements, 'fa-minus': inputMode.improvements}")
       textarea(ng-model="newEntry.improvements" placeholder="Some example..." ng-enter="add('improvements')" ng-show="inputMode.improvements && !reviewMode")
