@@ -30,7 +30,7 @@ angular.module('pokerestimateApp')
     socket.on('hide',             $scope.listeners.onHide);
     socket.on('newEntry',         $scope.listeners.onNewEntry);
     socket.on('deleteEntry',      $scope.listeners.onDeleteEntry);
-    socket.on('entryUpdated',     $scope.listeners.onEntryUpdated);
+    socket.on('updateEntry',      $scope.listeners.onUpdateEntry);
     socket.on('moveCurrentEntry', $scope.listeners.onMoveCurrentEntry);
     socket.on('openEntry',        $scope.listeners.onOpenEntry);
     socket.on('updateEntries',    $scope.listeners.onUpdateEntries);
@@ -192,13 +192,9 @@ angular.module('pokerestimateApp')
       $scope.editEntry = $scope.session[data.type][data.index];
     },
 
-    onEntryUpdated: function(data){
+    onUpdateEntry: function(data){
       var entry = _.findWhere($scope.session[data.entryType], {id: data.entry.id});
-      entry.text = data.entry.text;
       entry.read = data.entry.read;
-      if($scope.editEntry.text == data.entry.text){
-        $scope.editEntry.read = data.entry.read;
-      }
     },
 
     onUpdateEntries: function(data){

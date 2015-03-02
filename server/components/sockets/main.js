@@ -137,7 +137,7 @@ function onUpdateEntry(socket, data) {
   var entry = _.findWhere(rooms[data.id][data.entryType], {id: data.entry.id});
   entry.read = data.entry.read;
   entry.text = data.entry.text;
-  socket.broadcast.to(data.id).emit('entryUpdated', data);
+  socket.broadcast.to(data.id).emit('updateEntry', data);
 };
 
 function onLeaveSession(socket){
