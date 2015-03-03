@@ -473,16 +473,18 @@ describe('sockets', function() {
         id = data.id;
       });
 
-      client2.once('updateUsers', function(){
-        client1.on('joinedSession', function(){
-          client1.emit('newEntry', {id: id, type:'good', entry:{username: 'Tester', text:'TestG', id:0}});
-          client1.emit('leaveSession');
+      client1.once('joinedSession', function(){
+        client2.once('joinedSession', function(){
+          client2.once('updateUsers', function(){
+            client1.emit('newEntry', {id: id, type:'good', entry:{username: 'Tester', text:'TestG', id:0}});
+            client1.emit('leaveSession');
 
-          client2.once('updateUsers', function(data){
-            data.players.length.should.be.exactly(1);
-            done();
+            client2.once('updateUsers', function(data){
+              data.players.length.should.be.exactly(1);
+              done();
+            });
+
           });
-
         });
       });
       client1.emit('newSession', 'retrospective');

@@ -62,6 +62,10 @@ var MainPage = function() {
  this.readBtn = element(by.buttonText('Mark as read'));
  this.unReadBtn = element(by.buttonText('Mark as unread'));
 
+ this.goodLinkList = element.all(by.css('[ng-repeat="entry in session.good"] a'));
+ this.badLinkList = element.all(by.css('[ng-repeat="entry in session.bad"] a'));
+ this.impLinkList = element.all(by.css('[ng-repeat="entry in session.improvements"] a'));
+
  this.goodList = element.all(by.css('[ng-repeat="entry in session.good"] span'));
  this.badList = element.all(by.css('[ng-repeat="entry in session.bad"] span'));
  this.impList = element.all(by.css('[ng-repeat="entry in session.improvements"] span'));
