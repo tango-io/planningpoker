@@ -37,9 +37,9 @@ var MainPage = function() {
  this.retrospectiveOpt = element(by.cssContainingText('.start option', 'Retrospective'));
  this.retrospectiveJoinOpt = element(by.cssContainingText('.join option', 'Retrospective'));
 
- this.goodColumn = element(by.cssContainingText('.retrospective .columns h5', 'What went well?'));
- this.badColumn = element(by.cssContainingText('.retrospective .columns h5', 'What went bad?'));
- this.improvementsColumn = element(by.cssContainingText('.retrospective .columns h5', 'What can we improve?'));
+ this.goodColumn = element(by.cssContainingText('.retrospective .columns h5', 'Prouds'));
+ this.badColumn = element(by.cssContainingText('.retrospective .columns h5', 'Sorries'));
+ this.improvementsColumn = element(by.cssContainingText('.retrospective .columns h5', 'Ideas'));
 
  this.addGoodBtn = element(by.css('[ng-click="toggleInputMode(\'good\')"]'));
  this.addBadBtn = element(by.css('[ng-click="toggleInputMode(\'bad\')"]'));
@@ -62,9 +62,9 @@ var MainPage = function() {
  this.readBtn = element(by.buttonText('Mark as read'));
  this.unReadBtn = element(by.buttonText('Mark as unread'));
 
- this.goodList = element.all(by.css('[ng-repeat="entry in session.good"] div'));
- this.badList = element.all(by.css('[ng-repeat="entry in session.bad"] div'));
- this.impList = element.all(by.css('[ng-repeat="entry in session.improvements"] div'));
+ this.goodList = element.all(by.css('[ng-repeat="entry in session.good"] span'));
+ this.badList = element.all(by.css('[ng-repeat="entry in session.bad"] span'));
+ this.impList = element.all(by.css('[ng-repeat="entry in session.improvements"] span'));
 
  this.goodCheck = element.all(by.css('[ng-repeat="entry in session.good"] div .fa-check'));
 

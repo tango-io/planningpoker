@@ -432,7 +432,7 @@ describe('sockets', function() {
         client1.emit('updateEntry', {id: id, entryType: 'good', entry:{ id: 0, read: true}});
       });
 
-      client2.on('entryUpdated', function(data){
+      client2.on('updateEntry', function(data){
         data.should.have.property('entryType', 'good');
         data.entry.should.have.property('read', true);
         data.entry.should.have.property('id', 0);

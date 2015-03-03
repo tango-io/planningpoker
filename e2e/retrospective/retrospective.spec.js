@@ -259,4 +259,80 @@ describe('Retrospective View', function() {
       expect(page.goodCheck.first().isDisplayed()).toBe(false);
     });
   });
+
+  describe('User event should be sincronized with all users conected', function(){
+    var appWindow, newWindowHandle;
+
+    beforeEach(function(done) {
+
+      page.addGoodBtn.click();
+      page.newGoodEntry.sendKeys('first awesome!');
+      browser.actions().sendKeys(protractor.Key.ENTER).perform();
+      page.addBadBtn.click();
+      page.newBadEntry.sendKeys('first sad!');
+      browser.actions().sendKeys(protractor.Key.ENTER).perform();
+      page.addImpBtn.click();
+      page.newImpEntry.sendKeys('first it will be better next time!');
+      browser.actions().sendKeys(protractor.Key.ENTER).perform();
+
+      browser.getCurrentUrl().then(function(url){
+        browser.driver.executeScript('window.open();');
+        appWindow = browser.getWindowHandle();
+        browser.getAllWindowHandles().then(function (handles) {
+          newWindowHandle = handles[1];
+          browser.switchTo(newWindowHandle).window(newWindowHandle).then(function () {
+            browser.get(url);
+            page.usernameModalInput.sendKeys('Cersei');
+            page.moderatorModalOpt.click();
+            page.modalBtn.click();
+
+            page.addGoodBtn.click();
+            page.newGoodEntry.sendKeys('another awesome!');
+            browser.actions().sendKeys(protractor.Key.ENTER).perform();
+            page.addBadBtn.click();
+            page.newBadEntry.sendKeys('another sad!');
+            browser.actions().sendKeys(protractor.Key.ENTER).perform();
+            page.addImpBtn.click();
+            page.newImpEntry.sendKeys('another it will be better next time!');
+            browser.actions().sendKeys(protractor.Key.ENTER).perform();
+
+            done();
+          });
+        });
+      });
+    });
+
+
+    it('should remove entries from a user when it leaves session', function() {
+      browser.switchTo().window(appWindow);
+      expect(page.goodList.count()).toBe(2);
+      expect(page.badList.count()).toBe(2);
+      expect(page.impList.count()).toBe(2);
+
+      browser.switchTo().window(newWindowHandle);
+      browser.driver.close().then(function () {
+        browser.switchTo().window(appWindow);
+        expect(page.goodList.count()).toBe(1);
+        expect(page.badList.count()).toBe(1);
+        expect(page.impList.count()).toBe(1);
+      });
+    });
+
+    it('should be able to edit entries', function() {
+      browser.getAllWindowHandles().then(function (handles) {
+        browser.driver.switchTo().window(handles[0]).then(function(){
+          browser.driver.executeScript('window.focus();');
+          page.goodEdit.first().click();
+          page.editEntry.clear();
+          page.editEntry.sendKeys('changed');
+          page.okBtn.click();
+
+          browser.driver.switchTo().window(handles[1]).then(function(){
+            browser.driver.executeScript('window.focus();');
+            expect(page.goodList.first().getText()).toBe('________ (Arya)');
+          });
+        });
+      });
+    });
+  });
 });
