@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pokerestimateApp')
-.controller('MainCtrl', function ($scope, $location, userService, socket) {
+.controller('MainCtrl', function ($scope, $location, userService, socket, $modal) {
 
   //Setting default options and clearing user in userservice
   $scope.init = function(){
@@ -14,6 +14,7 @@ angular.module('pokerestimateApp')
     //Redirect to retrospective page after create a session
     socket.on('sessionCreated', $scope.listeners.onSessionCreated);
     socket.on('sessionVerified',$scope.listeners.onSessionCreated);
+    socket.on('errorMsg',       $scope.listeners.onError);
   };
 
   $scope.startSession = function(){
@@ -45,6 +46,9 @@ angular.module('pokerestimateApp')
     onSessionCreated: function(data){
       var type = data.data == 'retrospective' ? 'retrospectives' : 'sessions';
      $location.path('/'+ type +'/' + data.id);
+    },
+    onError: function(){
+     $modal.open({templateUrl: 'app/templates/modals/error.html'});
     }
   };
 });
