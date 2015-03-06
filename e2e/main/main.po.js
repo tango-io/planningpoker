@@ -33,8 +33,7 @@ var MainPage = function() {
 
   this.joinModeratorOpt = element(by.cssContainingText('.join option', 'Scrum Master \/ Moderator'));
 
-  this.retrospectiveOpt = element(by.cssContainingText('.start option', 'Retrospective'));
-  this.retrospectiveJoinOpt = element(by.cssContainingText('.join option', 'Retrospective'));
+  this.retrospectiveOpt = element(by.cssContainingText('.start option', 'Retrospective Session'));
 };
 
 module.exports = new MainPage();
