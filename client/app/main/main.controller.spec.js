@@ -26,12 +26,13 @@ describe('Controller: MainCtrl', function () {
     socket.on = socket.onFake;
     spyOn(userService, 'setUser');
     spyOn(scope.listeners, 'onSessionCreated');
+    spyOn(scope.listeners, 'onError');
     scope.init();
     expect(userService.setUser).toHaveBeenCalledWith({username : '', type: 'player'});
     expect(scope.currentUser.username).toBe("");
     expect(scope.currentUser.type).toBe("player");
     expect(scope.currentUser_.type).toBe("player");
-    expect(scope.listeners.onSessionCreated).toHaveBeenCalled();
+    expect(scope.listeners.onSessionCreated.callCount).toBe(2);
     expect(scope.listeners.onError).toHaveBeenCalled();
   }));
 
@@ -109,12 +110,8 @@ describe('Controller: MainCtrl', function () {
        expect($location.path()).toBe('/voteValues');
     }));
 
-
-    it('reditects to session/:id when user joins a session', inject(function ($location) {
-      scope.currentUser_.username = "tester";
-      scope.sessionType_ = "pointing";
-      scope.sessionId    = "some-1231";
-      scope.joinSession();
+    it('reditects to session/:id on session verified', inject(function ($location) {
+      scope.listeners.onSessionCreated({id: 'some-1231', data:'session'});
       expect($location.path()).toBe('/sessions/some-1231')
     }));
   });
@@ -135,11 +132,8 @@ describe('Controller: MainCtrl', function () {
       expect($location.path()).toBe('/sessions/some-1231')
     }));
 
-    it('reditects to retrospectives/:id when user joins a session', inject(function ($location) {
-      scope.currentUser_.username = "tester";
-      scope.sessionType_ = "retrospective";
-      scope.sessionId   = "some-1231";
-      scope.joinSession();
+    it('reditects to retrospectives/:id on session verified', inject(function ($location) {
+      scope.listeners.onSessionCreated({id: 'some-1231', data:'retrospective'});
       expect($location.path()).toBe('/retrospectives/some-1231')
     }));
 
