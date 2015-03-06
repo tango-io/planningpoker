@@ -162,10 +162,7 @@ function onLeaveSession(socket){
       socket.broadcast.to(roomId).emit('updateVotes', rooms[roomId].votes);
     }
 
-    if(rooms[roomId].good){ //delete entries from user, and update clients
-      rooms[roomId].improvements  = _.reject(rooms[roomId].improvements, {userId: socket.id});
-      rooms[roomId].good  = _.reject(rooms[roomId].good, {userId: socket.id});
-      rooms[roomId].bad  = _.reject(rooms[roomId].bad, {userId: socket.id});
+    if(rooms[roomId].good){
       socket.broadcast.to(roomId).emit('updateEntries', _.pick(rooms[roomId], 'good', 'bad', 'improvements'));
     }
   }else{

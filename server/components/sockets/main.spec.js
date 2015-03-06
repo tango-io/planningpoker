@@ -464,7 +464,7 @@ describe('sockets', function() {
       client1.emit('newSession', 'retrospective');
     });
 
-    it('removes entries from user on leave session', function(done) {
+    it('does not remove entries from user on leave session', function(done) {
       var id, pass;
       var that = this;
       client1.on('sessionCreated', function(data){
@@ -478,7 +478,7 @@ describe('sockets', function() {
         client1.emit('leaveSession');
 
         client2.on('updateEntries', function(data){
-          data.good.length.should.be.exactly(0);
+          data.good.length.should.be.exactly(1);
           done();
         });
       });
