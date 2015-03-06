@@ -3,10 +3,11 @@ var uuid  = require('node-uuid'),
     rooms = {};
 
 exports.register = function(socket, io) {
-  socket.on('newSession',   function(data){onNewSession(socket, data);});
-  socket.on('joinSession',  function(data){onJoinSession(io, socket, data);});
-  socket.on('leaveSession', function(data){onLeaveSession(socket);});
-  socket.on('disconnect',   function(data){onLeaveSession(socket);});
+  socket.on('newSession',    function(data){onNewSession(socket, data);});
+  socket.on('joinSession',   function(data){onJoinSession(io, socket, data);});
+  socket.on('leaveSession',  function(data){onLeaveSession(socket);});
+  socket.on('disconnect',    function(data){onLeaveSession(socket);});
+  socket.on('verifySession', function(data){onVerifyession(socket, data);});
 
   //Pointing sessions listeners
   socket.on('updateDescription', function(data){updateDescription(socket, data);});
@@ -23,6 +24,11 @@ exports.register = function(socket, io) {
   socket.on('closeEntry',       function(data){onCloseEntry(socket, data);});
   socket.on('openEntry',        function(data){onOpenEntry(socket, data);});
   socket.on('moveCurrentEntry', function(data){onMoveCurrentEntry(socket, data);});
+};
+
+function onVerifyession(socket, data){
+  if(!rooms[data.id]){ return socket.emit('errorMsg', {message: "Session does not exist"}); }
+  socket.emit('sessionVerified', {id: data.id, data: rooms[data.id].hasOwnProperty('good') ? 'retrospective': 'pointing'});
 };
 
 function onNewSession(socket, data) {
