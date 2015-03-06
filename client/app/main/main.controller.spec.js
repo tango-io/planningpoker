@@ -6,6 +6,7 @@ describe('Controller: MainCtrl', function () {
   beforeEach(module('pokerestimateApp'));
   beforeEach(module('socketMock'));
   beforeEach(module('userServiceMock'));
+  beforeEach(module('modalMock'));
 
   var MainCtrl,
   scope;
@@ -31,6 +32,7 @@ describe('Controller: MainCtrl', function () {
     expect(scope.currentUser.type).toBe("player");
     expect(scope.currentUser_.type).toBe("player");
     expect(scope.listeners.onSessionCreated).toHaveBeenCalled();
+    expect(scope.listeners.onError).toHaveBeenCalled();
   }));
 
   it('sets submitted to true when starts a session without username', inject(function () {
@@ -85,6 +87,14 @@ describe('Controller: MainCtrl', function () {
     expect(userService.setUser).toHaveBeenCalledWith( { username : 'Tester', type : 'player' });
   }));
 
+  it('emits verify session on joinSession', inject(function (socket) {
+    spyOn(socket, 'emit');
+    scope.currentUser_.username = "tester";
+    scope.sessionId = "some-1231";
+    scope.joinSession();
+    expect(socket.emit).toHaveBeenCalledWith("verifySession", { type : 'pointing', id : 'some-1231' });
+  }));
+
   describe("Pointing Sessions", function(){
     it('does not go to vote values page without username', inject(function (userService, $location) {
       spyOn(userService, 'setUser');
@@ -131,6 +141,13 @@ describe('Controller: MainCtrl', function () {
       scope.sessionId   = "some-1231";
       scope.joinSession();
       expect($location.path()).toBe('/retrospectives/some-1231')
+    }));
+
+    it('opens modal on errorMsg function', inject(function ($modal) {
+      spyOn($modal, 'open').andReturn($modal.fakeResponses.cleanOpen);
+      scope.listeners.onError();
+
+      expect($modal.open).toHaveBeenCalled();
     }));
   });
 });
