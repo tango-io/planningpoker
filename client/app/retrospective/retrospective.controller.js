@@ -195,6 +195,9 @@ angular.module('pokerestimateApp')
     onUpdateEntry: function(data){
       var entry = _.findWhere($scope.session[data.entryType], {id: data.entry.id});
       entry.read = data.entry.read;
+      if($scope.reviewMode){
+        entry.text = data.entry.text;
+      }
     },
 
     onUpdateEntries: function(data){

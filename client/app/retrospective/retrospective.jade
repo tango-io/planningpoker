@@ -1,5 +1,5 @@
 include ../templates/header.jade
-#container.retrospective(ng-controller="RetrospectiveCtrl" ng-init="init()")
+container.retrospective(ng-controller="RetrospectiveCtrl" ng-init="init()")
   .row.row-with-padding.retrospective
     .large-3.columns
       h5.title Prouds
@@ -12,6 +12,9 @@ include ../templates/header.jade
           div(ng-if="reviewMode")
             a.left(ng-click="openEntry('good', entry)") {{entry.text}}({{entry.username}})
             i.fa.fa-check(ng-show="entry.read")
+            .right(ng-show="currentUser.type == 'moderator'")
+              i.fa.fa-pencil(ng-click="edit('good', entry)")
+              i.fa.fa-times(ng-click="remove('good', entry)")
           div(ng-if="!reviewMode")
             span.left {{entry.text}}
             .right(ng-show="currentUser.id == entry.userId")
@@ -28,6 +31,9 @@ include ../templates/header.jade
           div(ng-if="reviewMode")
             a.left(ng-click="openEntry('bad', entry)") {{entry.text}}({{entry.username}})
             i.fa.fa-check(ng-show="entry.read")
+            .right(ng-show="currentUser.type == 'moderator'")
+              i.fa.fa-pencil(ng-click="edit('bad', entry)")
+              i.fa.fa-times(ng-click="remove('bad', entry)")
           div(ng-if="!reviewMode")
             span.left {{entry.text}}
             .right(ng-show="currentUser.id == entry.userId")
@@ -43,6 +49,9 @@ include ../templates/header.jade
           div(ng-if="reviewMode")
             a.left(ng-click="openEntry('improvements', entry)") {{entry.text}}({{entry.username}})
             i.fa.fa-check(ng-show="entry.read")
+            .right(ng-show="currentUser.type == 'moderator'")
+              i.fa.fa-pencil(ng-click="edit('improvements', entry)")
+              i.fa.fa-times(ng-click="remove('improvements', entry)")
           div(ng-if="!reviewMode")
             span.left {{entry.text}}
             .right(ng-show="currentUser.id == entry.userId")
