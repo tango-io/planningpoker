@@ -3,10 +3,12 @@ var uuid  = require('node-uuid'),
     rooms = {};
 
 exports.register = function(socket, io) {
-  socket.on('newSession',   function(data){onNewSession(socket, data);});
-  socket.on('joinSession',  function(data){onJoinSession(io, socket, data);});
-  socket.on('leaveSession', function(data){onLeaveSession(socket);});
-  socket.on('disconnect',   function(data){onLeaveSession(socket);});
+  socket.on('newSession',    function(data){onNewSession(socket, data);});
+  socket.on('joinSession',   function(data){onJoinSession(io, socket, data);});
+  socket.on('leaveSession',  function(data){onLeaveSession(socket);});
+  socket.on('disconnect',    function(data){onLeaveSession(socket);});
+  socket.on('reconnect',     function(data){onReconnect(socket);});
+  socket.on('verifySession', function(data){onVerifyession(socket, data);});
 
   //Pointing sessions listeners
   socket.on('updateDescription', function(data){updateDescription(socket, data);});
@@ -23,6 +25,11 @@ exports.register = function(socket, io) {
   socket.on('closeEntry',       function(data){onCloseEntry(socket, data);});
   socket.on('openEntry',        function(data){onOpenEntry(socket, data);});
   socket.on('moveCurrentEntry', function(data){onMoveCurrentEntry(socket, data);});
+};
+
+function onVerifyession(socket, data){
+  if(!rooms[data.id]){ return socket.emit('errorMsg', {message: "Session does not exist"}); }
+  socket.emit('sessionVerified', {id: data.id, data: rooms[data.id].hasOwnProperty('good') ? 'retrospective': 'pointing'});
 };
 
 function onNewSession(socket, data) {
@@ -140,6 +147,10 @@ function onUpdateEntry(socket, data) {
   socket.broadcast.to(data.id).emit('updateEntry', data);
 };
 
+function onReconnect(){
+  console.log("Reconecting");
+}
+
 function onLeaveSession(socket){
   var match, union;
   var roomId = _.findKey(rooms, function(room){//Find user in rooms
@@ -156,10 +167,7 @@ function onLeaveSession(socket){
       socket.broadcast.to(roomId).emit('updateVotes', rooms[roomId].votes);
     }
 
-    if(rooms[roomId].good){ //delete entries from user, and update clients
-      rooms[roomId].improvements  = _.reject(rooms[roomId].improvements, {userId: socket.id});
-      rooms[roomId].good  = _.reject(rooms[roomId].good, {userId: socket.id});
-      rooms[roomId].bad  = _.reject(rooms[roomId].bad, {userId: socket.id});
+    if(rooms[roomId].good){
       socket.broadcast.to(roomId).emit('updateEntries', _.pick(rooms[roomId], 'good', 'bad', 'improvements'));
     }
   }else{

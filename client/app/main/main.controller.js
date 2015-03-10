@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pokerestimateApp')
-.controller('MainCtrl', function ($scope, $location, userService, socket) {
+.controller('MainCtrl', function ($scope, $location, userService, socket, $modal) {
 
   //Setting default options and clearing user in userservice
   $scope.init = function(){
@@ -12,7 +12,9 @@ angular.module('pokerestimateApp')
     userService.setUser($scope.currentUser);
 
     //Redirect to retrospective page after create a session
-    socket.on('sessionCreated', $scope.listeners.onSessionCreated);
+    socket.on('sessionCreated',  $scope.listeners.onSessionCreated);
+    socket.on('sessionVerified', $scope.listeners.onSessionCreated);
+    socket.on('errorMsg',        $scope.listeners.onError);
   };
 
   $scope.startSession = function(){
@@ -31,10 +33,9 @@ angular.module('pokerestimateApp')
   };
 
   $scope.joinSession = function(){
-    var type = ($scope.sessionType_ == "pointing" ? '/sessions/' : '/retrospectives/');
     if($scope.currentUser_.username && $scope.sessionId){
       userService.setUser($scope.currentUser_);
-      $location.path(type + $scope.sessionId);
+      socket.emit('verifySession', {type: $scope.sessionType_, id: $scope.sessionId});
     }else{
       //Set submitted_ to true to show errors in join form
       $scope.submitted_ = true;
@@ -45,6 +46,9 @@ angular.module('pokerestimateApp')
     onSessionCreated: function(data){
       var type = data.data == 'retrospective' ? 'retrospectives' : 'sessions';
      $location.path('/'+ type +'/' + data.id);
+    },
+    onError: function(){
+     $modal.open({templateUrl: 'app/templates/modals/error.html'});
     }
   };
 });

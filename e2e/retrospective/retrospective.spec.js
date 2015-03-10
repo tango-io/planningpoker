@@ -169,6 +169,7 @@ describe('Retrospective View', function() {
   describe('Session View for moderators', function() {
     beforeEach(function(){
       browser.get('/');
+      browser.waitForAngular();
       page.usernameInput.sendKeys('Arya');
       page.moderatorOpt.click();
       page.retrospectiveOpt.click();
@@ -263,7 +264,7 @@ describe('Retrospective View', function() {
 
   describe('User event should be sincronized with all users conected', function(){
 
-    it('should remove entries from a user when it leaves session', function(done) {
+    it('should not remove entries from a user when it leaves session', function(done) {
       var appWindow, newWindowHandle;
 
       page.addGoodBtn.click();
@@ -308,9 +309,9 @@ describe('Retrospective View', function() {
               browser.switchTo(newWindowHandle).window(newWindowHandle).then(function(){
                 browser.driver.close().then(function() {
                   browser.switchTo().window(appWindow).then(function(){
-                    expect(page.goodList.count()).toBe(1);
-                    expect(page.badList.count()).toBe(1);
-                    expect(page.impList.count()).toBe(1);
+                    expect(page.goodList.count()).toBe(2);
+                    expect(page.badList.count()).toBe(2);
+                    expect(page.impList.count()).toBe(2);
                     done();
                   });
                 });

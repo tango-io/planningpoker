@@ -35,6 +35,7 @@ angular.module('pokerestimateApp')
     socket.on('openEntry',        $scope.listeners.onOpenEntry);
     socket.on('updateEntries',    $scope.listeners.onUpdateEntries);
     socket.on('closeEntry',       $scope.listeners.onCloseEntry);
+    socket.on('disconnect',       $scope.listeners.onDisconnect);
   };
 
   $scope.add = function(type){
@@ -195,6 +196,9 @@ angular.module('pokerestimateApp')
     onUpdateEntry: function(data){
       var entry = _.findWhere($scope.session[data.entryType], {id: data.entry.id});
       entry.read = data.entry.read;
+      if($scope.reviewMode){
+        entry.text = data.entry.text;
+      }
     },
 
     onUpdateEntries: function(data){
@@ -206,6 +210,10 @@ angular.module('pokerestimateApp')
       modalInstance.result.then(function () {
         $location.path("/");
       });
+    },
+
+    onDisconnect: function(){
+     $modal.open({templateUrl: 'app/templates/modals/reconnect.html'});
     }
   };
 });

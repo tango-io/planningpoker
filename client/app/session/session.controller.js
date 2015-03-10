@@ -29,6 +29,7 @@ angular.module('pokerestimateApp')
     socket.on('hideVotes',          $scope.listeners.onHideVotes);
     socket.on('updateVotes',        $scope.listeners.onUpdateVotes);
     socket.on('errorMsg',           $scope.listeners.onError);
+    socket.on('disconnect',         $scope.listeners.onDisconnect);
   };
 
   $scope.listeners = {
@@ -70,6 +71,10 @@ angular.module('pokerestimateApp')
       //Show unanimous message only when all votes match and is more than one player
       $scope.showDetailsMsg = _.keys(votes).length > 1;
       $scope.unanimous      = _.keys($scope.points).length == 1 && $scope.showDetailsMsg ? true : false;
+    },
+
+    onDisconnect: function(){
+     $modal.open({templateUrl: 'app/templates/modals/reconnect.html'});
     }
   };
 

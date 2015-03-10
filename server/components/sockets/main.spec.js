@@ -57,6 +57,28 @@ describe('sockets', function() {
     });
   });
 
+  it('emits an error event when session does not exist on verify session', function(done) {
+    client1.emit('verifySession', {id:'not-existing-id'});
+
+    client1.on('errorMsg', function(data){
+      data.message.should.be.exactly("Session does not exist")
+      done();
+    });
+  });
+
+  it('emits session verified when session exist', function(done) {
+    client1.on('sessionCreated', function(data){
+      client2.emit('verifySession', {id:data.id});
+
+      client2.on('sessionVerified', function(data){
+        data.id.should.be.exactly(data.id);
+        data.data.should.be.exactly("pointing");
+        done();
+      });
+    });
+    client1.emit('newSession');
+  });
+
   it('emits an error if client does not send correct information', function(done) {
     client1.on('sessionCreated', function(data){
       client2.emit('joinSession', {roomId:data.id, username: 'tester'});
@@ -442,7 +464,7 @@ describe('sockets', function() {
       client1.emit('newSession', 'retrospective');
     });
 
-    it('removes entries from user on leave session', function(done) {
+    it('does not remove entries from user on leave session', function(done) {
       var id, pass;
       var that = this;
       client1.on('sessionCreated', function(data){
@@ -456,7 +478,7 @@ describe('sockets', function() {
         client1.emit('leaveSession');
 
         client2.on('updateEntries', function(data){
-          data.good.length.should.be.exactly(0);
+          data.good.length.should.be.exactly(1);
           done();
         });
       });

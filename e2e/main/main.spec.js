@@ -137,7 +137,6 @@ describe('Main View', function() {
             browser.get('/');
             page.usernameInput_.sendKeys('Cersei');
             page.sessionIdInput.sendKeys(id);
-            page.retrospectiveJoinOpt.click();
             page.joinBtn.click();
 
             browser.getCurrentUrl().then(function(path){
@@ -158,13 +157,7 @@ describe('Main View', function() {
       page.usernameInput_.sendKeys('Sansa');
       page.sessionIdInput.sendKeys('X123');
       page.joinBtn.click();
-      browser.getCurrentUrl().then(function(path){
-        expect(path).toMatch('#/sessions/');
-        browser.sleep(1000);
-        expect(page.modal.getText()).toBe("Session does not exist")
-        page.modalBtn.click();
-        expect(browser.getCurrentUrl()).toBe(config.DOMAIN + "/#/");
-      });
+      expect(page.modal.getText()).toBe("Session does not exist")
     });
 
     it('s not able to join a session without username and session id', function() {

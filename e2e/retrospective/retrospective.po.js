@@ -35,7 +35,6 @@ var MainPage = function() {
  this.firstModerator= element(by.repeater('moderator in moderators').row(0).column('username'));
 
  this.retrospectiveOpt = element(by.cssContainingText('.start option', 'Retrospective'));
- this.retrospectiveJoinOpt = element(by.cssContainingText('.join option', 'Retrospective'));
 
  this.goodColumn = element(by.cssContainingText('.retrospective .columns h5', 'Prouds'));
  this.badColumn = element(by.cssContainingText('.retrospective .columns h5', 'Sorries'));
