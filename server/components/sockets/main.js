@@ -7,6 +7,7 @@ exports.register = function(socket, io) {
   socket.on('joinSession',   function(data){onJoinSession(io, socket, data);});
   socket.on('leaveSession',  function(data){onLeaveSession(socket);});
   socket.on('disconnect',    function(data){onLeaveSession(socket);});
+  socket.on('reconnect',     function(data){onReconnect(socket);});
   socket.on('verifySession', function(data){onVerifyession(socket, data);});
 
   //Pointing sessions listeners
@@ -145,6 +146,10 @@ function onUpdateEntry(socket, data) {
   entry.text = data.entry.text;
   socket.broadcast.to(data.id).emit('updateEntry', data);
 };
+
+function onReconnect(){
+  console.log("Reconecting");
+}
 
 function onLeaveSession(socket){
   var match, union;
