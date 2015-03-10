@@ -27,7 +27,3 @@ angular.module('pokerestimateApp', [
     templateUrl: 'app/voteValues/voteValues.html'
   });
 });
-
-function safeApply(scope, fn) {
-  (scope.$$phase || scope.$root.$$phase) ? fn() : scope.$apply(fn);
-}
