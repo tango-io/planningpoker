@@ -33,12 +33,6 @@ describe('Controller: VoteValuesCtrl', function () {
     expect(scope.voteValues).toEqual(defaultValues);
   });
 
-  it('sets listener for session created', function () {
-    spyOn(scope, 'redirectToSession');
-    scope.init();
-    expect(scope.voteValues).toEqual(defaultValues);
-  });
-
   it('emits new session in start session', inject(function (socket) {
     scope.init();
     spyOn(socket, 'emit');
@@ -59,10 +53,4 @@ describe('Controller: VoteValuesCtrl', function () {
     scope.addValue({label:"this one", value:"4"});
     expect(scope.voteValues.length).toBe(defaultValues.length + 1);
   }));
-
-  it('redirects to session:id on redirect to session function', inject(function ($location) {
-    scope.redirectToSession('sessionId');
-    expect($location.path()).toMatch('/sessions/sessionId');
-  }));
-
 });

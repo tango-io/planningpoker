@@ -20,6 +20,9 @@ angular.module('pokerestimateApp', [
   .when('/sessions/:id', {
     templateUrl: 'app/session/session.html'
   })
+  .when('/retrospectives/:id', {
+    templateUrl: 'app/retrospective/retrospective.html'
+  })
   .when('/voteValues', {
     templateUrl: 'app/voteValues/voteValues.html'
   });

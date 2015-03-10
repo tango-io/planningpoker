@@ -1,7 +1,7 @@
 'use strict';
 var config = require('../../server/config/local.env');
 
-ddescribe('Session View', function() {
+describe('Session View', function() {
   var page;
   var id;
 
@@ -32,8 +32,11 @@ ddescribe('Session View', function() {
       expect(page.shareUrl.getAttribute('value')).toEqual(url);
       expect(page.shareId.getAttribute('value')).toEqual(id);
       page.shareUrlBtn.click();
+      browser.sleep(1000);
       expect(page.shareTooltip.getText()).toEqual('Copied')
       page.shareIdBtn.click();
+      browser.sleep(1000);
+      expect(page.shareTooltip.getText()).toEqual('Copied')
       expect(page.shareTooltip.getText()).toEqual('Copied')
     });
   });
@@ -44,16 +47,16 @@ ddescribe('Session View', function() {
     page.usernameInput.sendKeys('Arya');
     page.startBtn.click();
     page.goBtn.click();
-    browser.waitForAngular();
-    expect(page.userList.count()).toBe(1);
+    browser.sleep(1000);
 
+    expect(page.userList.count()).toBe(1);
     browser.get('/');
     browser.waitForAngular();
     page.usernameInput.sendKeys('Arya');
     page.moderatorOpt.click();
     page.startBtn.click();
     page.goBtn.click();
-    browser.waitForAngular();
+    browser.sleep(1000);
     expect(page.moderatorsList.count()).toBe(1);
   });
 

@@ -46,13 +46,13 @@ describe('Controller: SessionCtrl', function () {
       expect($location.path()).toBe('/');
     }));
 
-    it('emits leave session if location.patch changes', inject(function ($location, socket) {
+    it('emits leave session if location.path changes', inject(function ($location, socket) {
       spyOn(socket, 'emit');
       $location.path('/')
       expect(socket.emit).not.toHaveBeenCalledWith('leaveSession');
     }));
 
-    it('sets the listener for socket events', inject(function (socket) {
+    it('sets the listeners for socket events', inject(function (socket) {
       socket.on = socket.onFake;
       spyOn(scope.listeners, 'onDescriptionUpdated');
       spyOn(scope.listeners, 'onJoinedSession');

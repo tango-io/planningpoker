@@ -8,7 +8,7 @@ describe('Controller: MainCtrl', function () {
   beforeEach(module('userServiceMock'));
 
   var MainCtrl,
-      scope;
+  scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function (_socket_, _userService_, $location, $controller, $rootScope) {
@@ -21,20 +21,16 @@ describe('Controller: MainCtrl', function () {
     scope.init();
   }));
 
-  it('initialize variables', inject(function (userService) {
+  it('initialize variables', inject(function (userService, socket) {
+    socket.on = socket.onFake;
     spyOn(userService, 'setUser');
+    spyOn(scope.listeners, 'onSessionCreated');
     scope.init();
     expect(userService.setUser).toHaveBeenCalledWith({username : '', type: 'player'});
     expect(scope.currentUser.username).toBe("");
     expect(scope.currentUser.type).toBe("player");
     expect(scope.currentUser_.type).toBe("player");
-  }));
-
-  it('does not go to vote values page without username', inject(function (userService, $location) {
-    spyOn(userService, 'setUser');
-    scope.startSession();
-    expect(userService.setUser).not.toHaveBeenCalledWith();
-     expect($location.path()).toBe('');
+    expect(scope.listeners.onSessionCreated).toHaveBeenCalled();
   }));
 
   it('sets submitted to true when starts a session without username', inject(function () {
@@ -55,12 +51,6 @@ describe('Controller: MainCtrl', function () {
     scope.currentUser.username = "tester";
     scope.startSession();
     expect(userService.setUser).toHaveBeenCalledWith({ username : 'tester', type : 'moderator' });
-  }));
-
-  it('goes to vote values start session', inject(function ($location) {
-    scope.currentUser.username = "tester";
-    scope.startSession();
-     expect($location.path()).toBe('/voteValues');
   }));
 
   it('does not join a session without username or session id', inject(function (userService, socket) {
@@ -95,10 +85,52 @@ describe('Controller: MainCtrl', function () {
     expect(userService.setUser).toHaveBeenCalledWith( { username : 'Tester', type : 'player' });
   }));
 
-  it('reditects to session/:id when user joins a session', inject(function ($location) {
-    scope.currentUser_.username = "tester";
-    scope.sessionId = "some-1231";
-    scope.joinSession();
-    expect($location.path()).toBe('/sessions/some-1231')
-  }));
+  describe("Pointing Sessions", function(){
+    it('does not go to vote values page without username', inject(function (userService, $location) {
+      spyOn(userService, 'setUser');
+      scope.startSession();
+      expect(userService.setUser).not.toHaveBeenCalledWith();
+       expect($location.path()).toBe('');
+    }));
+
+    it('goes to vote values start session', inject(function ($location) {
+      scope.currentUser.username = "tester";
+      scope.startSession();
+       expect($location.path()).toBe('/voteValues');
+    }));
+
+
+    it('reditects to session/:id when user joins a session', inject(function ($location) {
+      scope.currentUser_.username = "tester";
+      scope.sessionType_ = "pointing";
+      scope.sessionId    = "some-1231";
+      scope.joinSession();
+      expect($location.path()).toBe('/sessions/some-1231')
+    }));
+  });
+
+  describe("Retrospective Sessions", function(){
+    it('emit new session on start session', inject(function (socket) {
+      spyOn(socket, 'emit');
+      scope.currentUser.username = "tester";
+      scope.sessionType = "retrospective";
+      scope.startSession();
+      expect(socket.emit).toHaveBeenCalledWith('newSession', 'retrospective');
+    }));
+
+    it('reditects to retrospectives/:id on session created listener', inject(function (socket, $location) {
+      scope.listeners.onSessionCreated({id: 'some-1231', data:'retrospective'});
+      expect($location.path()).toBe('/retrospectives/some-1231')
+      scope.listeners.onSessionCreated({id: 'some-1231'});
+      expect($location.path()).toBe('/sessions/some-1231')
+    }));
+
+    it('reditects to retrospectives/:id when user joins a session', inject(function ($location) {
+      scope.currentUser_.username = "tester";
+      scope.sessionType_ = "retrospective";
+      scope.sessionId   = "some-1231";
+      scope.joinSession();
+      expect($location.path()).toBe('/retrospectives/some-1231')
+    }));
+  });
 });

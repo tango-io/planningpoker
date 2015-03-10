@@ -1,24 +1,40 @@
-'use strict';
-
 var uuid  = require('node-uuid'),
     _     = require('lodash'),
     rooms = {};
 
 exports.register = function(socket, io) {
-  socket.on('newSession', function(data){ onNewSession(socket, data);});
-  socket.on('joinSession', function(data){ onJoinSession(io, socket, data);});
-  socket.on('updateDescription', function(data){ updateDescription(socket, data);});
-  socket.on('vote', function(data){ onVote(io, socket, data);});
-  socket.on('revealVotes', function(data){onRevealVotes(io, socket, data);});
-  socket.on('clearSession', function(data){onClearSession(socket, data)});
+  socket.on('newSession',   function(data){onNewSession(socket, data);});
+  socket.on('joinSession',  function(data){onJoinSession(io, socket, data);});
   socket.on('leaveSession', function(data){onLeaveSession(socket);});
-  socket.on('disconnect', function(data){onLeaveSession(socket);});
+  socket.on('disconnect',   function(data){onLeaveSession(socket);});
+
+  //Pointing sessions listeners
+  socket.on('updateDescription', function(data){updateDescription(socket, data);});
+  socket.on('vote',              function(data){onVote(io, socket, data);});
+  socket.on('revealVotes',       function(data){onRevealVotes(io, socket, data);});
+  socket.on('clearSession',      function(data){onClearSession(socket, data)});
+
+//Retrospective sessions listeners
+  socket.on('reveal',           function(data){onReveal(io, data);});
+  socket.on('hide',             function(data){onHide(io, data);});
+  socket.on('newEntry',         function(data){onNewEntry(socket, data);});
+  socket.on('updateEntry',      function(data){onUpdateEntry(socket, data);});
+  socket.on('deleteEntry',      function(data){onDeleteEntry(socket, data);});
+  socket.on('closeEntry',       function(data){onCloseEntry(socket, data);});
+  socket.on('openEntry',        function(data){onOpenEntry(socket, data);});
+  socket.on('moveCurrentEntry', function(data){onMoveCurrentEntry(socket, data);});
 };
 
 function onNewSession(socket, data) {
   var roomId = uuid.v1();
-  rooms[roomId] = {players: [], moderators:[], votes: {}, voteValues: data};
-  socket.emit('sessionCreated', roomId);
+
+  if(data == 'retrospective'){
+    rooms[roomId] = {players: [], moderators:[], good: [], bad: [], improvements: []};
+  }else{
+    rooms[roomId] = {players: [], moderators:[], votes: {}, voteValues: data};
+  }
+
+  socket.emit('sessionCreated', {id: roomId, data: data});
 };
 
 function onJoinSession(io, socket, data) {
@@ -28,12 +44,19 @@ function onJoinSession(io, socket, data) {
   socket.join(data.roomId);
   //Save user in room
   rooms[data.roomId][data.type + "s"].push({id: socket.id, username:data.username, type:data.type});
-  //Send previous information from room
-  socket.emit('joinedSession', {id: socket.id, description: rooms[data.roomId].description, voteValues: rooms[data.roomId].voteValues});
 
+  //Send previous information from room
+  if(data.sessionType == 'retrospective'){
+    socket.emit('joinedSession', {id: socket.id, session: getRetrospectiveData(rooms[data.roomId])});
+    return io.to(data.roomId).emit('updateUsers', {players: rooms[data.roomId].players, moderators: rooms[data.roomId].moderators});
+  }
+
+  socket.emit('joinedSession', {id: socket.id, description: rooms[data.roomId].description, voteValues: rooms[data.roomId].voteValues});
   io.to(data.roomId).emit('hideVotes'); //hide votes if more users joined to room
   io.to(data.roomId).emit('updateUsers', {players: rooms[data.roomId].players, moderators: rooms[data.roomId].moderators});
 };
+
+//Pointing listeners
 
 function updateDescription(socket, data) {
   rooms[data.id].description = data.description;
@@ -66,6 +89,57 @@ function onClearSession(socket, data){
   socket.broadcast.to(data.id).emit('clearVotes');
 };
 
+//Retrospective listeners
+function getRetrospectiveData(data){
+  return {good: hideText(data.good), bad: hideText(data.bad), improvements: hideText(data.improvements)}
+};
+
+function hideText(data){
+   var entry;
+   return _.map(data, function(value){
+    entry = _.clone(value);
+    entry.text = '________ (' + entry.username + ')';
+    return entry;
+  }) || [];
+};
+
+function onNewEntry(socket, data) {
+  rooms[data.id][data.type].push(data.entry);
+  socket.broadcast.to(data.id).emit('newEntry', {type: data.type, username: data.entry.username});
+};
+
+function onCloseEntry(socket, data) {
+  socket.broadcast.to(data.id).emit('closeEntry');
+};
+
+function onReveal(io, data) {
+  io.to(data.id).emit('reveal', {session: _.pick(rooms[data.id], 'good', 'bad', 'improvements')} );
+};
+
+function onHide(io, data) {
+  io.to(data.id).emit('hide', {session: getRetrospectiveData(rooms[data.id])} );
+};
+
+function onOpenEntry(socket, data) {
+  socket.broadcast.to(data.id).emit('openEntry', {entry: data.entry});
+};
+
+function onDeleteEntry(socket, data) {
+  rooms[data.id][data.type] =  _.reject(rooms[data.id][data.type], {id: data.entry.id});
+  socket.broadcast.to(data.id).emit('deleteEntry', data);
+};
+
+function onMoveCurrentEntry(socket, data) {
+  socket.broadcast.to(data.id).emit('moveCurrentEntry', data);
+};
+
+function onUpdateEntry(socket, data) {
+  var entry = _.findWhere(rooms[data.id][data.entryType], {id: data.entry.id});
+  entry.read = data.entry.read;
+  entry.text = data.entry.text;
+  socket.broadcast.to(data.id).emit('updateEntry', data);
+};
+
 function onLeaveSession(socket){
   var match, union;
   var roomId = _.findKey(rooms, function(room){//Find user in rooms
@@ -77,9 +151,16 @@ function onLeaveSession(socket){
   if(roomId && union.length > 1){ //Remove user from rooms and delete rooms if is the last user in the room
     rooms[roomId][match.type + "s"]= _.reject(rooms[roomId][match.type + "s"], {id: socket.id}); //remove user from room
     socket.broadcast.to(roomId).emit('updateUsers', {players: rooms[roomId].players, moderators: rooms[roomId].moderators});
-    if(match.type == 'player'){ //delete votes from user, and update clients
+    if(match.type == 'player' && rooms[roomId].votes){ //delete votes from user, and update clients
       delete rooms[roomId].votes[socket.id];
       socket.broadcast.to(roomId).emit('updateVotes', rooms[roomId].votes);
+    }
+
+    if(rooms[roomId].good){ //delete entries from user, and update clients
+      rooms[roomId].improvements  = _.reject(rooms[roomId].improvements, {userId: socket.id});
+      rooms[roomId].good  = _.reject(rooms[roomId].good, {userId: socket.id});
+      rooms[roomId].bad  = _.reject(rooms[roomId].bad, {userId: socket.id});
+      socket.broadcast.to(roomId).emit('updateEntries', _.pick(rooms[roomId], 'good', 'bad', 'improvements'));
     }
   }else{
     delete rooms[roomId];

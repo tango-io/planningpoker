@@ -14,17 +14,11 @@ angular.module('pokerestimateApp')
         {label: ':/', value: '?'},
         {label: 'Break', value: 'need a break'}
       ];
-
-      socket.on('sessionCreated', function(sessionId){ $scope.redirectToSession(sessionId)});
     };
 
     $scope.go = function(){
      userService.setVoteValues($scope.voteValues);
      socket.emit('newSession', $scope.voteValues);
-    };
-
-    $scope.redirectToSession = function(sessionId){
-     $location.path('/sessions/' + sessionId);
     };
 
     $scope.removeValue = function(value){

@@ -21,6 +21,13 @@ angular.module('modalMock', [])
           }
         }
       },
+      editOpen: {
+        result: {
+          then: function(cb) {
+            return cb({currentEntry: {text: 'entry updated'}});
+          }
+        }
+      },
       cleanOpen:{
         result: {
           then: function(cb) {
@@ -31,5 +38,3 @@ angular.module('modalMock', [])
     }
   };
 });
-
-
