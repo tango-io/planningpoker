@@ -15,7 +15,6 @@ angular.module('pokerestimateApp')
     socket.on('sessionCreated',  $scope.listeners.onSessionCreated);
     socket.on('sessionVerified', $scope.listeners.onSessionCreated);
     socket.on('errorMsg',        $scope.listeners.onError);
-    socket.on('disconnect',      $scope.listeners.onDisconnect);
   };
 
   $scope.startSession = function(){
@@ -50,9 +49,6 @@ angular.module('pokerestimateApp')
     },
     onError: function(){
      $modal.open({templateUrl: 'app/templates/modals/error.html'});
-    },
-    onDisconnect: function(){
-     $modal.open({templateUrl: 'app/templates/modals/reconnect.html'});
     }
   };
 });
