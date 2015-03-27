@@ -489,6 +489,7 @@ describe('sockets', function() {
     it('removes users from user on leave session', function(done) {
       var id, pass;
       var that = this;
+      pending();
       client1.on('sessionCreated', function(data){
         client1.emit('joinSession', {roomId: data.id, username: 'Tester', type: 'player', sessionType: 'retrospective'});
         client2.emit('joinSession', {roomId: data.id, username: 'Tester2', type: 'player', sessionType: 'retrospective'});
