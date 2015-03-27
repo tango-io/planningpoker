@@ -486,7 +486,7 @@ describe('sockets', function() {
       client1.emit('newSession', 'retrospective');
     });
 
-    it('removes users from user on leave session', function(done) {
+    it('PENDING removes users from user on leave session', function() {
       var id, pass;
       var that = this;
       client1.on('sessionCreated', function(data){
