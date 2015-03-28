@@ -11,7 +11,5 @@ angular.module('pokerestimateApp')
     ioSocket: ioSocket
   });
 
-  return {
-    socket: socket
-  }
+  return socket;
 });

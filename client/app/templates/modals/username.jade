@@ -2,7 +2,7 @@ div
   h3 Enter username
   input(type="text" ng-model="username")
   h3 Enter as
-  select(ng-model="type")
+  select(ng-model="userType")
     option(value="player") Player
-    option(value="moderator") Moderator
-  button.button(ng-click='$close(this)' ng-disabled="!username" ) OK
+    option(value="moderator") Scrum Master / Moderator
+  button.button.showy(ng-click='$close(this)' ng-disabled="!username" ) OK

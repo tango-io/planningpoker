@@ -20,7 +20,7 @@ angular.module('userServiceMock', [])
     },
     fakeResponses:{
       getFakeUser: function(){
-        return {username: 'tester', userType:'observer'};
+        return {username: 'tester', type:'moderator', id:'socketId'};
       },
       getFakeValues: function(){
         return [

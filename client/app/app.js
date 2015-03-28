@@ -6,9 +6,12 @@ angular.module('pokerestimateApp', [
   'ngSanitize',
   'ngRoute',
   'btford.socket-io',
-  'mm.foundation'
+  'mm.foundation',
+  'ngClipboard'
 ])
-.config(function ($routeProvider) {
+.config(function ($routeProvider, ngClipProvider) {
+  ngClipProvider.setPath("bower_components/zeroclipboard/dist/ZeroClipboard.swf");
+
   $routeProvider
   .when('/', {
     templateUrl: 'app/main/main.html',
@@ -16,6 +19,9 @@ angular.module('pokerestimateApp', [
   })
   .when('/sessions/:id', {
     templateUrl: 'app/session/session.html'
+  })
+  .when('/retrospectives/:id', {
+    templateUrl: 'app/retrospective/retrospective.html'
   })
   .when('/voteValues', {
     templateUrl: 'app/voteValues/voteValues.html'
