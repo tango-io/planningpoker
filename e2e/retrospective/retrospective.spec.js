@@ -128,6 +128,18 @@ describe('Retrospective View', function() {
     expect(page.impList.first().getText()).toBe('it will be much better next time!');
   });
 
+  it('sn\'t able to edit entries if is empty',function(){
+    page.addGoodBtn.click();
+    page.newGoodEntry.sendKeys('awesome!');
+    browser.actions().sendKeys(protractor.Key.ENTER).perform();
+    page.goodEdit.click();
+    page.editEntry.clear();
+    page.okBtn.click();
+    browser.sleep(1000);
+
+    expect(page.modal.isPresent()).toBe(true);
+  });
+
   it('s able to cancel edit entries', function() {
     page.addGoodBtn.click();
     page.newGoodEntry.sendKeys('awesome!');
