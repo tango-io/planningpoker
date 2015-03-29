@@ -128,7 +128,7 @@ describe('Retrospective View', function() {
     expect(page.impList.first().getText()).toBe('it will be much better next time!');
   });
 
-  it('sn\'t able to edit entries if is empty',function(){
+  it('sn\'t able to edit an entry if it is empty',function(){
     page.addGoodBtn.click();
     page.newGoodEntry.sendKeys('awesome!');
     browser.actions().sendKeys(protractor.Key.ENTER).perform();
