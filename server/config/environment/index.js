@@ -10,7 +10,7 @@ function requiredProcessEnv(name) {
   return process.env[name];
 }
 
-var port =  process.env.NODE_ENV == 'development' ? 9000 : 8080;
+var port =  _.contains(['development', 'test'], process.env.NODE_ENV)  ? 9000 : 8080;
 
 // All configurations will extend these options
 // ============================================
@@ -40,7 +40,7 @@ var all = {
 
   FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
   GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_ID,
-  DOMAIN: process.env.DOMAIN
+  DOMAIN: process.env.DOMAIN || 'http://localhost:9000'
 };
 
 // Export the config object based on the NODE_ENV

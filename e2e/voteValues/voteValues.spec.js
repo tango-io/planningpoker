@@ -1,4 +1,4 @@
-var config = require('../../server/config/local.env');
+var config = require('../../server/config/environment');
 
 describe('voteValues View', function() {
   var page;

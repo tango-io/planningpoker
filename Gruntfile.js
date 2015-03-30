@@ -4,7 +4,7 @@
 module.exports = function (grunt) {
   var localConfig;
   try {
-    localConfig = require('./server/config/local.env');
+    localConfig = require('./server/config/ennvironment');
   } catch(e) {
     localConfig = {};
   }
@@ -690,6 +690,8 @@ module.exports = function (grunt) {
     }
 
     else grunt.task.run([
+      'env:all',
+      'env:test',
       'test:server',
       'test:client',
       'test:integration'
