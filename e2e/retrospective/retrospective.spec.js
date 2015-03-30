@@ -30,7 +30,7 @@ describe('Retrospective View', function() {
     expect(page.addImpBtn.isPresent()).toBe(true);
   });
 
-  iit('shows entries if is in reveal mode when user joins', function() {
+  it('shows entries if is in reveal mode when user joins', function() {
     browser.get('/');
     browser.waitForAngular();
     page.usernameInput.sendKeys('Arya');

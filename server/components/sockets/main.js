@@ -55,6 +55,11 @@ function onJoinSession(io, socket, data) {
   //Send previous information from room
   if(data.sessionType == 'retrospective'){
     socket.emit('joinedSession', {id: socket.id, session: getRetrospectiveData(rooms[data.roomId])});
+
+    if(rooms[data.roomId].revealed){
+      socket.emit('reveal', {session: _.pick(rooms[data.roomId], 'good', 'bad', 'improvements')} );
+    }
+
     return io.to(data.roomId).emit('updateUsers', {players: rooms[data.roomId].players, moderators: rooms[data.roomId].moderators});
   }
 
@@ -120,6 +125,7 @@ function onCloseEntry(socket, data) {
 };
 
 function onReveal(io, data) {
+  rooms[data.id].revealed = true;
   io.to(data.id).emit('reveal', {session: _.pick(rooms[data.id], 'good', 'bad', 'improvements')} );
 };
 
