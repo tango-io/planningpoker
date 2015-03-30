@@ -53,9 +53,10 @@ describe('Retrospective View', function() {
         browser.switchTo(newWindowHandle).window(newWindowHandle).then(function () {
           browser.driver.executeScript('window.focus();');
           browser.get(url);
+          browser.waitForAngular();
           page.usernameModalInput.sendKeys('Cersei');
           page.modalBtn.click();
-          expect(page.goodList.getText()).toEqual('awesome!');
+          expect(page.goodLinkList.first().getText()).toEqual('awesome!(Arya)');
           browser.driver.close().then(function () {
             browser.switchTo().window(appWindow);
           });
