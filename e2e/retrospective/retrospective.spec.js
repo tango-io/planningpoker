@@ -30,6 +30,40 @@ describe('Retrospective View', function() {
     expect(page.addImpBtn.isPresent()).toBe(true);
   });
 
+  iit('shows entries if is in reveal mode when user joins', function() {
+    browser.get('/');
+    browser.waitForAngular();
+    page.usernameInput.sendKeys('Arya');
+    page.moderatorOpt.click();
+    page.retrospectiveOpt.click();
+    page.startBtn.click();
+    browser.sleep(1000);
+
+    page.addGoodBtn.click();
+    page.newGoodEntry.sendKeys('awesome!');
+    browser.actions().sendKeys(protractor.Key.ENTER).perform();
+
+    page.revealBtn.click();
+
+    browser.getCurrentUrl().then(function(url){
+      browser.driver.executeScript('window.open();');
+      var appWindow = browser.getWindowHandle();
+      browser.getAllWindowHandles().then(function (handles) {
+        var newWindowHandle = handles[1];
+        browser.switchTo(newWindowHandle).window(newWindowHandle).then(function () {
+          browser.driver.executeScript('window.focus();');
+          browser.get(url);
+          page.usernameModalInput.sendKeys('Cersei');
+          page.modalBtn.click();
+          expect(page.goodList.getText()).toEqual('awesome!');
+          browser.driver.close().then(function () {
+            browser.switchTo().window(appWindow);
+          });
+        });
+      });
+    });
+  });
+
   it('s prompts username request if user does not have', function(){
     browser.getCurrentUrl().then(function(url){
       browser.driver.executeScript('window.open();');
