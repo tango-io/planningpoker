@@ -7,8 +7,8 @@ angular.module('pokerestimateApp')
   $scope.init = function(){
     $scope.sessionType  = 'pointing';
     $scope.currentUser  = {username:'', type:'player'};
-    $scope.sessionType_ = 'pointing";
-    $scope.currentUser_ = {username:'', type:"player'};
+    $scope.sessionType_ = 'pointing';
+    $scope.currentUser_ = {username:'', type:'player'};
     userService.setUser($scope.currentUser);
 
     //Redirect to retrospective page after create a session
