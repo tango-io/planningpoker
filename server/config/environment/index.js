@@ -10,6 +10,8 @@ function requiredProcessEnv(name) {
   return process.env[name];
 }
 
+var port =  process.env.NODE_ENV == 'development' ? 9000 : 8080;
+
 // All configurations will extend these options
 // ============================================
 var all = {
@@ -18,8 +20,15 @@ var all = {
   // Root path of server
   root: path.normalize(__dirname + '/../../..'),
 
+  // Server IP
+  ip:       process.env.OPENSHIFT_NODEJS_IP ||
+            process.env.IP ||
+            undefined,
+
   // Server port
-  port: process.env.PORT || 9000,
+  port:     process.env.OPENSHIFT_NODEJS_PORT ||
+            process.env.PORT ||
+            port,
 
   // Should we populate the DB with sample data?
   seedDB: false,
@@ -29,12 +38,11 @@ var all = {
     session: 'pokerestimate-secret'
   },
 
-  // List of user roles
-  userRoles: ['guest', 'user', 'admin'],
+  FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
+  GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_ID,
+  DOMAIN: process.env.DOMAIN
 };
 
 // Export the config object based on the NODE_ENV
 // ==============================================
-module.exports = _.merge(
-  all,
-  require('../env.js') || {});
+module.exports = all
