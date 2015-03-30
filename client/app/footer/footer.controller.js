@@ -14,13 +14,13 @@ angular.module('pokerestimateApp')
     var url;
 
     //Using FB SDK to share
-    if(social=='facebook'){ return FB.ui({ method: 'share', href: path}, function(response){}); }
+    if(social === 'facebook'){ return FB.ui({ method: 'share', href: path}); }
 
     //Setting url for twitter or facebook
-    if(social=='twitter'){
+    if(social === 'twitter'){
       url = 'http://twitter.com/share?url='+ path +'&text=' + text;
     }else{
-      url= "http://www.linkedin.com/shareArticle?mini=true&url="+encodedPath+"&title="+text+"&summary="+description+"&source="+encodedPath
+      url= 'http://www.linkedin.com/shareArticle?mini=true&url='+encodedPath+'&title='+text+'&summary='+description+'&source='+encodedPath;
     }
 
     //Setting dimmensions for pop up window

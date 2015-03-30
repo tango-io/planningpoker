@@ -5,5 +5,5 @@ angular.module('FBMock', [])
     return {
       ui: function(){
       }
-    }
+    };
   });

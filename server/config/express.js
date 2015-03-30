@@ -20,6 +20,7 @@ module.exports = function(app) {
 
   app.locals.FACEBOOK_APP_ID= config.FACEBOOK_APP_ID;
   app.locals.GOOGLE_ANALYTICS_ID= config.GOOGLE_ANALYTICS_ID;
+  app.locals.DOMAIN = config.DOMAIN;
 
   app.set('view engine', 'jade');
   app.set('views', config.root + '/client/');
@@ -35,7 +36,6 @@ module.exports = function(app) {
     app.use(favicon(path.join(config.root, 'public', 'favicon.ico')));
     app.use(express.static(path.join(config.root, 'public')));
     app.set('appPath', config.root + '/public');
-    app.use(morgan('dev'));
   }
 
   if ('development' === env || 'test' === env) {
@@ -43,7 +43,11 @@ module.exports = function(app) {
     app.use(express.static(path.join(config.root, '.tmp')));
     app.use(express.static(path.join(config.root, 'client')));
     app.set('appPath', 'client');
-    app.use(morgan('dev'));
     app.use(errorHandler()); // Error handler - has to be last
   }
+
+  if('test' !== env){
+    app.use(morgan('dev'));
+  }
+
 };

@@ -7,19 +7,19 @@ angular.module('pokerestimateApp')
     link: function (scope, element, attrs) {
       var roles = attrs.hideFor.split(' ');
 
-      scope.$watch(attrs.model, function(newVal){
+      // Wait until value is set
+      scope.$watch(attrs.model, function(){
+        var hideFor = _.contains(roles);
 
-      var hideFor = _.contains(roles, scope[attrs.model]);
-
-      if (hideFor) {
-        angular.forEach(element.children(), function (child) {
-          removeElement(child);
-        });
-        removeElement(element);
-      }
-      })
+        if (hideFor) {
+          angular.forEach(element.children(), function (child) {
+            removeElement(child);
+          });
+          removeElement(element);
+        }
+      });
     }
   };
 }]).constant('removeElement', function(element){
-  element && element.remove && element.remove();
+  if(element && element.remove){ element.remove() };
 });

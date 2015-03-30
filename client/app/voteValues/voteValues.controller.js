@@ -14,24 +14,18 @@ angular.module('pokerestimateApp')
         {label: ':/', value: '?'},
         {label: 'Break', value: 'need a break'}
       ];
-
-      socket.socket.on('sessionCreated', function(sessionId){ $scope.redirectToSession(sessionId)});
     };
 
     $scope.go = function(){
      userService.setVoteValues($scope.voteValues);
-     socket.socket.emit('newSession', $scope.voteValues);
-    };
-
-    $scope.redirectToSession = function(sessionId){
-     $location.path('/sessions/' + sessionId);
+     socket.emit('newSession', $scope.voteValues);
     };
 
     $scope.removeValue = function(value){
       $scope.voteValues = _.reject($scope.voteValues, {value: value});
     };
 
-    $scope.addValue = function(value){
+    $scope.addValue= function(value){
       $scope.voteValues.push(value);
       $scope.newVote = {};
     };

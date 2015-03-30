@@ -17,7 +17,14 @@ angular.module('modalMock', [])
       open: {
         result: {
           then: function(cb) {
-            return cb({username: 'tester', type: 'moderator'});
+            return cb({username: 'tester', userType: 'moderator'});
+          }
+        }
+      },
+      editOpen: {
+        result: {
+          then: function(cb) {
+            return cb({currentEntry: {text: 'entry updated'}});
           }
         }
       },
@@ -31,5 +38,3 @@ angular.module('modalMock', [])
     }
   };
 });
-
-

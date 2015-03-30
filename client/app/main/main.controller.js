@@ -1,20 +1,31 @@
 'use strict';
 
 angular.module('pokerestimateApp')
-.controller('MainCtrl', function ($scope, $location, userService) {
+.controller('MainCtrl', function ($scope, $location, userService, socket, $modal) {
 
   //Setting default options and clearing user in userservice
   $scope.init = function(){
-    userService.setUser({username: ""});
-    $scope.username = "";
-    $scope.userType = "player";
-    $scope.userType_ = "player";
+    $scope.sessionType  = 'pointing';
+    $scope.currentUser  = {username:'', type:'player'};
+    $scope.sessionType_ = 'pointing';
+    $scope.currentUser_ = {username:'', type:'player'};
+    userService.setUser($scope.currentUser);
+
+    //Redirect to retrospective page after create a session
+    socket.on('sessionCreated',  $scope.listeners.onSessionCreated);
+    socket.on('sessionVerified', $scope.listeners.onSessionCreated);
+    socket.on('errorMsg',        $scope.listeners.onError);
   };
 
   $scope.startSession = function(){
-    if($scope.username){
-      userService.setUser({username: $scope.username, userType: $scope.userType});
-      $location.path('/voteValues');
+    if($scope.currentUser.username){
+      userService.setUser($scope.currentUser);
+
+      if($scope.sessionType == 'pointing'){
+        $location.path('/voteValues');
+      }else{
+        socket.emit('newSession', 'retrospective');
+      }
     }else{
       //Set submitted to true to show form errors in start form
       $scope.submitted = true;
@@ -22,12 +33,22 @@ angular.module('pokerestimateApp')
   };
 
   $scope.joinSession = function(){
-    if($scope.username_ && $scope.sessionId){
-      userService.setUser({username: $scope.username_, userType: $scope.userType_});
-      $location.path('/sessions/' + $scope.sessionId);
+    if($scope.currentUser_.username && $scope.sessionId){
+      userService.setUser($scope.currentUser_);
+      socket.emit('verifySession', {type: $scope.sessionType_, id: $scope.sessionId});
     }else{
       //Set submitted_ to true to show errors in join form
       $scope.submitted_ = true;
+    }
+  };
+
+  $scope.listeners = {
+    onSessionCreated: function(data){
+      var type = data.data == 'retrospective' ? 'retrospectives' : 'sessions';
+     $location.path('/'+ type +'/' + data.id);
+    },
+    onError: function(){
+     $modal.open({templateUrl: 'app/templates/modals/error.html'});
     }
   };
 });

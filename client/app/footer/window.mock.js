@@ -5,5 +5,5 @@ angular.module('windowMock', [])
     return {
       open: function(){
       }
-    }
+    };
   });

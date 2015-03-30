@@ -1,0 +1,4 @@
+div.entry-modal
+ textarea(ng-model="currentEntry.text")
+ button.button.showy(ng-click='$dismiss(this)') Cancel
+ button.button.showy.disabled(ng-click='$close(this)' ng-disabled="!currentEntry.text") OK

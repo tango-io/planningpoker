@@ -1,0 +1,36 @@
+.retrospective
+  h5.title
+    padding-bottom: 5px
+  button.button.showy
+    padding: 0px 5px
+    font-size: 20px
+    float: right
+  .row.retrospective .columns:not(:last-child)
+    border-right: 1px solid steadyGray
+    min-height: 300px
+  ul
+    margin: 0
+    list-style: none
+    li
+      width: 100%
+      clear: both
+      span
+        text-overflow: ellipsis
+        overflow: hidden
+        max-width: 79%
+      i.fa
+        margin: 5px;
+        float: right
+        color: buttonColor
+        &:hover
+          cursor: pointer
+          color: buttonColorS
+  .players
+    ul li span
+      width: 100%
+      padding: 2px 4px
+      display: block
+      max-width: none
+.entry-modal
+  button
+    margin-right: 10px

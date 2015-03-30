@@ -33,17 +33,11 @@ describe('Controller: VoteValuesCtrl', function () {
     expect(scope.voteValues).toEqual(defaultValues);
   });
 
-  it('sets listener for session created', function () {
-    spyOn(scope, 'redirectToSession');
-    scope.init();
-    expect(scope.voteValues).toEqual(defaultValues);
-  });
-
   it('emits new session in start session', inject(function (socket) {
     scope.init();
-    spyOn(socket.socket, 'emit');
+    spyOn(socket, 'emit');
     scope.go();
-    expect(socket.socket.emit).toHaveBeenCalledWith('newSession', defaultValues);
+    expect(socket.emit).toHaveBeenCalledWith('newSession', defaultValues);
   }));
 
   it('remove values from list', inject(function ($location) {
@@ -59,10 +53,4 @@ describe('Controller: VoteValuesCtrl', function () {
     scope.addValue({label:"this one", value:"4"});
     expect(scope.voteValues.length).toBe(defaultValues.length + 1);
   }));
-
-  it('redirects to session:id on redirect to session function', inject(function ($location) {
-    scope.redirectToSession('sessionId');
-    expect($location.path()).toMatch('/sessions/sessionId');
-  }));
-
 });
