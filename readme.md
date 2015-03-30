@@ -1,9 +1,10 @@
 TangoSource Poker Estimate
 ==========================
+[![Code Climate](https://codeclimate.com/github/tangosource/tangoestimate/badges/gpa.svg)](https://codeclimate.com/github/tangosource/tangoestimate)
 
 ##Description
 
-This project aims to help SCRUM estimation process by using [Planning Poker technique](http://es.wikipedia.org/wiki/Planning_poker) 
+This project aims to help SCRUM estimation process by using [Planning Poker technique](http://es.wikipedia.org/wiki/Planning_poker)
 It allows to create game sessions for your sprint estimation where you and all of your teammates can participate in real time.
 
 ##Requirements
@@ -13,13 +14,13 @@ It allows to create game sessions for your sprint estimation where you and all o
 
 ###Install Dependencies
 
-####Development dependencies 
+####Development dependencies
 
 In order to keep our development process high-speed, we are taking advantages of these great tools:
 
  - [Grunt](http://gruntjs.com/using-the-cli)
  - [Bower](http://bower.io/)
- - [AngularJS Full-Stack Generator](https://github.com/DaftMonk/generator-angular-fullstack) 
+ - [AngularJS Full-Stack Generator](https://github.com/DaftMonk/generator-angular-fullstack)
 
 Please install them if you have not done it yet.
 
@@ -37,13 +38,13 @@ $ npm install -g bower
 
 We asume that you have some experience with these tools, if not, please take a look on their pages.
 
-####Project dependencies 
-To install all of npm and bower dependencies please run: 
+####Project dependencies
+To install all of npm and bower dependencies please run:
 
 ```sh
 $ npm install && bower install
 ```
-You are ready to run the server with this comand 
+You are ready to run the server with this comand
 
 ```sh
 $ grunt serve
@@ -55,12 +56,12 @@ Since we are using AngularJS Full-Stack Generator development is much
 easier:
 
 To generate a controller, directive, route, endpoint, service, etc.
-We do it like this: 
+We do it like this:
 
 ```sh
 yo angular-fullstack:type name
 ```
-To generate an angular controller for example we run  
+To generate an angular controller for example we run
 
 ```sh
 yo angular-fullstack:controller user
