@@ -1,5 +1,5 @@
 'use strict';
-var config = require('../../server/config/local.env');
+var config = require('../../server/config/environment');
 
 describe('Retrospective View', function() {
   var page;

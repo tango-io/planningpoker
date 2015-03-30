@@ -40,6 +40,6 @@ describe('Controller: FooterCtrl', function () {
     window.FB = FB;
     spyOn(window.FB, 'ui');
     scope.share(event, 'facebook');
-    expect(FB.ui).toHaveBeenCalledWith({ method : 'share', href : event.currentTarget.href }, jasmine.any(Function));
+    expect(FB.ui).toHaveBeenCalledWith({ method : 'share', href : event.currentTarget.href });
   }));
 });
