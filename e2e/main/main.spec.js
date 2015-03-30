@@ -1,6 +1,6 @@
 'use strict';
 
-var config = require('../../server/config/local.env');
+var config = require('../../server/config/environment');
 
 describe('Main View', function() {
   var page;

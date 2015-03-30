@@ -3,7 +3,7 @@
 var should = require('should');
 var io = require('socket.io-client');
 var _ = require('lodash');
-var url = require('../../config/local.env').DOMAIN;
+var url = require('../../config/environment').DOMAIN;
 
 var options ={
   transports: ['websocket'],
@@ -11,7 +11,6 @@ var options ={
 };
 
 describe('sockets', function() {
-
   var server, client1, client2;
 
   var options = {
