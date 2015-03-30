@@ -5,10 +5,10 @@ angular.module('pokerestimateApp')
 
   //Setting default options and clearing user in userservice
   $scope.init = function(){
-    $scope.sessionType  = "pointing";
-    $scope.currentUser  = {username:"", type:"player"};
-    $scope.sessionType_ = "pointing";
-    $scope.currentUser_ = {username:"", type:"player"};
+    $scope.sessionType  = 'pointing';
+    $scope.currentUser  = {username:'', type:'player'};
+    $scope.sessionType_ = 'pointing';
+    $scope.currentUser_ = {username:'', type:'player'};
     userService.setUser($scope.currentUser);
 
     //Redirect to retrospective page after create a session
@@ -21,8 +21,8 @@ angular.module('pokerestimateApp')
     if($scope.currentUser.username){
       userService.setUser($scope.currentUser);
 
-      if($scope.sessionType == "pointing"){
-        $location.path("/voteValues");
+      if($scope.sessionType == 'pointing'){
+        $location.path('/voteValues');
       }else{
         socket.emit('newSession', 'retrospective');
       }

@@ -8,7 +8,7 @@ describe('Controller: SessionCtrl', function () {
   beforeEach(module('modalMock'));
   beforeEach(module('userServiceMock'));
 
-  var SessionCtrl, scope, $modal;
+  var SessionCtrl, scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function (_socket_, _userService_, $location, $controller, $rootScope, $routeParams, $modal) {
@@ -23,7 +23,7 @@ describe('Controller: SessionCtrl', function () {
 
   describe('Sessions controller', function(){
 
-    it('initialize variables on calling init', inject(function ($location, socket, userService, $routeParams, $modal) {
+    it('initialize variables on calling init', inject(function ($location, socket, userService, $routeParams) {
       spyOn(userService, 'getUser').andReturn(userService.fakeResponses.getFakeUser());
       $location.path('/sessions/sessionId');
       socket.on = socket.onFake;
@@ -158,7 +158,7 @@ describe('Controller: SessionCtrl', function () {
       expect(scope.unanimous).toEqual(false);
     }));
 
-    it('shows unanimous if there is all votes matches', inject(function ($location) {
+    it('shows unanimous if there is all votes matches', inject(function() {
       scope.init();
       scope.listeners.onUpdateVotes({id: 3, otherSocketId: 3, anotherSocketId: 3});
       expect(scope.unanimous).toEqual(true);

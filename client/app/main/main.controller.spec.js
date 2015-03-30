@@ -29,9 +29,9 @@ describe('Controller: MainCtrl', function () {
     spyOn(scope.listeners, 'onError');
     scope.init();
     expect(userService.setUser).toHaveBeenCalledWith({username : '', type: 'player'});
-    expect(scope.currentUser.username).toBe("");
-    expect(scope.currentUser.type).toBe("player");
-    expect(scope.currentUser_.type).toBe("player");
+    expect(scope.currentUser.username).toBe('');
+    expect(scope.currentUser.type).toBe('player');
+    expect(scope.currentUser_.type).toBe('player');
     expect(scope.listeners.onSessionCreated.callCount).toBe(2);
     expect(scope.listeners.onError).toHaveBeenCalled();
   }));
@@ -43,15 +43,15 @@ describe('Controller: MainCtrl', function () {
 
   it('calls sets username function in service before start session', inject(function (userService) {
     spyOn(userService, 'setUser');
-    scope.currentUser.username = "tester";
+    scope.currentUser.username = 'tester';
     scope.startSession();
     expect(userService.setUser).toHaveBeenCalledWith({ username : 'tester', type : 'player' });
   }));
 
   it('sets type in service before start session', inject(function (userService) {
     spyOn(userService, 'setUser');
-    scope.currentUser.type = "moderator";
-    scope.currentUser.username = "tester";
+    scope.currentUser.type = 'moderator';
+    scope.currentUser.username = 'tester';
     scope.startSession();
     expect(userService.setUser).toHaveBeenCalledWith({ username : 'tester', type : 'moderator' });
   }));
@@ -61,7 +61,7 @@ describe('Controller: MainCtrl', function () {
     spyOn(userService, 'setUser');
     scope.startSession();
     expect(userService.setUser).not.toHaveBeenCalledWith();
-    scope.currentUser_.username = "tester";
+    scope.currentUser_.username = 'tester';
     expect(userService.setUser).not.toHaveBeenCalledWith();
     expect(socket.emit).not.toHaveBeenCalledWith('joinSession');
   }));
@@ -73,7 +73,7 @@ describe('Controller: MainCtrl', function () {
 
   it('sets username in service before join session', inject(function (userService) {
     spyOn(userService, 'setUser');
-    scope.currentUser_.username = "tester";
+    scope.currentUser_.username = 'tester';
     scope.sessionId = "some-1231";
     scope.joinSession();
     expect(userService.setUser).toHaveBeenCalledWith({ username : 'tester', type : 'player' });
@@ -81,8 +81,8 @@ describe('Controller: MainCtrl', function () {
 
   it('sets type_ in service before join session', inject(function (userService) {
     spyOn(userService, 'setUser');
-    scope.currentUser_.type = "player";
-    scope.currentUser_.username = "Tester";
+    scope.currentUser_.type = 'player';
+    scope.currentUser_.username = 'Tester';
     scope.sessionId = "some-1231";
     scope.joinSession();
     expect(userService.setUser).toHaveBeenCalledWith( { username : 'Tester', type : 'player' });

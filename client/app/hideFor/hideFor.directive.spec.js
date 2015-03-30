@@ -11,16 +11,16 @@ describe('Directive: hideFor', function () {
     scope = $rootScope.$new();
   }));
 
-  it('removes an element for certain types of users', inject(function ($compile, userService) {
-    scope.userType = "moderator";
+  it('removes an element for certain types of users', inject(function ($compile) {
+    scope.userType = 'moderator';
     element = angular.element('<div><div hide-for="moderator" model="userType"></div></div>');
     element = $compile(element)(scope);
     element.scope().$apply()
     expect(element.html()).toBe('');
   }));
 
-  it('does not removes an element for certain types of users', inject(function ($compile, userService) {
-    scope.userType = "player";
+  it('does not removes an element for certain types of users', inject(function ($compile) {
+    scope.userType = 'player';
     element = angular.element('<div><div hide-for="moderator" model="userType"></div></div>');
     element = $compile(element)(scope);
     element.scope().$apply()
