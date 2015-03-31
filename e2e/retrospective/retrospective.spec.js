@@ -228,32 +228,37 @@ describe('Retrospective View', function() {
       browser.driver.executeScript('window.open();');
       appWindow = browser.getWindowHandle();
 
+      browser.ignoreSynchronization = true
+
       browser.getAllWindowHandles().then(function (handles) {
-        newWindowHandle = handles[1];
-        browser.switchTo(newWindowHandle).window(newWindowHandle).then(function () {
-          browser.driver.executeScript('window.focus();');
+        browser.switchTo().window(handles[1]).then(function() {
           browser.get(url);
           page.usernameModalInput.sendKeys('Cersei');
           page.modalBtn.click();
-          browser.sleep(1000);
 
-          browser.getAllWindowHandles().then(function (handles) {
-            browser.driver.switchTo().window(handles[0]).then(function(){
-              page.revealBtn.click();
-              page.goodLinkList.first().click();
+          browser.driver.switchTo().window(handles[0]).then(function(){
+            page.revealBtn.click();
+            page.goodLinkList.first().click();
+
+            browser.driver.switchTo().window(handles[1]).then(function(){
               browser.sleep(1000);
+              expect(page.modal.isPresent()).toBe(true);
+              expect(page.showEntry.getAttribute('value')).toBe('awesome!');
 
-              browser.driver.switchTo().window(handles[1]).then(function(){
-                expect(page.modal.isPresent()).toBe(true);
-                expect(page.showEntry.getAttribute('value')).toBe('awesome!');
+              browser.driver.switchTo().window(handles[0]).then(function(){
+                page.closeBg.click();
+                browser.sleep(3000);
+                page.goodLinkList.first().click();
+                page.nextBtn.click();
+                browser.sleep(3000);
+                expect(page.showEntry.getAttribute('value')).toBe('second awesome!');
 
-                browser.driver.switchTo().window(handles[0]).then(function(){
-                  page.nextBtn.click();
+                browser.driver.switchTo().window(handles[1]).then(function(){
                   expect(page.showEntry.getAttribute('value')).toBe('second awesome!');
-
-                  browser.driver.switchTo().window(handles[1]).then(function(){
-                    expect(page.showEntry.getAttribute('value')).toBe('second awesome!');
-                    done();
+                  browser.driver.close().then(function() {
+                    browser.switchTo().window(appWindow).then(function(){
+                      done();
+                    });
                   });
                 });
               });
