@@ -53,6 +53,7 @@ var MainPage = function() {
 
  this.okBtn = this.modal.element(by.buttonText('OK'));
  this.closeBtn = this.modal.element(by.buttonText('Close'));
+ this.closeBg = element(by.css('.reveal-modal-bg'));
  this.cancelBtn = this.modal.element(by.buttonText('Cancel'));
  this.nextBtn = this.modal.element(by.buttonText('Next'));
  this.previousBtn = this.modal.element(by.buttonText('Previous'));
