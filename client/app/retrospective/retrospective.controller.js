@@ -181,7 +181,7 @@ angular.module('pokerestimateApp')
     },
 
     onOpenEntry: function(data){
-      $scope.editEntry = data.entry;
+      $scope.currentEntry = data.entry;
       $scope.entryModal = $modal.open({templateUrl: modalPath + 'showEntry.html', keyboard:false, scope: $scope});
     },
 
@@ -190,7 +190,7 @@ angular.module('pokerestimateApp')
     },
 
     onMoveCurrentEntry: function(data){
-      $scope.editEntry = $scope.session[data.type][data.index];
+      $scope.currentEntry = $scope.session[data.type][data.index];
     },
 
     onUpdateEntry: function(data){

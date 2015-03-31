@@ -207,6 +207,63 @@ describe('Retrospective View', function() {
     expect(page.impList.count()).toBe(0);
   });
 
+  it('s able to view entries in review mode', function(done){
+    var appWindow, newWindowHandle;
+
+    browser.get('/');
+    browser.waitForAngular();
+    page.usernameInput.sendKeys('Arya');
+    page.moderatorOpt.click();
+    page.retrospectiveOpt.click();
+    page.startBtn.click();
+
+    page.addGoodBtn.click();
+    page.newGoodEntry.sendKeys('awesome!');
+    browser.actions().sendKeys(protractor.Key.ENTER).perform();
+
+    page.newGoodEntry.sendKeys('second awesome!');
+    browser.actions().sendKeys(protractor.Key.ENTER).perform();
+
+    browser.getCurrentUrl().then(function(url){
+      browser.driver.executeScript('window.open();');
+      appWindow = browser.getWindowHandle();
+
+      browser.getAllWindowHandles().then(function (handles) {
+        newWindowHandle = handles[1];
+        browser.switchTo(newWindowHandle).window(newWindowHandle).then(function () {
+          browser.driver.executeScript('window.focus();');
+          browser.get(url);
+          page.usernameModalInput.sendKeys('Cersei');
+          page.modalBtn.click();
+          browser.sleep(1000);
+
+          browser.getAllWindowHandles().then(function (handles) {
+            browser.driver.switchTo().window(handles[0]).then(function(){
+              page.revealBtn.click();
+              page.goodLinkList.first().click();
+              browser.sleep(1000);
+
+              browser.driver.switchTo().window(handles[1]).then(function(){
+                expect(page.modal.isPresent()).toBe(true);
+                expect(page.showEntry.getAttribute('value')).toBe('awesome!');
+
+                browser.driver.switchTo().window(handles[0]).then(function(){
+                  page.nextBtn.click();
+                  expect(page.showEntry.getAttribute('value')).toBe('second awesome!');
+
+                  browser.driver.switchTo().window(handles[1]).then(function(){
+                    expect(page.showEntry.getAttribute('value')).toBe('second awesome!');
+                    done();
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+
   describe('session view for players', function() {
     it('s not able to reveal entries', function() {
       expect(page.revealBtn.isPresent()).toBe(false);
