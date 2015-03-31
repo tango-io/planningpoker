@@ -190,7 +190,7 @@ angular.module('pokerestimateApp')
     },
 
     onMoveCurrentEntry: function(data){
-      $scope.editEntry = $scope.session[data.type][data.index];
+      $scope.currentEntry = $scope.session[data.type][data.index];
     },
 
     onUpdateEntry: function(data){
