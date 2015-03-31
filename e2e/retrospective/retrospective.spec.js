@@ -208,16 +208,20 @@ describe('Retrospective View', function() {
   });
 
   it('s able to view entries in review mode', function(done){
+    var appWindow, newWindowHandle;
+
     browser.get('/');
     browser.waitForAngular();
     page.usernameInput.sendKeys('Arya');
     page.moderatorOpt.click();
     page.retrospectiveOpt.click();
     page.startBtn.click();
-    var appWindow, newWindowHandle;
 
     page.addGoodBtn.click();
     page.newGoodEntry.sendKeys('awesome!');
+    browser.actions().sendKeys(protractor.Key.ENTER).perform();
+
+    page.newGoodEntry.sendKeys('second awesome!');
     browser.actions().sendKeys(protractor.Key.ENTER).perform();
 
     browser.getCurrentUrl().then(function(url){
@@ -242,7 +246,16 @@ describe('Retrospective View', function() {
               browser.driver.switchTo().window(handles[1]).then(function(){
                 expect(page.modal.isPresent()).toBe(true);
                 expect(page.showEntry.getAttribute('value')).toBe('awesome!');
-                done();
+
+                browser.driver.switchTo().window(handles[0]).then(function(){
+                  page.nextBtn.click();
+                  expect(page.showEntry.getAttribute('value')).toBe('second awesome!');
+
+                  browser.driver.switchTo().window(handles[1]).then(function(){
+                    expect(page.showEntry.getAttribute('value')).toBe('second awesome!');
+                    done();
+                  });
+                });
               });
             });
           });
