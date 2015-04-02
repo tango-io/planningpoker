@@ -83,6 +83,34 @@ describe('Session View', function() {
     });
   });
 
+it('can close modal if user does not enter username', function(){
+    browser.getCurrentUrl().then(function(url){
+      browser.driver.executeScript('window.open();');
+      var appWindow = browser.getWindowHandle();
+      browser.getAllWindowHandles().then(function (handles) {
+        var newWindowHandle = handles[1];
+        browser.switchTo(newWindowHandle).window(newWindowHandle).then(function () {
+          browser.driver.executeScript('window.focus();');
+          browser.get(url);
+
+          expect(page.usernameModalInput.isDisplayed()).toBe(true);
+
+          browser.actions().mouseMove(page.modalBg).click();
+
+          expect(page.usernameModalInput.isDisplayed()).toBe(true);
+          expect(page.modalBtn.isEnabled()).toBe(false);
+
+          page.usernameModalInput.sendKeys('Cersei');
+          expect(page.modalBtn.isEnabled()).toBe(true);
+
+          browser.driver.close().then(function () {
+            browser.switchTo().window(appWindow);
+          });
+        });
+      });
+    });
+  });
+
   describe('Session View for players', function() {
     it('s able to vote', function() {
       page.numbers.click();
