@@ -10,7 +10,6 @@ header.header
       .row
         .large-6.medium-6.columns
           form.card.wow.fadeInUp(name="startSessionForm" novalidate, data-wow-delay='0.2s')
-          .card.wow.fadeInUp(data-wow-delay='0.2s')
             .title
               h2 Create a new session
               h6 Some cool subtitle
@@ -18,7 +17,7 @@ header.header
               .input-field
                 input#create_username.validate(type='text' name="username" ng-model="currentUser.username" placeholder="Enter a username" required)
                 span.error(ng-show="submitted && startSessionForm.$invalid") Please enter a username
-                label(for='create_username') Enter a username
+                //-label(for='create_username') Enter a username
               select(ng-model="sessionType")
                 option(value='', disabled='', selected='') Type of session
                 option(value='pointing') Pointing session
@@ -28,7 +27,7 @@ header.header
                 option(value="player") Player
                 option(value="moderator") Scrum Master / Moderator
               .text-right
-                button.defaultbtn.button(ng-click="startSession()") START
+                button.hilightbtn(ng-click="startSession()") START
         .large-6.medium-6.columns
           form.card.wow.fadeInUp(name="joinSessionForm" novalidate, data-wow-delay='0.3s')
             .title
@@ -38,33 +37,33 @@ header.header
               .input-field
                 input#join_username.validate(type='text' name="username" ng-model="currentUser_.username" placeholder="Enter a username" required)
                 span.error(ng-show="submitted_ && joinSessionForm.username.$invalid") Please enter a username
-                label(for='join_username') Enter a username
+                //-label(for='join_username') Enter a username
               .input-field
                 input#join_id.validate(type='text' name="sessionId" ng-model="sessionId" placeholder="Enter a session id" required)
                 span.error(ng-show="submitted_ && joinSessionForm.sessionId.$invalid") Please enter a session id
-                label(for='join_id') Enter a session ID
+                //-label(for='join_id') Enter a session ID
               select(ng-model="currentUser_.type")
                 option(value='', disabled='', selected='') Type of player
                 option(value="player") Player
                 option(value="moderator") Scrum Master / Moderator
               .text-right
-                button.defaultbtn.button(ng-click="joinSession()") JOIN
+                button.hilightbtn(ng-click="joinSession()") JOIN
     .stats
       .row
         .large-12.text-center.columns
           h1.headline.subdued.wow.fadeIn(data-wow-delay='0.1s') Something about stats
         .large-4.medium-4.text-center.columns
-          .stacked.wow.fadeInUp(data-wow-delay='0.2s')
+          .stacked-inverted.wow.fadeInUp(data-wow-delay='0.2s')
             .content
               h6 Pointing sessions
               h1.display 1,239,090
         .large-4.medium-4.text-center.columns
-          .stacked.wow.fadeInUp(data-wow-delay='0.3s')
+          .stacked-inverted.wow.fadeInUp(data-wow-delay='0.3s')
             .content
               h6 Pointed stories
               h1.display 5,032,739
         .large-4.medium-4.text-center.columns
-          .stacked.wow.fadeInUp(data-wow-delay='0.4s')
+          .stacked-inverted.wow.fadeInUp(data-wow-delay='0.4s')
             .content
               h6 Votes casted
               h1.display 12,002,243
