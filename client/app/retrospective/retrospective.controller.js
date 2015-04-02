@@ -74,14 +74,23 @@ angular.module('pokerestimateApp')
   };
 
   $scope.openEntry = function(type, entry){
-    socket.emit('openEntry', {id: $scope.sessionId, entry: entry});
+    if($scope.currentUser.type == "moderator" && $scope.showForOthers){
+      socket.emit('openEntry', {id: $scope.sessionId, entry: entry});
+    }
+
     $scope.currentEntry = entry;
     $scope.entryType = type;
     $scope.entryModal = $modal.open({templateUrl: modalPath + 'showEntry.html', keyboard:false, scope: this});
 
     $scope.entryModal.result.then(function (data) {
-      socket.emit('closeEntry', {id: $scope.sessionId});
+      if($scope.currentUser.type == "moderator" && $scope.showForOthers){
+        socket.emit('closeEntry', {id: $scope.sessionId});
+      }
     });
+  };
+
+  $scope.toggleShow = function(event){
+    $scope.showForOthers = event.currentTarget.checked;
   };
 
   $scope.setCopyMsg = function(msg){
