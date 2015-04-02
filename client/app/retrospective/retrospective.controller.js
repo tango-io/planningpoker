@@ -89,10 +89,6 @@ angular.module('pokerestimateApp')
     });
   };
 
-  $scope.toggleShow = function(event){
-    $scope.showForOthers = event.currentTarget.checked;
-  };
-
   $scope.setCopyMsg = function(msg){
     $scope.copyMsg = msg;
   };
@@ -116,6 +112,7 @@ angular.module('pokerestimateApp')
   };
 
   function getRetrospectiveData(data){
+    if(!data){return false; }
     return {good: hideText(data.good), bad: hideText(data.bad), improvements: hideText(data.improvements)}
   };
 
@@ -186,6 +183,7 @@ angular.module('pokerestimateApp')
     },
 
     onDeleteEntry: function(data){
+      if(!data){ return false;}
       $scope.session[data.type] =  _.reject($scope.session[data.type], {id: data.entry.id});
     },
 
@@ -203,6 +201,8 @@ angular.module('pokerestimateApp')
     },
 
     onUpdateEntry: function(data){
+      if(!data){ return false;}
+
       var entry = _.findWhere($scope.session[data.entryType], {id: data.entry.id});
       entry.read = data.entry.read;
       if($scope.reviewMode){

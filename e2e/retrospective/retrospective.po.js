@@ -58,6 +58,7 @@ var MainPage = function() {
  this.nextBtn = this.modal.element(by.buttonText('Next'));
  this.previousBtn = this.modal.element(by.buttonText('Previous'));
 
+ this.showForOthers = element(by.model('showForOthers'));
  this.revealBtn = element(by.buttonText('Reveal'));
  this.readBtn = element(by.buttonText('Mark as read'));
  this.unReadBtn = element(by.buttonText('Mark as unread'));
