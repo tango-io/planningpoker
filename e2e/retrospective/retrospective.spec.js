@@ -114,6 +114,16 @@ describe('Retrospective View', function() {
     expect(page.moderatorsList.count()).toBe(1);
   });
 
+  it('closes modal changing of route', function(){
+    page.addGoodBtn.click();
+    page.newGoodEntry.sendKeys('awesome!');
+    browser.actions().sendKeys(protractor.Key.ENTER).perform();
+
+   page.goodList.first().click();
+   browser.navigate().back();
+    expect(page.modal.isPresent()).toBe(false);
+  });
+
   it('s able to add entries in all categories', function() {
     page.addGoodBtn.click();
     page.newGoodEntry.sendKeys('awesome!');
