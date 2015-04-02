@@ -40,6 +40,7 @@ var MainPage = function() {
   this.goBtn = element(by.buttonText('Go'));
 
   this.modal = element(by.css('.reveal-modal'));
+  this.modalBg = element(by.css('.reveal-modal-bg'));
   this.usernameModalInput = this.modal.element(by.model('username'));
   this.moderatorModalOpt = this.modal.element(by.cssContainingText('option', 'Moderator'));
   this.modalBtn = this.modal.element(by.buttonText('OK'));
