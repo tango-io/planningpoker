@@ -27,7 +27,7 @@ include ../templates/header.jade
             tbody
               tr(ng-repeat="moderator in moderators")
                td(ng-class="{active: moderator.id == currentUser.id}") {{moderator.username}}
-    .large-9.columns
+    .large-9.columns(ng-show="currentUser.username")
       .row
         .large-8.columns
           h5.title Poker Area
