@@ -18,10 +18,12 @@ html.no-js
     meta(property='og:title', content='Tango Poker Estimate')
     meta(property='og:image', content='https://pbs.twimg.com/profile_images/1409762848/tangosource_logo.png')
     meta(property='og:description', content='Best planning poker app')
+    link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Roboto:400,300,100', type='text/css')
 
     <!-- build:css(client) app/vendor.css -->
     // bower:css
     link(rel='stylesheet', href='bower_components/foundation/css/foundation.css')
+    link(rel='stylesheet', href='bower_components/animate.css/animate.css')
     // endbower
     <!-- endbuild -->
 
@@ -51,9 +53,9 @@ html.no-js
 
     //if lt IE 7
       p.browsehappy
-        | You are using an 
+        | You are using an
         strong outdated
-        |  browser. Please 
+        |  browser. Please
         a(href='http://browsehappy.com/') upgrade your browser
         |  to improve your experience.
 
@@ -64,6 +66,8 @@ html.no-js
       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
       ga('create', '#{GOOGLE_ANALYTICS_ID}');
       ga('send', 'pageview');
+
+
 
     div(ng-view='')
     //if lt IE 9
@@ -88,6 +92,7 @@ html.no-js
     script(src='bower_components/foundation/js/foundation.js')
     script(src='bower_components/zeroclipboard/dist/ZeroClipboard.js')
     script(src='bower_components/ng-clip/src/ngClip.js')
+    script(src='bower_components/wow/dist/wow.js')
     // endbower
     script(src='socket.io-client/socket.io.js')
     <!-- endbuild -->
@@ -107,4 +112,3 @@ html.no-js
     script(src="components/socket/socket.service.js")
     // endinjector
     <!-- endbuild -->
-

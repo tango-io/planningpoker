@@ -15,7 +15,12 @@ angular.module('pokerestimateApp')
     socket.on('sessionCreated',  $scope.listeners.onSessionCreated);
     socket.on('sessionVerified', $scope.listeners.onSessionCreated);
     socket.on('errorMsg',        $scope.listeners.onError);
+
+    $(document).ready(function() {
+      new WOW({ callback: animationCB }).init();
+    });
   };
+
 
   $scope.startSession = function(){
     if($scope.currentUser.username){
@@ -50,5 +55,11 @@ angular.module('pokerestimateApp')
     onError: function(){
      $modal.open({templateUrl: 'app/templates/modals/error.html'});
     }
+  };
+
+  function animationCB(box){
+    setTimeout(function(){
+      $(box).removeClass('fadeInUp');
+    }, 2000);
   };
 });

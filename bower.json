@@ -16,7 +16,9 @@
     "angular-foundation": "~0.5.1",
     "foundation": "5.2.0",
     "zeroclipboard": "~2.2.0",
-    "ng-clip": "~0.2.6"
+    "ng-clip": "~0.2.6",
+    "animate.css": "~3.2.6",
+    "wow": "~1.0.3"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",

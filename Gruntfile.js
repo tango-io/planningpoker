@@ -612,7 +612,7 @@ module.exports = function (grunt) {
       return grunt.task.run([
         'clean:server',
         'env:all',
-        'injector:stylus', 
+        'injector:stylus',
         'concurrent:server',
         'injector',
         'wiredep',
@@ -624,7 +624,7 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'env:all',
-      'injector:stylus', 
+      'injector:stylus',
       'concurrent:server',
       'injector',
       'wiredep',
@@ -654,7 +654,7 @@ module.exports = function (grunt) {
       return grunt.task.run([
         'clean:server',
         'env:all',
-        'injector:stylus', 
+        'injector:stylus',
         'concurrent:test',
         'injector',
         'autoprefixer',

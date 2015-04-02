@@ -1,21 +1,246 @@
-#banner
-    background bannerColor
-    padding 17px 15px 17px 15px
-    text-align center
-    border-bottom: 5px solid highlight2
-#banner h1
-    font-size 60px
-    letter-spacing -1px
-    line-height 1
-    color: white
-.row.separator:after
-  content: ""
-  display: inline-block
-  height: 300px
-  width: 1px
-  background: steadyGray
-  margin-top: 25px;
-  position: absolute
-  left: 50%
-body
-  color: route66
+@import 'mixins.styl';
+
+/* ==========================================================================
+   Colors
+   ========================================================================== */
+darkestBlue = #253137
+darkerBlue =  #36464E
+darkBlue =    #445963
+Blue =        #CED7DB
+lightBlue =   #EBEEF0
+darkerGrey =  #A4ABAE
+darkGrey =    #BDC1C3
+Grey =        #F9F9F9
+White =       #FFFFFF
+Green =       #BFC932
+darkGreen =   #AEB32A
+
+
+/* ==========================================================================
+   Font Styles
+   ========================================================================== */
+
+fontFamily =   'Roboto'
+fontLight =    100
+fontRegular =  300
+fontBold =     400
+fontBiggest =  45px
+fontBigger =   34px
+fontBig =      22px
+fontSmall =    16px
+fontSmaller =  14px
+fontSmallest = 12px
+
+h1, h2, h3, h4, h5, h6, p
+  color darkestBlue
+
+h1
+  font fontRegular fontBigger fontFamily, sans-serif
+
+h2
+  font fontRegular fontBig fontFamily, sans-serif
+
+h6
+  font fontBold fontSmaller fontFamily, sans-serif
+
+p
+  letter-spacing 0.5px
+
+.subdued
+  color darkerGrey
+
+.display
+  font fontRegular fontBiggest fontFamily, sans-serif
+
+.quote
+  font italic fontRegular fontSmaller fontFamily, sans-serif
+  text-align right
+  &:before
+    content "- "
+
+/* ==========================================================================
+   Button Styles
+   ========================================================================== */
+
+.defaultbtn
+ inkBtn lightBlue darkestBlue
+
+.headline
+  margin-bottom 78px
+  &:after
+    content url("../img/separator-sm-dark.png")
+    display block
+    margin auto
+    margin-top -10px
+
+.defaultbtn
+  materialBtn()
+  background-color lightBlue
+  color darkestBlue
+  &:hover, &:focus
+    background-color Green
+    color White
+
+.hilightbtn
+  materialBtn()
+  background-color Green
+  color White
+  &:hover, &:focus
+    background-color darkGreen
+
+.inkbtn
+  materialBtn()
+  background-color transparent
+  color darkerGrey
+  &:hover, &:focus
+    background-color Green
+    color White
+
+.outlinebtn
+  materialBtn()
+  background-color transparent
+  border 1px solid Green
+  color Green
+  &:hover
+    background-color Green
+    border Green
+    color White
+
+/* ==========================================================================
+   General Styles
+   ========================================================================== */
+
+.headline
+  margin-bottom: 78px
+  &:after
+    content url("../img/separator-sm-dark.png")
+    display block
+    margin auto
+    margin-top -10px
+
+.card
+  border 1px solid Grey
+  border-radius 2px
+  box-shadow 0px 1px 0px #DFDFDF
+  .title
+    background-color lightBlue
+    padding 24px
+    h2, h6
+      color darkBlue
+      font-weight fontBold
+      margin 0
+  .body
+    background-color White
+    overflow hidden
+    padding 24px
+
+.stacked
+  stackedCard()
+  box-shadow 0px 3px 0px -2px White, 0px 3px 0 -1px lightBlue, 0px 6px 0 -3px White, 0px 6px 0 -2px lightBlue
+  &>.content
+    background-color Grey
+    margin 5px 5px 10px
+    padding 6px 12px
+
+.stacked-inverted
+  stackedCard()
+  border-bottom none
+  box-shadow 0px -3px 0px -2px White, 0px -3px 0 -1px lightBlue, 0px -6px 0 -3px White, 0px -6px 0 -2px lightBlue
+  &>.content
+    background-color Grey
+    padding 8px 5px 20px 5px
+    h1
+      color Green
+      line-height 1
+      margin 0
+
+.modal
+  .title
+    margin-bottom 20px
+    h2, a
+      display inline
+    .close-reveal-modal
+      color darkerGrey
+      font-size fontBig
+      line-height 1
+      float right
+      margin-top 4px
+      position initial
+      top 0
+      right 0
+  .button-group
+    margin-top 30px
+    text-align right
+
+
+/* ==========================================================================
+   NavBar Styles
+   ========================================================================== */
+
+.contain-to-grid
+  background #253137
+  box-shadow 0px 2px 4px rgba(0,0,0,0.2)
+
+
+.top-bar
+  height 4.8125rem
+  background #253137
+  .expanded .title-area
+    background-color #253137
+
+.log
+  background-color #36464E
+  padding 10px 0 11px
+  .large-12
+    padding 0
+  p
+    display inline
+    font-size 12px
+    font-weight 300
+  a
+    font-size 12px
+    font-weight 400
+    letter-spacing 0.5px
+    transition all 100ms ease-in-out
+  &:hover
+    color #BFC932
+
+.navbar .title-area img{
+  width: 290px;
+  margin-top: 16px;
+}
+
+.navbar .top-bar-section ul{
+  margin-top: 16px;
+}
+
+.navbar .top-bar-section li:not(.has-form){
+  background: #253137;
+}
+
+.navbar .top-bar-section li:not(.has-form) a:not(.button){
+  background: #253137;
+  color: #BDC1C3;
+  font-size: 16px;
+  font-weight: 100;
+  padding: 0 30px;
+  -webkit-transition: all 100ms ease-in-out;
+  -moz-transition: all 100ms ease-in-out;
+  -o-transition: all 100ms ease-in-out;
+  transition: all 100ms ease-in-out;
+}
+
+.navbar .top-bar-section li:not(.has-form) a:not(.button):hover{
+  color: #BFC932;
+}
+
+.navbar .top-bar-section li:not(.has-form) a:not(.button) .active{
+  color: #FFF;
+  font-weight: 400;
+}
+
+.navbar .top-bar-section li:not(.has-form):last-child a:not(.button){
+  padding-right: 0;
+}
+
+
