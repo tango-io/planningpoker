@@ -1,12 +1,11 @@
-footer.footer(ng-controller="FooterCtrl")
-  .container
-    .row
-      .large-2.large-centered.columns
-        .button-bar
-          div.icon-bar.three-up
-            a.social-btn.item(href="/" ng-click="share($event, 'twitter')" target="_blank")
-              i.fa.fa-twitter-square
-            a.social-btn.item(href="/" ng-click="share($event, 'facebook')" target="_blank")
-              i.fa.fa-facebook-square
-            a.social-btn.item(href="/" ng-click="share($event, 'linkedin')" target="_blank")
-              i.fa.fa-linkedin-square
+footer(ng-controller="FooterCtrl")
+  .row
+    .large-6.medium-6.text-center.medium-text-left.columns
+      h6 © All rights reserved 2015 TangoSource
+    .social.large-6.medium-6.text-center.medium-text-right.columns
+      a.facebook(href="/" ng-click="share($event, 'facebook')" target="_blank")
+        i.fa.fa-lg.fa-facebook
+      a.twitter(href="/" ng-click="share($event, 'twitter')" target="_blank")
+        i.fa.fa-lg.fa-twitter
+      a.linkedin(href="/" ng-click="share($event, 'linkedin')" target="_blank")
+        i.fa.fa-lg.fa-linkedin
