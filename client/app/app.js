@@ -27,3 +27,7 @@ angular.module('pokerestimateApp', [
     templateUrl: 'app/voteValues/voteValues.html'
   });
 });
+
+$(document).ready(function(){
+  new WOW().init();
+});
