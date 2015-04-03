@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pokerestimateApp')
-.controller('RetrospectiveCtrl', function ($scope, socket, $location, userService, $routeParams, $modal, $timeout) {
+.controller('RetrospectiveCtrl', function ($scope, socket, $location, userService, $routeParams, $modal, $timeout, $modalStack) {
   var modalPath = 'app/templates/modals/';
 
   $scope.init = function(){
@@ -151,6 +151,7 @@ angular.module('pokerestimateApp')
 
   //remove user from room when they leave the page
   $scope.$on('$locationChangeStart', function (event, next, current) {
+    $modalStack.dismissAll();
     socket.emit('leaveSession');
   });
 
