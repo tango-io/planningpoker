@@ -28,8 +28,12 @@ angular.module('pokerestimateApp', [
   });
 });
 
-$(document).foundation();
-
-$(document).ready(function(){
-  new WOW().init();
+$(document).ready(function() {
+  new WOW({ callback: animationCB }).init();
 });
+
+function animationCB(box){
+  setTimeout(function(){
+    $(box).removeClass('fadeInUp');
+  }, 2000);
+};
