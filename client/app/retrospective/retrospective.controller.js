@@ -74,13 +74,18 @@ angular.module('pokerestimateApp')
   };
 
   $scope.openEntry = function(type, entry){
-    socket.emit('openEntry', {id: $scope.sessionId, entry: entry});
+    if($scope.currentUser.type == "moderator" && $scope.showForOthers){
+      socket.emit('openEntry', {id: $scope.sessionId, entry: entry});
+    }
+
     $scope.currentEntry = entry;
     $scope.entryType = type;
     $scope.entryModal = $modal.open({templateUrl: modalPath + 'showEntry.html', keyboard:false, scope: this});
 
     $scope.entryModal.result.then(function (data) {
-      socket.emit('closeEntry', {id: $scope.sessionId});
+      if($scope.currentUser.type == "moderator" && $scope.showForOthers){
+        socket.emit('closeEntry', {id: $scope.sessionId});
+      }
     });
   };
 
@@ -107,6 +112,7 @@ angular.module('pokerestimateApp')
   };
 
   function getRetrospectiveData(data){
+    if(!data){return false; }
     return {good: hideText(data.good), bad: hideText(data.bad), improvements: hideText(data.improvements)}
   };
 
@@ -177,6 +183,7 @@ angular.module('pokerestimateApp')
     },
 
     onDeleteEntry: function(data){
+      if(!data){ return false;}
       $scope.session[data.type] =  _.reject($scope.session[data.type], {id: data.entry.id});
     },
 
@@ -194,6 +201,8 @@ angular.module('pokerestimateApp')
     },
 
     onUpdateEntry: function(data){
+      if(!data){ return false;}
+
       var entry = _.findWhere($scope.session[data.entryType], {id: data.entry.id});
       entry.read = data.entry.read;
       if($scope.reviewMode){

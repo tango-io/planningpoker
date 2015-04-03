@@ -59,6 +59,9 @@ container.retrospective(ng-controller="RetrospectiveCtrl" ng-init="init()")
               i.fa.fa-times(ng-click="remove('improvements', entry)")
     .large-2.columns.players
       .row.text-center(hide-for="player" model="currentUser.type")
+        span
+          input(type="checkbox" ng-model="showForOthers" ng-click="toggleShow($event)")
+          label Show for others
         button.btn.showy(ng-click="toggleReviewMode()") {{ reviewMode ? 'Hide' : 'Reveal'}}
       h5.title Players
       ul

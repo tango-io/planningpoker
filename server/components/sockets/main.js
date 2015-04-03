@@ -173,7 +173,7 @@ function onLeaveSession(socket){
       socket.broadcast.to(roomId).emit('updateVotes', rooms[roomId].votes);
     }
 
-    if(rooms[roomId].good){
+    if(roomId && rooms[roomId].good){
       socket.broadcast.to(roomId).emit('updateEntries', _.pick(rooms[roomId], 'good', 'bad', 'improvements'));
     }
   }else{
