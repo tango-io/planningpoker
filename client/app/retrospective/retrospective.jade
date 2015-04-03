@@ -1,6 +1,6 @@
 include ../templates/header.jade
 container.retrospective(ng-controller="RetrospectiveCtrl" ng-init="init()")
-  .row.row-with-padding.retrospective
+  .row.row-with-padding.retrospective(ng-show="currentUser.username")
     .large-3.columns
       h5.title Prouds
         button.button.tiny.showy(ng-click="toggleInputMode('good')" ng-hide="reviewMode")

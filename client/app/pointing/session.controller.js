@@ -15,7 +15,7 @@ angular.module('pokerestimateApp')
     }else{
       //open modal to ask for username and type when user joins
       $scope.userType = "player"; //default option in modal
-      var modalInstance = $modal.open({templateUrl: 'app/templates/modals/username.html', keyboard:false, scope: this});
+      var modalInstance = $modal.open({templateUrl: 'app/templates/modals/username.html', backdrop: 'static', keyboard:false, scope: this});
       modalInstance.result.then(function (data) {
         $scope.currentUser = {username: data.username, type: data.userType};
         socket.emit('joinSession', {roomId: $scope.sessionId, username: data.username, type: data.userType});

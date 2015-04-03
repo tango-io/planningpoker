@@ -18,7 +18,7 @@ angular.module('pokerestimateApp', [
     controller: 'MainCtrl'
   })
   .when('/sessions/:id', {
-    templateUrl: 'app/session/session.html'
+    templateUrl: 'app/pointing/session.html'
   })
   .when('/retrospectives/:id', {
     templateUrl: 'app/retrospective/retrospective.html'
