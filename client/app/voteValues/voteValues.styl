@@ -1,16 +1,28 @@
-.vote-values-container
-  table
-    tr
-      &:last-child
-        background: rgb(239, 239, 239);
-      td
-        margin: 0;
-        padding: 5px;
+@import 'mixins';
+
+.values
+  background-image url("../img/values-bg-01.jpg")
+  background-repeat no-repeat
+  background-position bottom right
+  background-size 800px
+  padding 88px 0
+  .card
+    margin-bottom 20px
+    .body
+      padding 10px 0 0
+      .row
+        display flex
+        display -webkit-flex
+        align-items center
+        webkit-align-items center
+        padding 12px 24px
+        &:last-child
+          background-color #F9F9F9
+          margin-top 24px
+          padding 10px 24px
       input
-        min-width: 85px
-        margin: 0
-        height: 30px
-    button.button
-      margin: 0
-      font-size: 15px
-      padding: 5px 10px
+        margin 0
+      .inkbtn
+        padding 6px 7px
+      i
+        font-size 22px
