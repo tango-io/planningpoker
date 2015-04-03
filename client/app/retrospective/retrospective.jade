@@ -101,32 +101,30 @@ include ../templates/header.jade
                 i.fa.fa-trash
             p.preview {{entry.text}}
 
-.share
-  .row
-    .large-12.text-center.columns
-      h1.headline.subdued.wow.fadeIn Share this session with your mates
-    .large-6.medium-6.columns
-      .stacked-inverted.wow.fadeInUp(data-wow-delay='0.1s')
-        .content
-          .link.row.collapse
-            .small-11.columns
-              label.subdued
-                | Full link
-                input(type='text' ng-model='url' disabled)
-            .small-1.columns
-              span.has-tip.tip-top(data-tooltip='', aria-haspopup='true', title='{{copyMsg}}', ng-mouseenter="setCopyMsg('Copy')")
-                a.button.postfix(href='javascript:void(0)' id='share-url' clip-copy='url' clip-click="setCopyMsg('Copied')")
+  .share
+    .row
+      .large-12.text-center.columns
+        h1.headline.subdued.wow.fadeIn Share this session with your mates
+      .large-6.medium-6.columns
+        .stacked-inverted.wow.fadeInUp(data-wow-delay='0.1s')
+          .content
+            .link.row.collapse
+              .small-11.columns
+                label.subdued
+                  | Full link
+                input(type="text" ng-model="url" disabled)
+              .small-1.columns(tooltip="{{copyMsg}}" tooltip-placement="top" ng-mouseenter="setCopyMsg('Copy')")
+                button.button.postfix(id="share-url" clip-copy='url' clip-click="setCopyMsg('Copied')")
                   i.fa.fa-clipboard
-    .large-6.medium-6.columns
-      .stacked-inverted.wow.fadeInUp(data-wow-delay='0.2s')
-        .content
-          .link.row.collapse
-            .small-11.columns
-              label.subdued
-                | Session ID
-                input(type='text' ng-model='sessionId' disabled)
-            .small-1.columns
-              span.has-tip.tip-top(data-tooltip='', aria-haspopup='true', title="{{copyMsg}}" ng-mouseenter="setCopyMsg('Copy')")
-                a.button.postfix(href='javascript:void(0)' id='share-id' clip-copy='sessionId' clip-click="setCopyMsg('Copied')")
+      .large-6.medium-6.columns
+        .stacked-inverted.wow.fadeInUp(data-wow-delay='0.2s')
+          .content
+            .link.row.collapse
+              .small-11.columns
+                label.subdued
+                  | Session ID
+                input(type="text" ng-model="sessionId" disabled)
+              .small-1.columns(id="share-id" tooltip="{{copyMsg}}" tooltip-placement="top" ng-mouseenter="setCopyMsg('Copy')")
+                button.button.postfix(clip-copy='sessionId' clip-click="setCopyMsg('Copied')")
                   i.fa.fa-clipboard
 include ../templates/footer.jade
