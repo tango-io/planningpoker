@@ -110,7 +110,7 @@ function hideText(data){
    var entry;
    return _.map(data, function(value){
     entry = _.clone(value);
-    entry.text = '________ (' + entry.username + ')';
+    entry.text = '';
     return entry;
   }) || [];
 };
