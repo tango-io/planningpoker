@@ -5,9 +5,9 @@
       i.fa.fa-close
   p {{currentEntry.text}}
   p.quote {{currentEntry.username}}
-  ul.button-group
+  ul.button-group.right
     li
-      a.inkbtn.button(href='javascript:void(0)' ng-click='toggleRead(currentEntry)') {{ currentEntry.read ? 'Mark as unread' : 'Mark as read' }}
+      a.inkbtn.button(ng-show="reviewMode" href='javascript:void(0)' ng-click='toggleRead(currentEntry)') {{ currentEntry.read ? 'Mark as unread' : 'Mark as read' }}
     li
       a.inkbtn.button(href='javascript:void(0)' ng-click='previous(currentEntry)') Previous
     li
