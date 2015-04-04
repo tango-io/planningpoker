@@ -72,29 +72,31 @@ describe('Controller: RetrospectiveCtrl', function () {
     expect(socket.emit).toHaveBeenCalledWith('joinSession', {roomId : undefined, username : 'tester', type : 'moderator', sessionType : 'retrospective'});
   }));
 
-  //xit('sets the listeners for socket events', inject(function (socket) {
-  //  socket.on = socket.onFake;
-  //  spyOn(scope.listeners, 'onJoinedSession');
-  //  spyOn(scope.listeners, 'onUpdateUsers');
-  //  spyOn(scope.listeners, 'onError');
-  //  spyOn(scope.listeners, 'onReveal');
-  //  spyOn(scope.listeners, 'onHide');
-  //  spyOn(scope.listeners, 'onNewEntry');
-  //  spyOn(scope.listeners, 'onEntryUpdated');
-  //  spyOn(scope.listeners, 'onMoveCurrentEntry');
-  //  spyOn(scope.listeners, 'onOpenEntry');
-  //  spyOn(scope.listeners, 'onCloseEntry');
-  //  scope.init();
-  //  expect(scope.listeners.onJoinedSession).toHaveBeenCalled();
-  //  expect(scope.listeners.onUpdateUsers).toHaveBeenCalled();
-  //  expect(scope.listeners.onError).toHaveBeenCalled();
-  //  expect(scope.listeners.onHide).toHaveBeenCalled();
-  //  expect(scope.listeners.onNewEntry).toHaveBeenCalled();
-  //  expect(scope.listeners.onEntryUpdated).toHaveBeenCalled();
-  //  expect(scope.listeners.onMoveCurrentEntry).toHaveBeenCalled();
-  //  expect(scope.listeners.onOpenEntry).toHaveBeenCalled();
-  //  expect(scope.listeners.onCloseEntry).toHaveBeenCalled();
-  //}));
+  it('sets the listeners for socket events', inject(function (socket) {
+    socket.on = socket.onFake;
+    spyOn(scope.listeners, 'onJoinedSession');
+    spyOn(scope.listeners, 'onUpdateUsers');
+    spyOn(scope.listeners, 'onError');
+    spyOn(scope.listeners, 'onReveal');
+    spyOn(scope.listeners, 'onHide');
+    spyOn(scope.listeners, 'onNewEntry');
+    spyOn(scope.listeners, 'onUpdateEntry');
+    spyOn(scope.listeners, 'onMoveCurrentEntry');
+    spyOn(scope.listeners, 'onOpenEntry');
+    spyOn(scope.listeners, 'onCloseEntry');
+
+    scope.init();
+
+    expect(scope.listeners.onJoinedSession).toHaveBeenCalled();
+    expect(scope.listeners.onUpdateUsers).toHaveBeenCalled();
+    expect(scope.listeners.onError).toHaveBeenCalled();
+    expect(scope.listeners.onHide).toHaveBeenCalled();
+    expect(scope.listeners.onNewEntry).toHaveBeenCalled();
+    expect(scope.listeners.onUpdateEntry).toHaveBeenCalled();
+    expect(scope.listeners.onMoveCurrentEntry).toHaveBeenCalled();
+    expect(scope.listeners.onOpenEntry).toHaveBeenCalled();
+    expect(scope.listeners.onCloseEntry).toHaveBeenCalled();
+  }));
 
   it('adds an entry in the corresponding type', function () {
     scope.session = {good: [], bad: [], improvements: []};
@@ -136,7 +138,7 @@ describe('Controller: RetrospectiveCtrl', function () {
     expect(scope.newEntry.good).toEqual("");
   });
 
-  it('removes an entry', function () {
+  it('removes an entry', function() {
     scope.session = {good: [], bad: [], improvements: []};
     scope.newEntry = {};
     scope.currentUser = {username: 'Tester'};
@@ -198,16 +200,8 @@ describe('Controller: RetrospectiveCtrl', function () {
     expect(socket.emit).toHaveBeenCalledWith('updateEntry', {id:'sessionId', entry:{id:0, text:'New text', username:'Tester', userId:undefined }, entryType:'good' });
   }));
 
-  it('emits open entry in open entry function', inject(function (socket) {
-    scope.sessionId = 'sessionId';
-    spyOn(socket, 'emit');
-    scope.session = {good: [{text: 'text', username: 'Tester'}], bad: [], improvements: []};
-
-    scope.openEntry('good', scope.session.good[0]);
-    expect(socket.emit).toHaveBeenCalledWith('openEntry', {id:'sessionId', entry:{ text:'text', username:'Tester'}});
-  }));
-
   it('opens modal and sets edit entry in open entry function', inject(function ($modal) {
+    scope.init();
     var fakeResponse = $modal.open();
     $modal.open.andReturn(fakeResponse);
 
@@ -218,26 +212,75 @@ describe('Controller: RetrospectiveCtrl', function () {
     expect(scope.entryType).toEqual("good");
   }));
 
-  it('emits close entry after closing modal in open entry function', inject(function ($modal, socket) {
-    var fakeResponse = $modal.open();
-    $modal.open.andReturn(fakeResponse);
-    scope.sessionId = 'sessionId';
-    scope.session = {good: [{text: 'text', username: 'Tester'}], bad: [], improvements: []};
+  describe('Open entry for moderators', function(){
 
-    spyOn(socket, 'emit');
+    beforeEach(function(){
+      scope.init();
+      scope.currentUser = {type: 'moderator'};
+      scope.showForOthers = true;
+    });
 
-    scope.openEntry('good', scope.session.good[0]);
+    it('emits open entry in open entry function if showForOthers is selected', inject(function (socket) {
+      scope.sessionId = 'sessionId';
+      spyOn(socket, 'emit');
+      scope.session = {good: [{text: 'text', username: 'Tester'}], bad: [], improvements: []};
 
-    expect(socket.emit.callCount).toBe(2);
-    expect(socket.emit.mostRecentCall.args).toEqual(['closeEntry', {id: 'sessionId'}]);
-  }));
+      scope.openEntry('good', scope.session.good[0]);
+      expect(socket.emit).toHaveBeenCalledWith('openEntry', {id:'sessionId', entry:{ text:'text', username:'Tester'}});
+    }));
 
-  it('sets copy message in set copy msg function', function () {
+    it('emits close entry after closing modal in open entry function when showForOthers is selected', inject(function ($modal, socket) {
+      var fakeResponse = $modal.open();
+      $modal.open.andReturn(fakeResponse);
+      scope.sessionId = 'sessionId';
+      scope.session = {good: [{text: 'text', username: 'Tester'}], bad: [], improvements: []};
+
+      spyOn(socket, 'emit');
+
+      scope.openEntry('good', scope.session.good[0]);
+
+      expect(socket.emit.callCount).toBe(2);
+      expect(socket.emit.mostRecentCall.args).toEqual(['closeEntry', {id: 'sessionId'}]);
+    }));
+
+    it('emits reveal or hide in toggle review mode function if showForOthers is selected', inject(function (socket) {
+      scope.sessionId = 'sessionId';
+      spyOn(socket, 'emit');
+      scope.toggleReviewMode();
+
+      expect(socket.emit).toHaveBeenCalledWith('reveal', {id: 'sessionId'});
+      scope.toggleReviewMode();
+      expect(socket.emit.mostRecentCall.args).toEqual(['hide', {id: 'sessionId'}]);
+    }));
+
+    it('emits move current entry in next and previous function in showForOthers mode', inject(function (socket) {
+      scope.sessionId = 'sessionId';
+      scope.session = {good: [{text: 'text', username: 'Tester'}, {text: 'second', username: 'Tester'}], bad: [], improvements: []};
+      scope.openEntry('good', scope.session.good[0]);
+      spyOn(socket, 'emit');
+      scope.next(scope.session.good[0]);
+      expect(socket.emit).toHaveBeenCalledWith('moveCurrentEntry', {id: 'sessionId', type:'good', index: 1});
+      scope.previous(scope.session.good[1]);
+      expect(socket.emit).toHaveBeenCalledWith('moveCurrentEntry', {id: 'sessionId', type:'good', index: 0});
+    }));
+
+    it('does not emit open entry if showForOthers is not selected', inject(function(socket){
+      scope.showForOthers = false;
+      scope.sessionId = 'sessionId';
+      spyOn(socket, 'emit');
+      scope.session = {good: [{text: 'text', username: 'Tester'}], bad: [], improvements: []};
+
+      scope.openEntry('good', scope.session.good[0]);
+      expect(socket.emit).not.toHaveBeenCalled();
+    }));
+  });
+
+  it('sets copy message in set copy msg function', function() {
     scope.setCopyMsg("copied");
     expect(scope.copyMsg).toBe("copied");
   });
 
-  it('change value of entry.read in toggle read function', function () {
+  it('change value of entry.read in toggle read function', function() {
     scope.session = {good: [{text: 'text', username: 'Tester'}], bad: [], improvements: []};
     scope.toggleRead(scope.session.good[0]);
     expect(scope.session.good[0].read).toBe(true);
@@ -245,31 +288,22 @@ describe('Controller: RetrospectiveCtrl', function () {
     expect(scope.session.good[0].read).toBe(false);
   });
 
-  it('calls update function after toggle in toggle read function', function () {
+  it('calls update function after toggle in toggle read function', function() {
     scope.session = {good: [{text: 'text', username: 'Tester'}], bad: [], improvements: []};
     spyOn(scope, 'update');
     scope.toggleRead(scope.session.good[0]);
     expect(scope.update).toHaveBeenCalledWith({text: 'text', username:'Tester', read:true});
   });
 
-  it('change value of review mode in toggle review mode function', function () {
+  it('change value of review mode in toggle review mode function', function() {
     scope.toggleReviewMode();
     expect(scope.reviewMode).toBe(true);
     scope.toggleReviewMode();
     expect(scope.reviewMode).toBe(false);
   });
 
-  it('emits reveal or hide in toggle review mode function', inject(function (socket) {
-    scope.sessionId = 'sessionId';
-    spyOn(socket, 'emit');
-    scope.toggleReviewMode();
-
-    expect(socket.emit).toHaveBeenCalledWith('reveal', {id: 'sessionId'});
-    scope.toggleReviewMode();
-    expect(socket.emit.mostRecentCall.args).toEqual(['hide', {id: 'sessionId'}]);
-  }));
-
-  it('changes next entry as edit entry in next function', function () {
+  it('changes next entry as edit entry in next function', function() {
+    scope.init();
     scope.session = {good: [{text: 'text', username: 'Tester'}, {text: 'second', username: 'Tester'}], bad: [], improvements: []};
     scope.openEntry('good', scope.session.good[0]);
     expect(scope.currentEntry).toBe(scope.session.good[0])
@@ -277,7 +311,8 @@ describe('Controller: RetrospectiveCtrl', function () {
     expect(scope.currentEntry).toBe(scope.session.good[1])
   });
 
-  it('changes previous entry as edit entry in previous function', function () {
+  it('changes previous entry as edit entry in previous function', function() {
+    scope.init();
     scope.session = {good: [{text: 'text', username: 'Tester'}, {text: 'second', username: 'Tester'}], bad: [], improvements: []};
     scope.openEntry('good', scope.session.good[0]);
     expect(scope.currentEntry).toBe(scope.session.good[0])
@@ -285,14 +320,4 @@ describe('Controller: RetrospectiveCtrl', function () {
     expect(scope.currentEntry).toBe(scope.session.good[0])
   });
 
-  it('emits move current entry in next and previous function', inject(function (socket) {
-    scope.sessionId = 'sessionId';
-    scope.session = {good: [{text: 'text', username: 'Tester'}, {text: 'second', username: 'Tester'}], bad: [], improvements: []};
-    scope.openEntry('good', scope.session.good[0]);
-    spyOn(socket, 'emit');
-    scope.next(scope.session.good[0]);
-    expect(socket.emit).toHaveBeenCalledWith('moveCurrentEntry', {id: 'sessionId', type:'good', index: 1});
-    scope.previous(scope.session.good[1]);
-    expect(socket.emit).toHaveBeenCalledWith('moveCurrentEntry', {id: 'sessionId', type:'good', index: 0});
-  }));
 });

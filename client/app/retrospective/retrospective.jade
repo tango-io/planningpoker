@@ -19,11 +19,15 @@ div(ng-controller="RetrospectiveCtrl" ng-init="init()")
               .profile.large-12.columns
                 p {{moderator.username}}
         a.hilightbtn.expand.button(href='javascript:void(0)' ng-click="toggleReviewMode()" hide-for="player" model="currentUser.type") {{ reviewMode ? 'Hide' : 'Reveal'}}
+        span
+          input(type="checkbox" ng-model="showForOthers" ng-click="toggleShow($event)")
+          label Show for others
       .section.large-3.columns(data-equalizer-watch='')
         .title
           h2.subdued More of...
           a.inkbtn.button(ng-click="toggleInputMode('good')" ng-hide="reviewMode")
             i.fa(ng-class="{'fa-plus': !inputMode.good, 'fa-close': inputMode.good}")
+
         textarea(placeholder='We should be doing more of?' ng-model="newEntry.good" ng-enter="add('good')" ng-show="inputMode.good && !reviewMode")
         ul.list
           li.user.reveal(ng-repeat="entry in session.good")
