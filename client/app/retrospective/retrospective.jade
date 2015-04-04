@@ -18,10 +18,11 @@ div(ng-controller="RetrospectiveCtrl" ng-init="init()")
             .player(ng-repeat="moderator in moderators" ng-class="{current: moderator.id == currentUser.id}")
               .profile.large-12.columns
                 p {{moderator.username}}
-        a.hilightbtn.expand.button(href='javascript:void(0)' ng-click="toggleReviewMode()" hide-for="player" model="currentUser.type") {{ reviewMode ? 'Hide' : 'Reveal'}}
-        span
-          input(type="checkbox" ng-model="showForOthers" ng-click="toggleShow($event)")
-          label Show for others
+        div(hide-for="player" model="currentUser.type")
+          a.hilightbtn.expand.button(href='javascript:void(0)' ng-click="toggleReviewMode()") {{ reviewMode ? 'Hide' : 'Reveal'}}
+          span.show-for-others
+            input(id='show-for-others' type="checkbox" ng-model="showForOthers")
+            label(for='show-for-others') Show for others
       .section.large-3.columns(data-equalizer-watch='')
         .title
           h2.subdued More of...
