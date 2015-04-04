@@ -1,8 +1,7 @@
 include ../templates/header.jade
 div(ng-controller="SessionCtrl" ng-init="init()")
-  .poker
+  .poker((ng-show="currentUser.username"))
     .row
-
       .team.large-4.medium-6.columns.wow.fadeInLeft
         .card
           .title(ng-show="players.length")
