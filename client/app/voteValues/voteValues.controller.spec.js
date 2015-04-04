@@ -43,7 +43,7 @@ describe('Controller: VoteValuesCtrl', function () {
   it('remove values from list', inject(function ($location) {
     scope.init();
     expect(scope.voteValues.length).toBe(defaultValues.length);
-    scope.removeValue(0);
+    scope.removeValue(scope.voteValues[0]);
     expect(scope.voteValues.length).toBe(defaultValues.length - 1);
   }));
 
