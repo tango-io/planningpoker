@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pokerestimateApp')
-.controller('SessionCtrl', function (socket, $scope, $location, $routeParams, $modal, userService) {
+.controller('SessionCtrl', function (socket, $scope, $location, $routeParams, $modal, userService, $modalStack) {
   $scope.init = function(){
     $scope.url         = $location.$$absUrl;// Url to share with the team
     $scope.voteValues  = userService.getVoteValues(); //get default points
@@ -117,6 +117,7 @@ angular.module('pokerestimateApp')
 
   //remove user from room when they leave the page
   $scope.$on('$locationChangeStart', function (event, next, current) {
+    $modalStack.dismissAll();
     socket.emit('leaveSession');
   });
 });

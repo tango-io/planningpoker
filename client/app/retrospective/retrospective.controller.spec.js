@@ -28,7 +28,6 @@ describe('Controller: RetrospectiveCtrl', function () {
     expect(userService.getUser).toHaveBeenCalled();
     expect(scope.currentUser.username).toEqual(userService.fakeResponses.getFakeUser().username);
     expect(scope.currentUser.type).toEqual(userService.fakeResponses.getFakeUser().type);
-    //expect(scope.url).toEqual($location.$$absUrl + "retrospectives/sessionId");
     expect(scope.url).toEqual($location.$$absUrl);
     expect(scope.sessionId).toEqual($routeParams.id);
     expect(scope.inputMode).toEqual({});
@@ -44,10 +43,14 @@ describe('Controller: RetrospectiveCtrl', function () {
     expect($location.path()).toBe('/');
   }));
 
-  it('emits leave session if location.path changes', inject(function ($location, socket) {
+  it('emits leave session if location.path changes', inject(function ($location, socket, $modalStack) {
     spyOn(socket, 'emit');
-    $location.path('/')
-    expect(socket.emit).not.toHaveBeenCalledWith('leaveSession');
+    spyOn($modalStack, 'dismissAll');
+
+    $location.path('/');
+    scope.$apply();
+    expect(socket.emit).toHaveBeenCalledWith('leaveSession');
+    expect($modalStack.dismissAll).toHaveBeenCalled();
   }));
 
   it('emit join session it user have a username', inject(function (socket) {
