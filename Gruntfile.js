@@ -373,7 +373,8 @@ module.exports = function (grunt) {
             '*.{ico,png,txt}',
             '.htaccess',
             'bower_components/**/*',
-            'assets/images/{,*/}*.{webp}',
+            'assets/img/*.{png,jpg,jpeg,gif}',
+            'assets/favicons/*',
             'assets/fonts/**/*',
             'index.jade'
           ]
