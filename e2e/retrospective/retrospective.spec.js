@@ -88,7 +88,7 @@ describe('Retrospective View', function() {
     });
   });
 
-  iit('can close modal if user does not enter username', function(){
+  it('can close modal if user does not enter username', function(){
     browser.getCurrentUrl().then(function(url){
       browser.driver.executeScript('window.open();');
       var appWindow = browser.getWindowHandle();

@@ -117,21 +117,11 @@ html.no-js
     script(src='socket.io-client/socket.io.js')
     <!-- endbuild -->
 
-    script.
-      function animationCB(box){
-        setTimeout(function(){
-          $(box).removeClass('fadeInUp');
-        }, 2000);
-      };
-
-      $(document).ready(function() {
-        new WOW({ callback: animationCB }).init();
-      });
-
 
     <!-- build:js({.tmp,client}) app/app.js -->
     script(src='app/app.js')
     // injector:js
+    script(src="app/config.js")
     script(src="app/footer/footer.controller.js")
     script(src="app/hideFor/hideFor.directive.js")
     script(src="app/main/main.controller.js")
