@@ -7,8 +7,8 @@
   p.quote {{currentEntry.username}}
   ul.button-group.right
     li
-      a.inkbtn.button(ng-show="reviewMode" href='javascript:void(0)' ng-click='toggleRead(currentEntry)') {{ currentEntry.read ? 'Mark as unread' : 'Mark as read' }}
+      a.inkbtn.button(href='javascript:void(0)' ng-click='toggleRead(currentEntry)' ng-show="reviewMode") {{ currentEntry.read ? 'MARK AS UNREAD' : 'MARK AS READ' }}
     li
-      a.inkbtn.button(href='javascript:void(0)' ng-click='previous(currentEntry)') Previous
+      a.inkbtn.button(href='javascript:void(0)' ng-click='previous(currentEntry)') PREVIOUS
     li
-      a.inkbtn.button(href='javascript:void(0)' ng-click='next(currentEntry)') Next
+      a.inkbtn.button(href='javascript:void(0)' ng-click='next(currentEntry)') NEXT

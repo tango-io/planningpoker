@@ -19,10 +19,11 @@ div(ng-controller="RetrospectiveCtrl" ng-init="init()")
               .profile.large-12.columns
                 p {{moderator.username}}
         div(hide-for="player" model="currentUser.type")
-          a.hilightbtn.expand.button(href='javascript:void(0)' ng-click="toggleReviewMode()") {{ reviewMode ? 'Hide' : 'Reveal'}}
+          button.hilightbtn.expand.button(ng-click="toggleReviewMode()") {{ reviewMode ? 'HIDE' : 'REVEAL'}}
           span.show-for-others
             input(id='show-for-others' type="checkbox" ng-model="showForOthers")
             label(for='show-for-others') Show for others
+
       .section.large-3.columns(data-equalizer-watch='')
         .title
           h2.subdued More of...
@@ -41,7 +42,6 @@ div(ng-controller="RetrospectiveCtrl" ng-init="init()")
                 a(href='javascript:void(0)' ng-click="remove('good', entry)")
                   i.fa.fa-trash
               p.preview(ng-hide="entry.read") {{entry.text}}
-
             div(ng-if="!reviewMode")
               .name
                 a(href='javascript:void(0)' ng-click="openEntry('good', entry)") {{entry.username}}

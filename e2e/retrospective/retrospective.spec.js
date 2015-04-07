@@ -56,7 +56,7 @@ describe('Retrospective View', function() {
           browser.waitForAngular();
           page.usernameModalInput.sendKeys('Cersei');
           page.modalBtn.click();
-          expect(page.goodLinkList.first().getText()).toEqual('awesome!(Arya)');
+          expect(page.goodLinkList.first().getText()).toEqual('Arya');
           browser.driver.close().then(function () {
             browser.switchTo().window(appWindow);
           });

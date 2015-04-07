@@ -27,13 +27,3 @@ angular.module('pokerestimateApp', [
     templateUrl: 'app/voteValues/voteValues.html'
   });
 });
-
-$(document).ready(function() {
-  new WOW({ callback: animationCB }).init();
-});
-
-function animationCB(box){
-  setTimeout(function(){
-    $(box).removeClass('fadeInUp');
-  }, 2000);
-};
