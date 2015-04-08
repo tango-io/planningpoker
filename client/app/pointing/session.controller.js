@@ -104,7 +104,6 @@ angular.module('pokerestimateApp')
 
   $scope.setVote = function(vote){
     //Users can't change vote after all users voted
-    console.log("showVOTES:", $scope.showVotes, " vote:", vote);
     if(!$scope.showVotes){
       $scope.currentUser.voted = true;
       $scope.votes[$scope.currentUser.id] = vote;

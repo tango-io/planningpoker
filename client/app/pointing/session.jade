@@ -35,16 +35,16 @@ div(ng-controller="SessionCtrl" ng-init="init()")
             h2(ng-class="{subdued: !description}" hide-for="moderator" model="currentUser.type") {{description || "Legen -wait for it- dary!"}}
             textarea(hide-for="player" ng-model="description" ng-keyup="updateDescription()" model="currentUser.type")
         ul.points.button-group(hide-for="moderator" model="currentUser.type")
-          li(ng-repeat="vote in voteValues" ng-click="setVote(vote.value)")
+          li(ng-repeat="vote in voteValues" ng-click="setVote(vote.value)" ng-disabled="showVotes")
             .card.wow.fadeInUp(data-wow-delay='{{($index+1)*0.05}}s')
               span.button(ng-disabled="showVotes")
                 h1.subdued.display {{vote.label}}
         .large-10.large-centered.wow.fadeIn.columns(hide-for="player" model="currentUser.type" data-wow-delay="0.1s")
           ul.controls.even-2.button-group
             li
-              a.defaultbtn.button(href="javascript:void(0);" ng-click="clearVotes()" model="currentUser.type") Play again
+              button.defaultbtn(ng-click="clearVotes()") PLAY AGAIN
             li
-              a.defaultbtn.button(href="javascript:void(0);" ng-click="revealVotes()" model="currentUser.type" ng-hide="showVotes") Reveal
+              button.defaultbtn(ng-click="revealVotes()" ng-hide="showVotes") REVEAL
 
       .results.large-2.medium-6.hide-for-small-only.columns.wow.flipInY(ng-show="showVotes" data-wow-delay='1s')
         .card
@@ -87,8 +87,8 @@ div(ng-controller="SessionCtrl" ng-init="init()")
                 label.subdued
                   | Session ID
                 input(type="text" ng-model="sessionId" disabled)
-              .small-1.columns(id="share-id" tooltip="{{copyMsg}}" tooltip-placement="top" ng-mouseenter="setCopyMsg('Copy')")
-                button.button.postfix(clip-copy='sessionId' clip-click="setCopyMsg('Copied')")
+              .small-1.columns(tooltip="{{copyMsg}}" tooltip-placement="top" ng-mouseenter="setCopyMsg('Copy')")
+                button.button.postfix(id="share-id" clip-copy='sessionId' clip-click="setCopyMsg('Copied')")
                   i.fa.fa-clipboard
 
 include ../templates/footer.jade
