@@ -34,10 +34,11 @@ div(ng-controller="SessionCtrl" ng-init="init()")
             h6 What are we pointing?
             h2(ng-class="{subdued: !description}" hide-for="moderator" model="currentUser.type") {{description || "Legen -wait for it- dary!"}}
             textarea(hide-for="player" ng-model="description" ng-keyup="updateDescription()" model="currentUser.type")
-        ul.points.even-6.button-group(hide-for="moderator" model="currentUser.type")
-          li.card.wow.fadeInUp(ng-repeat="vote in voteValues" data-wow-delay='{{($index+1)*0.05}}s' ng-click="setVote(vote.value)")
-            a.button(href="javascript:void(0)" ng-disabled="showVotes")
-              h1.subdued.display {{vote.label}}
+        ul.points.button-group(hide-for="moderator" model="currentUser.type")
+          li(ng-repeat="vote in voteValues" ng-click="setVote(vote.value)")
+            .card.wow.fadeInUp(data-wow-delay='{{($index+1)*0.05}}s')
+              span.button(ng-disabled="showVotes")
+                h1.subdued.display {{vote.label}}
         .large-10.large-centered.wow.fadeIn.columns(hide-for="player" model="currentUser.type" data-wow-delay="0.1s")
           ul.controls.even-2.button-group
             li
