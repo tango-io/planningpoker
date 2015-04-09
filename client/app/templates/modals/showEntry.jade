@@ -3,12 +3,12 @@
     h2#modalTitle We should do more of...
     a.close-reveal-modal(ng-click='$close(this)' aria-label='Close')
       i.fa.fa-close
-  p {{currentEntry.text}}
+  p#entry {{currentEntry.text}}
   p.quote {{currentEntry.username}}
   ul.button-group.right
     li
-      a.inkbtn.button(href='javascript:void(0)' ng-click='toggleRead(currentEntry)' ng-show="reviewMode") {{ currentEntry.read ? 'MARK AS UNREAD' : 'MARK AS READ' }}
+      button.inkbtn(ng-click='toggleRead(currentEntry)' ng-show="reviewMode") {{ currentEntry.read ? 'MARK AS UNREAD' : 'MARK AS READ' }}
     li
-      a.inkbtn.button(href='javascript:void(0)' ng-click='previous(currentEntry)') PREVIOUS
+      button.inkbtn(ng-click='previous(currentEntry)') PREVIOUS
     li
-      a.inkbtn.button(href='javascript:void(0)' ng-click='next(currentEntry)') NEXT
+      button.inkbtn(ng-click='next(currentEntry)') NEXT

@@ -129,7 +129,7 @@ describe('Session View', function() {
 
     it('s not able to vote after show votes', function() {
       page.numbers.click();
-      expect(page.number.isEnabled()).toBe(false);
+      expect(page.number.getAttribute('disabled')).toBe('true');
     });
   });
 

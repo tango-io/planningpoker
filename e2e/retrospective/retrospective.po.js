@@ -49,10 +49,10 @@ var MainPage = function() {
   this.newImpEntry = element(by.model('newEntry.improvements'));
 
   this.editEntry = this.modal.element(by.model('currentEntry.text'));
-  this.showEntry = this.modal.element(by.model('currentEntry.text'));
+  this.showEntry = this.modal.element(by.css('#entry'));
 
   this.okBtn = this.modal.element(by.buttonText('OK'));
-  this.closeBtn = this.modal.element(by.buttonText('Close'));
+  this.closeBtn = this.modal.element(by.css('.close-reveal-modal'));
   this.closeBg = element(by.css('.reveal-modal-bg'));
   this.cancelBtn = this.modal.element(by.buttonText('CANCEL'));
   this.nextBtn = this.modal.element(by.buttonText('NEXT'));
@@ -71,7 +71,7 @@ var MainPage = function() {
   this.badList = element.all(by.css('[ng-repeat="entry in session.bad"] p'));
   this.impList = element.all(by.css('[ng-repeat="entry in session.improvements"] p'));
 
-  this.goodCheck = element.all(by.css('[ng-repeat="entry in session.good"] div .fa-check'));
+  this.goodCheck = element.all(by.css('[ng-repeat="entry in session.good"] div .read'));
 
   this.goodEdit = element.all(by.css('[ng-repeat="entry in session.good"] div .fa-pencil'));
   this.badEdit = element.all(by.css('[ng-repeat="entry in session.bad"] div .fa-pencil'));

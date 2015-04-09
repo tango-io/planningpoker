@@ -24,7 +24,7 @@ var MainPage = function() {
 
   this.numbers = element(by.repeater('vote in voteValues').row(0));
 
-  this.number = element(by.repeater('vote in voteValues').row(0).column('vote'));
+  this.number = this.numbers.element(by.css('span'));
 
   this.statics = element(by.css('.results'));
   this.staticsList = element.all(by.repeater('(point, votes) in points'));
