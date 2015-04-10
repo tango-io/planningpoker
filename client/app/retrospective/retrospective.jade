@@ -1,93 +1,135 @@
 include ../templates/header.jade
-container.retrospective(ng-controller="RetrospectiveCtrl" ng-init="init()")
-  .row.row-with-padding.retrospective(ng-show="currentUser.username")
-    .large-3.columns
-      h5.title Prouds
-        button.button.tiny.showy(ng-click="toggleInputMode('good')" ng-hide="reviewMode")
-          i.fa(ng-class="{'fa-plus': !inputMode.good, 'fa-minus': inputMode.good}")
-       textarea(ng-model="newEntry.good" placeholder="Some example..." ng-enter="add('good')" ng-show="inputMode.good && !reviewMode")
-      //list of good things
-      ul
-        li(ng-repeat="entry in session.good")
-          div(ng-if="reviewMode")
-            a.left(ng-click="openEntry('good', entry)") {{entry.text}}({{entry.username}})
-            i.fa.fa-check(ng-show="entry.read")
-            .right(ng-show="currentUser.type == 'moderator'")
-              i.fa.fa-pencil(ng-click="edit('good', entry)")
-              i.fa.fa-times(ng-click="remove('good', entry)")
-          div(ng-if="!reviewMode")
-            span.left {{entry.text}}
-            .right(ng-show="currentUser.id == entry.userId")
-              i.fa.fa-pencil(ng-click="edit('good', entry)")
-              i.fa.fa-times(ng-click="remove('good', entry)")
-    .large-3.columns
-      h5.title Sorries
-        button.button.tiny.showy(ng-click="toggleInputMode('bad')" ng-hide="reviewMode")
-          i.fa(ng-class="{'fa-plus': !inputMode.bad, 'fa-minus': inputMode.bad}")
-      textarea(ng-model="newEntry.bad" placeholder="Some example..." ng-enter="add('bad')" ng-show="inputMode.bad && !reviewMode")
-      //list of bad things
-      ul
-       li(ng-repeat="entry in session.bad")
-          div(ng-if="reviewMode")
-            a.left(ng-click="openEntry('bad', entry)") {{entry.text}}({{entry.username}})
-            i.fa.fa-check(ng-show="entry.read")
-            .right(ng-show="currentUser.type == 'moderator'")
-              i.fa.fa-pencil(ng-click="edit('bad', entry)")
-              i.fa.fa-times(ng-click="remove('bad', entry)")
-          div(ng-if="!reviewMode")
-            span.left {{entry.text}}
-            .right(ng-show="currentUser.id == entry.userId")
-              i.fa.fa-pencil(ng-click="edit('bad', entry)")
-              i.fa.fa-times(ng-click="remove('bad', entry)")
-    .large-4.columns
-      h5.title Ideas
-        button.button.tiny.showy(ng-click="toggleInputMode('improvements')" ng-hide="reviewMode")
-          i.fa(ng-class="{'fa-plus': !inputMode.improvements, 'fa-minus': inputMode.improvements}")
-      textarea(ng-model="newEntry.improvements" placeholder="Some example..." ng-enter="add('improvements')" ng-show="inputMode.improvements && !reviewMode")
-      ul
-        li(ng-repeat="entry in session.improvements")
-          div(ng-if="reviewMode")
-            a.left(ng-click="openEntry('improvements', entry)") {{entry.text}}({{entry.username}})
-            i.fa.fa-check(ng-show="entry.read")
-            .right(ng-show="currentUser.type == 'moderator'")
-              i.fa.fa-pencil(ng-click="edit('improvements', entry)")
-              i.fa.fa-times(ng-click="remove('improvements', entry)")
-          div(ng-if="!reviewMode")
-            span.left {{entry.text}}
-            .right(ng-show="currentUser.id == entry.userId")
-              i.fa.fa-pencil(ng-click="edit('improvements', entry)")
-              i.fa.fa-times(ng-click="remove('improvements', entry)")
-    .large-2.columns.players
-      .row.text-center(hide-for="player" model="currentUser.type")
-        span
-          input(type="checkbox" ng-model="showForOthers" ng-click="toggleShow($event)")
-          label Show for others
-        button.btn.showy(ng-click="toggleReviewMode()") {{ reviewMode ? 'Hide' : 'Reveal'}}
-      h5.title Players
-      ul
-        li(ng-repeat="player in players")
-          span(ng-class="{active: player.id == currentUser.id}") {{player.username}}
-      h5.title Moderators
-      ul
-        li(ng-repeat="moderator in moderators")
-          span(ng-class="{active: moderator.id == currentUser.id}") {{moderator.username}}
-  .row.row-with-padding.share
-    h5.title Share Session with your team
-    .large-6.columns
-      .row.collapse
-        label Full Link
-        .large-11.columns
-          input(type="text" ng-model="url" disabled)
-        .large-1.column(tooltip="{{copyMsg}}" tooltip-placement="right" ng-mouseenter="setCopyMsg('Copy')")
-          button.button.showy.postfix(id="share-url" clip-copy='url' clip-click="setCopyMsg('Copied')")
-            i.fa.fa-clipboard
-    .large-6.columns
-      .row.collapse
-        label Session Id
-        .large-11.columns
-          input(type="text" ng-model="sessionId" disabled)
-        .large-1.columns(id="share-id" tooltip="{{copyMsg}}" tooltip-placement="right" ng-mouseenter="setCopyMsg('Copy')")
-          button.button.showy.postfix(clip-copy='sessionId' clip-click="setCopyMsg('Copied')")
-            i.fa.fa-clipboard
+div(ng-controller="RetrospectiveCtrl" ng-init="init()")
+  .retro(ng-show="currentUser.username")
+    .row(date-equalizer='')
+      .large-3.columns(data-equalizer-watch='')
+        .card
+          .title
+            .large-12.columns
+              h6.subdued Player
+          .body
+            .player(ng-repeat="player in players" ng-class="{current: player.id == currentUser.id}")
+              .profile.large-12.columns
+                p {{player.username}}
+          .title
+            .large-12.columns
+              h6.subdued Moderator
+          .body
+            .player(ng-repeat="moderator in moderators" ng-class="{current: moderator.id == currentUser.id}")
+              .profile.large-12.columns
+                p {{moderator.username}}
+        div(hide-for="player" model="currentUser.type")
+          button.hilightbtn.expand.button(ng-click="toggleReviewMode()") {{ reviewMode ? 'HIDE' : 'REVEAL'}}
+          span.show-for-others
+            input(id='show-for-others' type="checkbox" ng-model="showForOthers")
+            label(for='show-for-others') Show for others
 
+      .section.large-3.columns(data-equalizer-watch='')
+        .title
+          h2.subdued More of...
+          a.inkbtn.button(ng-click="toggleInputMode('good')" ng-hide="reviewMode")
+            i.fa(ng-class="{'fa-plus': !inputMode.good, 'fa-close': inputMode.good}")
+
+        textarea(placeholder='We should be doing more of?' ng-model="newEntry.good" ng-enter="add('good')" ng-show="inputMode.good && !reviewMode")
+        ul.list
+          li.user.reveal(ng-repeat="entry in session.good")
+            div(ng-if="reviewMode")
+              .name
+                a(href='javascript:void(0)' ng-click="openEntry('good', entry)" ng-class="{read: entry.read}") {{entry.username}}
+              .edit(ng-show="currentUser.type == 'moderator' && !entry.read")
+                a(href='javascript:void(0)' ng-click="edit('good', entry)")
+                  i.fa.fa-pencil
+                a(href='javascript:void(0)' ng-click="remove('good', entry)")
+                  i.fa.fa-trash
+              p.preview(ng-hide="entry.read") {{entry.text}}
+            div(ng-if="!reviewMode")
+              .name
+                a(href='javascript:void(0)' ng-click="openEntry('good', entry)") {{entry.username}}
+              .edit(ng-show="currentUser.id == entry.userId")
+                a(href='javascript:void(0)' ng-click="edit('good', entry)")
+                  i.fa.fa-pencil
+                a(href='javascript:void(0)' ng-click="remove('good', entry)")
+                  i.fa.fa-trash
+              p.preview {{entry.text}}
+
+      .section.large-3.columns(data-equalizer-watch='')
+        .title
+          h2.subdued Less of...
+          a.inkbtn.button(ng-click="toggleInputMode('bad')" ng-hide="reviewMode")
+            i.fa(ng-class="{'fa-plus': !inputMode.bad, 'fa-close': inputMode.bad}")
+        textarea(placeholder='We should be doing less of?' ng-model="newEntry.bad" ng-enter="add('bad')" ng-show="inputMode.bad && !reviewMode")
+        ul.list
+          li.user.reveal(ng-repeat="entry in session.bad")
+            div(ng-if="reviewMode")
+              .name
+                a(href='javascript:void(0)' ng-click="openEntry('bad', entry)" ng-class="{read: entry.read}") {{entry.username}}
+              .edit(ng-show="currentUser.type == 'moderator' && !entry.read")
+                a(href='javascript:void(0)' ng-click="edit('bad', entry)")
+                  i.fa.fa-pencil
+                a(href='javascript:void(0)' ng-click="remove('bad', entry)")
+                  i.fa.fa-trash
+              p.preview(ng-hide="entry.read") {{entry.text}}
+            div(ng-if="!reviewMode")
+              .name
+                a(href='javascript:void(0)' ng-click="openEntry('bad', entry)") {{entry.username}}
+              .edit(ng-show="currentUser.id == entry.userId")
+                a(href='javascript:void(0)' ng-click="edit('bad', entry)")
+                  i.fa.fa-pencil()
+                a(href='javascript:void(0)' ng-click="remove('bad', entry)")
+                  i.fa.fa-trash
+              p.preview {{entry.text}}
+
+      .section.large-3.columns(data-equalizer-watch='')
+        .title
+          h2.subdued Just as...
+          a.inkbtn.button(ng-click="toggleInputMode('improvements')" ng-hide="reviewMode")
+            i.fa(ng-class="{'fa-plus': !inputMode.improvements, 'fa-close': inputMode.improvements}")
+        textarea(placeholder='We should be doing just as?' ng-model="newEntry.improvements" ng-enter="add('improvements')" ng-show="inputMode.improvements && !reviewMode")
+        ul.list
+          li.user.reveal(ng-repeat="entry in session.improvements")
+            div(ng-if="reviewMode")
+              .name
+                a(href='javascript:void(0)' ng-click="openEntry('improvements', entry)" ng-class="{read: entry.read}") {{entry.username}}
+              .edit(ng-show="currentUser.type == 'moderator' && !entry.read")
+                a(href='javascript:void(0)' ng-click="edit('improvements', entry)")
+                  i.fa.fa-pencil
+                a(href='javascript:void(0)' ng-click="remove('improvements', entry)")
+                  i.fa.fa-trash
+              p.preview(ng-hide="entry.read") {{entry.text}}
+            div(ng-if="!reviewMode")
+              .name
+                a(href='javascript:void(0)' ng-click="openEntry('improvements', entry)") {{entry.username}}
+              .edit(ng-show="currentUser.id == entry.userId")
+                a(href='javascript:void(0)' ng-click="edit('improvements', entry)")
+                  i.fa.fa-pencil
+                a(href='javascript:void(0)' ng-click="remove('improvements', entry)")
+                  i.fa.fa-trash
+              p.preview {{entry.text}}
+
+  .share
+    .row
+      .large-12.text-center.columns
+        h1.headline.subdued.wow.fadeIn Share this session with your mates
+      .large-6.medium-6.columns
+        .stacked-inverted.wow.fadeInUp(data-wow-delay='0.1s')
+          .content
+            .link.row.collapse
+              .small-11.columns
+                label.subdued
+                  | Full link
+                input(type="text" ng-model="url" disabled)
+              .small-1.columns(tooltip="{{copyMsg}}" tooltip-placement="top" ng-mouseenter="setCopyMsg('Copy')")
+                button.button.postfix(id="share-url" clip-copy='url' clip-click="setCopyMsg('Copied')")
+                  i.fa.fa-clipboard
+      .large-6.medium-6.columns
+        .stacked-inverted.wow.fadeInUp(data-wow-delay='0.2s')
+          .content
+            .link.row.collapse
+              .small-11.columns
+                label.subdued
+                  | Session ID
+                input(type="text" ng-model="sessionId" disabled)
+              .small-1.columns(id="share-id" tooltip="{{copyMsg}}" tooltip-placement="top" ng-mouseenter="setCopyMsg('Copy')")
+                button.button.postfix(clip-copy='sessionId' clip-click="setCopyMsg('Copied')")
+                  i.fa.fa-clipboard
 include ../templates/footer.jade

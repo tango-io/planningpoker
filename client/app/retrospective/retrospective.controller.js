@@ -16,7 +16,7 @@ angular.module('pokerestimateApp')
     }else{
       //open modal to ask for username and type when user joins
       $scope.userType = "player"; //default option in modal
-      var modalInstance = $modal.open({templateUrl: modalPath + 'username.html', keyboard:false, backdrop: 'static', scope: this});
+      var modalInstance = $modal.open({templateUrl: modalPath + 'username.html', keyboard:false, backdrop: 'static', scope: this, windowClass:'small'});
       modalInstance.result.then(function (data) {
         $scope.currentUser = {username: data.username, type: data.userType};
         socket.emit('joinSession', {roomId: $scope.sessionId, username: data.username, type: data.userType, sessionType: 'retrospective'});
@@ -62,7 +62,7 @@ angular.module('pokerestimateApp')
   $scope.edit = function(type, entry){
     $scope.currentEntry = angular.copy(entry);
     $scope.entryType = type;
-    var modalInstance = $modal.open({templateUrl: modalPath + 'editEntry.html', keyboard:false, scope: this});
+    var modalInstance = $modal.open({templateUrl: modalPath + 'editEntry.html', keyboard:false, backdrop: 'static', scope: this, windowClass:'small'});
     modalInstance.result.then(function (data) {
       entry.text = data.currentEntry.text;
       $scope.update(entry);
@@ -80,7 +80,7 @@ angular.module('pokerestimateApp')
 
     $scope.currentEntry = entry;
     $scope.entryType = type;
-    $scope.entryModal = $modal.open({templateUrl: modalPath + 'showEntry.html', keyboard:false, scope: this});
+    $scope.entryModal = $modal.open({templateUrl: modalPath + 'showEntry.html', keyboard:false,  backdrop: 'static', scope: this, windowClass:'small'});
 
     $scope.entryModal.result.then(function (data) {
       if($scope.currentUser.type == "moderator" && $scope.showForOthers){
@@ -121,7 +121,7 @@ angular.module('pokerestimateApp')
     return _.map(data, function(value){
       if(value.userId != $scope.currentUser.id){
         entry = _.clone(value);
-        entry.text = '________ (' + entry.username + ')';
+        entry.text = '';
         return entry;
       }else{
         return value;
@@ -170,7 +170,7 @@ angular.module('pokerestimateApp')
     },
 
     onNewEntry:  function(data){
-      $scope.session[data.type].push({text: "________ (" + data.username + ")"});
+      $scope.session[data.type].push({text: '', username: data.username});
     },
 
     onReveal: function(data){
@@ -190,7 +190,7 @@ angular.module('pokerestimateApp')
 
     onOpenEntry: function(data){
       $scope.currentEntry = data.entry;
-      $scope.entryModal = $modal.open({templateUrl: modalPath + 'showEntry.html', keyboard:false, scope: $scope});
+      $scope.entryModal = $modal.open({templateUrl: modalPath + 'showEntry.html', keyboard:false,  backdrop: 'static', scope: $scope, windowClass:'small'});
     },
 
     onCloseEntry: function(data){
@@ -216,14 +216,14 @@ angular.module('pokerestimateApp')
     },
 
     onError: function(){
-      var modalInstance = $modal.open({templateUrl:  modalPath + 'error.html', keyboard:false});
+      var modalInstance = $modal.open({templateUrl:  modalPath + 'error.html', keyboard:false,  backdrop: 'static', windowClass:'small'});
       modalInstance.result.then(function () {
         $location.path("/");
       });
     },
 
     onDisconnect: function(){
-     $modal.open({templateUrl: 'app/templates/modals/reconnect.html'});
+     $modal.open({templateUrl: 'app/templates/modals/reconnect.html',  backdrop: 'static', windowClass:'small'});
     }
   };
 });

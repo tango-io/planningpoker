@@ -1,36 +1,97 @@
-.retrospective
-  h5.title
-    padding-bottom: 5px
-  button.button.showy
-    padding: 0px 5px
-    font-size: 20px
-    float: right
-  .row.retrospective .columns:not(:last-child)
-    border-right: 1px solid steadyGray
-    min-height: 300px
-  ul
-    margin: 0
-    list-style: none
-    li
-      width: 100%
-      clear: both
-      span
-        text-overflow: ellipsis
-        overflow: hidden
-        max-width: 79%
-      i.fa
-        margin: 5px;
-        float: right
-        color: buttonColor
-        &:hover
-          cursor: pointer
-          color: buttonColorS
-  .players
-    ul li span
-      width: 100%
-      padding: 2px 4px
-      display: block
-      max-width: none
-.entry-modal
-  button
-    margin-right: 10px
+.retro
+  padding 88px
+  .show-for-others
+    display: block
+    padding-top: 15px
+  .section
+    min-height 400px
+    border-left 1px solid #EBEEF0
+    &:nth-child(2)
+      border-left none
+    .title
+      height 49px
+      padding 6px 0
+      h2
+        display inline-block
+      a
+        display inline-block
+        float right
+        font-size 22px
+        padding 2px 5px 1px
+    .list
+      margin 0
+      li
+        padding 10px 0
+        &:first-child
+          margin-top 17px
+        a
+          color #253137
+          -webkit-transition all 100ms ease-in-out
+          -moz-transition all 100ms ease-in-out
+          -o-transition all 100ms ease-in-out
+          transition all 100ms ease-in-out
+          &:hover
+            color #BFC932
+      .user
+        height 80px
+        overflow hidden
+        .name
+          width 80%
+          float left
+        .edit
+          width 20%
+          float right
+          text-align center
+          a
+            color #A4ABAE
+            padding 0 1px
+            &:hover
+              color #BFC932
+      .read
+        color #A4ABAE
+        &:before
+          content url("../../assets/img/done-icon-sm.jpg")
+          margin-right 6px
+    textarea
+      height 60px
+      border 1px solid #A4ABAE
+      box-shadow none
+      resize none
+      &:focus
+        background #FFF
+        border 1px solid #BFC932
+        box-shadow none
+        color #253137
+  .card
+    margin-bottom 24px
+    .title
+      height 49px
+      padding 15px 24px
+      .columns
+        padding 0
+    .body
+      padding 0
+    .current
+      background-color #F9F9F9
+  .player
+    min-height 74px
+    display flex
+    display -webkit-flex
+    margin 0
+    padding 0 24px
+    .profile
+      display flex
+      display -webkit-flex
+      align-items center
+      webkit-align-items center
+      padding 0
+      p
+        margin-bottom 0
+        overflow hidden
+        white-space nowrap
+        text-overflow ellipsis
+
+.retro .section .list .user .preview,
+.retro .section .list .reveal .preview
+  font-size 0.8rem
+  font-weight 300

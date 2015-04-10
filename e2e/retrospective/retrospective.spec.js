@@ -56,7 +56,7 @@ describe('Retrospective View', function() {
           browser.waitForAngular();
           page.usernameModalInput.sendKeys('Cersei');
           page.modalBtn.click();
-          expect(page.goodLinkList.first().getText()).toEqual('awesome!(Arya)');
+          expect(page.goodLinkList.first().getText()).toEqual('Arya');
           browser.driver.close().then(function () {
             browser.switchTo().window(appWindow);
           });
@@ -88,7 +88,7 @@ describe('Retrospective View', function() {
     });
   });
 
-  iit('can close modal if user does not enter username', function(){
+  it('can close modal if user does not enter username', function(){
     browser.getCurrentUrl().then(function(url){
       browser.driver.executeScript('window.open();');
       var appWindow = browser.getWindowHandle();
@@ -147,8 +147,7 @@ describe('Retrospective View', function() {
     page.newGoodEntry.sendKeys('awesome!');
     browser.actions().sendKeys(protractor.Key.ENTER).perform();
 
-   page.goodList.first().click();
-   browser.navigate().back();
+    browser.navigate().back();
     expect(page.modal.isPresent()).toBe(false);
   });
 
@@ -331,7 +330,7 @@ describe('Retrospective View', function() {
 
       page.goodLinkList.first().click();
       expect(page.modal.isPresent()).toBe(true);
-      expect(page.showEntry.getAttribute('value')).toBe('awesome!');
+      expect(page.showEntry.getText()).toBe('awesome!');
       expect(page.nextBtn.isPresent()).toBe(true);
       expect(page.previousBtn.isPresent()).toBe(true);
       expect(page.readBtn.isPresent()).toBe(true);
@@ -340,7 +339,7 @@ describe('Retrospective View', function() {
 
       page.impLinkList.first().click();
       expect(page.modal.isPresent()).toBe(true);
-      expect(page.showEntry.getAttribute('value')).toBe('it will be better next time!');
+      expect(page.showEntry.getText()).toBe('it will be better next time!');
       expect(page.nextBtn.isPresent()).toBe(true);
       expect(page.previousBtn.isPresent()).toBe(true);
       expect(page.readBtn.isPresent()).toBe(true);
@@ -349,7 +348,7 @@ describe('Retrospective View', function() {
 
       page.badLinkList.first().click();
       expect(page.modal.isPresent()).toBe(true);
-      expect(page.showEntry.getAttribute('value')).toBe('sad entry!');
+      expect(page.showEntry.getText()).toBe('sad entry!');
       expect(page.nextBtn.isPresent()).toBe(true);
       expect(page.previousBtn.isPresent()).toBe(true);
       expect(page.readBtn.isPresent()).toBe(true);
@@ -366,11 +365,11 @@ describe('Retrospective View', function() {
       page.revealBtn.click();
 
       page.goodLinkList.first().click();
-      expect(page.showEntry.getAttribute('value')).toBe('awesome!');
+      expect(page.showEntry.getText()).toBe('awesome!');
       page.nextBtn.click();
-      expect(page.showEntry.getAttribute('value')).toBe('second entry!');
+      expect(page.showEntry.getText()).toBe('second entry!');
       page.previousBtn.click();
-      expect(page.showEntry.getAttribute('value')).toBe('awesome!');
+      expect(page.showEntry.getText()).toBe('awesome!');
     });
 
     it('s able to mark or unmark entry as read', function() {
@@ -382,19 +381,19 @@ describe('Retrospective View', function() {
       page.revealBtn.click();
 
       page.goodLinkList.first().click();
-      expect(page.showEntry.getAttribute('value')).toBe('awesome!');
+      expect(page.showEntry.getText()).toBe('awesome!');
 
       page.readBtn.click();
       page.closeBtn.click();
       browser.sleep(1000);
 
-      expect(page.goodCheck.first().isDisplayed()).toBe(true);
+      expect(page.goodCheck.count()).toBe(1);
 
       page.goodLinkList.first().click();
       page.unReadBtn.click();
       page.closeBtn.click();
 
-      expect(page.goodCheck.first().isDisplayed()).toBe(false);
+      expect(page.goodCheck.count()).toBe(0);
     });
 
     it('should be able to edit entries', function(done) {
@@ -427,7 +426,7 @@ describe('Retrospective View', function() {
 
                 browser.driver.switchTo().window(handles[1]).then(function(){
                   browser.driver.executeScript('window.focus();');
-                  expect(page.goodList.first().getText()).toBe('________ (Arya)');
+                  expect(page.goodList.first().getText()).toBe('');
                   browser.driver.close().then(function () {
                     browser.switchTo().window(appWindow);
                     done();
@@ -463,6 +462,7 @@ describe('Retrospective View', function() {
             page.modalBtn.click();
 
             browser.driver.switchTo().window(handles[0]).then(function(){
+              browser.sleep(1000)
               page.showForOthers.click();
               page.revealBtn.click();
               page.goodLinkList.first().click();
@@ -470,18 +470,19 @@ describe('Retrospective View', function() {
               browser.driver.switchTo().window(handles[1]).then(function(){
                 browser.sleep(1000);
                 expect(page.modal.isPresent()).toBe(true);
-                expect(page.showEntry.getAttribute('value')).toBe('awesome!');
+                expect(page.showEntry.getText()).toBe('awesome!');
 
                 browser.driver.switchTo().window(handles[0]).then(function(){
-                  page.closeBg.click();
+                  page.closeBtn.click();
                   browser.sleep(3000);
                   page.goodLinkList.first().click();
                   page.nextBtn.click();
                   browser.sleep(3000);
-                  expect(page.showEntry.getAttribute('value')).toBe('second awesome!');
+                  expect(page.showEntry.getText()).toBe('second awesome!');
 
                   browser.driver.switchTo().window(handles[1]).then(function(){
-                    expect(page.showEntry.getAttribute('value')).toBe('second awesome!');
+                    browser.sleep(1000);
+                    expect(page.showEntry.getText()).toBe('second awesome!');
                     browser.driver.close().then(function() {
                       browser.switchTo().window(appWindow).then(function(){
                         done();

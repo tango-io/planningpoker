@@ -17,7 +17,8 @@ module.exports = function (grunt) {
     cdnify: 'grunt-google-cdn',
     protractor: 'grunt-protractor-runner',
     injector: 'grunt-asset-injector',
-    buildcontrol: 'grunt-build-control'
+    buildcontrol: 'grunt-build-control',
+    ngconstant: 'grunt-ng-constant'
   });
 
   // Time how long tasks take. Can help when optimizing build times
@@ -361,6 +362,46 @@ module.exports = function (grunt) {
       }
     },
 
+    ngconstant: {
+      // Options for all targets
+      options: {
+        space: '  ',
+        wrap: '"use strict";\n\n {%= __ngModule %}',
+        name: 'config',
+      },
+      // Environment targets
+      development: {
+        options: {
+          dest: '<%= yeoman.client %>/app/config.js'
+        },
+        constants: {
+          ENV: {
+            name: 'development'
+          }
+        }
+      },
+      test: {
+        options: {
+          dest: '<%= yeoman.client %>/app/config.js'
+        },
+        constants: {
+          ENV: {
+            name: 'test'
+          }
+        }
+      },
+      production: {
+        options: {
+          dest: '<%= yeoman.dist %>/public/config.js'
+        },
+        constants: {
+          ENV: {
+            name: 'production'
+          }
+        }
+      },
+    },
+
     // Copies remaining files to places other tasks can use
     copy: {
       dist: {
@@ -373,7 +414,8 @@ module.exports = function (grunt) {
             '*.{ico,png,txt}',
             '.htaccess',
             'bower_components/**/*',
-            'assets/images/{,*/}*.{webp}',
+            'assets/img/*.{png,jpg,jpeg,gif}',
+            'assets/favicons/*',
             'assets/fonts/**/*',
             'index.jade'
           ]
@@ -612,7 +654,7 @@ module.exports = function (grunt) {
       return grunt.task.run([
         'clean:server',
         'env:all',
-        'injector:stylus', 
+        'injector:stylus',
         'concurrent:server',
         'injector',
         'wiredep',
@@ -624,7 +666,8 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'env:all',
-      'injector:stylus', 
+      'injector:stylus',
+      'ngconstant:development',
       'concurrent:server',
       'injector',
       'wiredep',
@@ -654,7 +697,8 @@ module.exports = function (grunt) {
       return grunt.task.run([
         'clean:server',
         'env:all',
-        'injector:stylus', 
+        'injector:stylus',
+        'ngconstant:test',
         'concurrent:test',
         'injector',
         'autoprefixer',
@@ -666,6 +710,7 @@ module.exports = function (grunt) {
       return grunt.task.run([
         'clean:server',
         'injector:stylus',
+        'ngconstant:test',
         'concurrent:test',
         'injector',
         'wiredep',
@@ -680,6 +725,7 @@ module.exports = function (grunt) {
         'env:all',
         'env:test',
         'injector:stylus',
+        'ngconstant:test',
         'concurrent:test',
         'injector',
         'wiredep',
@@ -701,6 +747,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'injector:stylus',
+    'ngconstant:development',
     'concurrent:dist',
     'injector',
     'wiredep',

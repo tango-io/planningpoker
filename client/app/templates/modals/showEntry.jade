@@ -1,6 +1,14 @@
-div.entry-modal
- textarea(ng-model="currentEntry.text")
- button.button(ng-click='toggleRead(currentEntry)') {{ currentEntry.read ? 'Mark as unread' : 'Mark as read' }}
- button.button.showy(ng-click='previous(currentEntry)') Previous
- button.button.showy(ng-click='next(currentEntry)') Next
- button.button(ng-click='$close(this)') Close
+.modal
+  .title
+    h2#modalTitle We should do more of...
+    a.close-reveal-modal(ng-click='$close(this)' aria-label='Close')
+      i.fa.fa-close
+  p#entry {{currentEntry.text}}
+  p.quote {{currentEntry.username}}
+  ul.button-group.right
+    li
+      button.inkbtn(ng-click='toggleRead(currentEntry)' ng-show="reviewMode") {{ currentEntry.read ? 'MARK AS UNREAD' : 'MARK AS READ' }}
+    li
+      button.inkbtn(ng-click='previous(currentEntry)') PREVIOUS
+    li
+      button.inkbtn(ng-click='next(currentEntry)') NEXT

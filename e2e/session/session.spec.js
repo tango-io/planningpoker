@@ -83,7 +83,7 @@ describe('Session View', function() {
     });
   });
 
-it('can close modal if user does not enter username', function(){
+  it('can close modal if user does not enter username', function(){
     browser.getCurrentUrl().then(function(url){
       browser.driver.executeScript('window.open();');
       var appWindow = browser.getWindowHandle();
@@ -112,23 +112,24 @@ it('can close modal if user does not enter username', function(){
   });
 
   describe('Session View for players', function() {
-    it('s able to vote', function() {
+   it('s able to vote', function() {
       page.numbers.click();
-      expect(page.userRow.getText()).toEqual('Arya 0');
+      expect(page.userRow.element(by.css('.profile')).getText()).toEqual('Arya');
+      expect(page.userRow.element(by.css('.vote')).getText()).toEqual('0');
       expect(page.statics.isDisplayed()).toBe(true);
       expect(page.staticsList.count()).toBe(1);
-      expect(page.staticsRow.getText()).toEqual("0 1");
+      expect(page.staticsRow.getText()).toEqual("0\n1");
     });
 
     it('s not able to write description, clear or show votes', function() {
       page.numbers.click();
       expect(page.clearBtn.isPresent()).toBe(false);
-      expect(page.descriptionInput.isEnabled()).toBe(false);
+      expect(page.descriptionInput.isPresent()).toBe(false);
     });
 
     it('s not able to vote after show votes', function() {
       page.numbers.click();
-      expect(page.number.isEnabled()).toBe(false);
+      expect(page.number.getAttribute('disabled')).toBe('true');
     });
   });
 
@@ -145,7 +146,7 @@ it('can close modal if user does not enter username', function(){
 
       expect(page.clearBtn.isPresent()).toBe(true);
       expect(page.numbersList.isPresent()).toBe(false);
-      expect(page.descriptionInput.isEnabled()).toBe(true);
+      expect(page.descriptionInput.isPresent()).toBe(true);
       expect(page.firstModerator.getText()).toBe('Arya');
     });
 

@@ -1,4 +1,7 @@
-div.entry-modal
- textarea(ng-model="currentEntry.text")
- button.button.showy(ng-click='$dismiss(this)') Cancel
- button.button.showy(ng-click='$close(this)' ng-disabled="!currentEntry.text") OK
+.modal
+  h2.title Editing
+
+  textarea(ng-model="currentEntry.text")
+  .button-group
+    button.inkbtn(ng-click='$dismiss(this)') CANCEL
+    button.inkbtn(ng-click='$close(this)' ng-disabled="!currentEntry.text") OK
