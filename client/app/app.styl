@@ -122,7 +122,6 @@ p
 .card
   border 1px solid Grey
   border-radius 2px
-  box-shadow 0px 1px 0px #DFDFDF
   .title
     background-color lightBlue
     padding 24px
@@ -132,8 +131,14 @@ p
       margin 0
   .body
     background-color White
+    border-radius 0 0 2px 2px
+    box-shadow 0px 1px 0px #DFDFDF
     overflow hidden
     padding 24px
+
+small.error, span.error
+  background Red
+  margin-top -20px
 
 .stacked
   stackedCards()

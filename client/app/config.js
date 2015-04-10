@@ -2,6 +2,6 @@
 
  angular.module('config', [])
 
-.constant('ENV', {name:'test'})
+.constant('ENV', {name:'development'})
 
 ;
