@@ -1,6 +1,6 @@
 .modal
   .title
-    h2#modalTitle We should do more of...
+    h2#modalTitle {{modalTitle}}
     a.close-reveal-modal(ng-click='$close(this)' aria-label='Close')
       i.fa.fa-close
   p#entry {{currentEntry.text}}

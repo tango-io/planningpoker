@@ -79,7 +79,20 @@ angular.module('pokerestimateApp')
     }
 
     $scope.currentEntry = entry;
-    $scope.entryType = type;
+    $scope.entryType    = type;
+    $scope.modalTitle   = "";
+    switch(type){
+      case 'good':
+        $scope.modalTitle = "We should do more of...";
+        break;
+      case 'bad':
+        $scope.modalTitle = "We should do less of...";
+        break;
+      case 'improvements':
+        $scope.modalTitle = "We should keep doing...";
+        break;
+    };
+
     $scope.entryModal = $modal.open({templateUrl: modalPath + 'showEntry.html', keyboard:false,  backdrop: 'static', scope: this, windowClass:'small'});
 
     $scope.entryModal.result.then(function (data) {
