@@ -134,7 +134,7 @@ function onHide(io, data) {
 };
 
 function onOpenEntry(socket, data) {
-  socket.broadcast.to(data.id).emit('openEntry', {entry: data.entry});
+  socket.broadcast.to(data.id).emit('openEntry', data);
 };
 
 function onDeleteEntry(socket, data) {

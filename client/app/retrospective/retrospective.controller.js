@@ -74,13 +74,7 @@ angular.module('pokerestimateApp')
   };
 
   $scope.openEntry = function(type, entry){
-    if($scope.currentUser.type == "moderator" && $scope.showForOthers){
-      socket.emit('openEntry', {id: $scope.sessionId, entry: entry});
-    }
-
-    $scope.currentEntry = entry;
-    $scope.entryType    = type;
-    $scope.modalTitle   = "";
+    $scope.modalTitle = "";
     switch(type){
       case 'good':
         $scope.modalTitle = "We should do more of...";
@@ -92,6 +86,13 @@ angular.module('pokerestimateApp')
         $scope.modalTitle = "We should keep doing...";
         break;
     };
+
+    if($scope.currentUser.type == "moderator" && $scope.showForOthers){
+      socket.emit('openEntry', {id: $scope.sessionId, entry: entry, modalTitle: $scope.modalTitle});
+    }
+
+    $scope.currentEntry = entry;
+    $scope.entryType    = type;
 
     $scope.entryModal = $modal.open({templateUrl: modalPath + 'showEntry.html', keyboard:false,  backdrop: 'static', scope: this, windowClass:'small'});
 
@@ -203,6 +204,7 @@ angular.module('pokerestimateApp')
 
     onOpenEntry: function(data){
       $scope.currentEntry = data.entry;
+      $scope.modalTitle = data.modalTitle;
       $scope.entryModal = $modal.open({templateUrl: modalPath + 'showEntry.html', keyboard:false,  backdrop: 'static', scope: $scope, windowClass:'small'});
     },
 
