@@ -223,6 +223,8 @@ angular.module('pokerestimateApp')
       entry.read = data.entry.read;
       if($scope.reviewMode){
         entry.text = data.entry.text;
+        $scope.currentEntry = data.entry;
+        $scope.entryType    = data.entryType;
       }
     },
 
