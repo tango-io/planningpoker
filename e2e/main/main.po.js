@@ -11,16 +11,16 @@ var MainPage = function() {
   this.usernameInput = this.container.element(by.model('currentUser.username'));
 
   this.usernameError = this.form.element(by.css('span.error'));
-  this.startBtn = element(by.buttonText('Start'));
+  this.startBtn = element(by.buttonText('START'));
 
-  this.modal = element(by.css('.reveal-modal h3'));
+  this.modal = element(by.css('.reveal-modal h4'));
   this.modalBtn = element(by.css('.reveal-modal button'));
 
-  this.goBtn = element(by.buttonText('Go'));
+  this.goBtn = element(by.cssContainingText('.values button', 'START'));
 
   this.usernameInput_ = this.container.element(by.model('currentUser_.username'));
   this.sessionIdInput = this.container.element(by.model('sessionId'));
-  this.joinBtn = element(by.buttonText('Join'));
+  this.joinBtn = element(by.buttonText('JOIN'));
 
   this.usernameError_ = element.all(by.css('form[name="joinSessionForm"] span.error')).first();
   this.sessionError = element.all(by.css('form[name="joinSessionForm"] span.error')).last();;
@@ -28,12 +28,12 @@ var MainPage = function() {
   this.playersList = element.all(by.repeater('player in players'));
   this.moderatorsList = element.all(by.repeater('moderator in moderators'));
 
-  this.moderatorOpt = element(by.cssContainingText('.start option', 'Scrum Master \/ Moderator'));
-  this.playerOpt = element(by.cssContainingText('.start option', 'Player'));
+  this.moderatorOpt = element(by.cssContainingText('form[name="startSessionForm"] option', 'Scrum Master \/ Moderator'));
+  this.playerOpt = element(by.cssContainingText('form[name="startSessionForm"] option', 'Player'));
 
-  this.joinModeratorOpt = element(by.cssContainingText('.join option', 'Scrum Master \/ Moderator'));
+  this.joinModeratorOpt = element(by.cssContainingText('form[name="joinSessionForm"] option', 'Scrum Master \/ Moderator'));
 
-  this.retrospectiveOpt = element(by.cssContainingText('.start option', 'Retrospective Session'));
+  this.retrospectiveOpt = element(by.cssContainingText('form[name="startSessionForm"] option', 'Retrospective Session'));
 };
 
 module.exports = new MainPage();

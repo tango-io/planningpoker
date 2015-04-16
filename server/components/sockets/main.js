@@ -16,7 +16,7 @@ exports.register = function(socket, io) {
   socket.on('revealVotes',       function(data){onRevealVotes(io, socket, data);});
   socket.on('clearSession',      function(data){onClearSession(socket, data)});
 
-//Retrospective sessions listeners
+  //Retrospective sessions listeners
   socket.on('reveal',           function(data){onReveal(io, data);});
   socket.on('hide',             function(data){onHide(io, data);});
   socket.on('newEntry',         function(data){onNewEntry(socket, data);});
@@ -110,7 +110,7 @@ function hideText(data){
    var entry;
    return _.map(data, function(value){
     entry = _.clone(value);
-    entry.text = '________ (' + entry.username + ')';
+    entry.text = '';
     return entry;
   }) || [];
 };
@@ -134,7 +134,7 @@ function onHide(io, data) {
 };
 
 function onOpenEntry(socket, data) {
-  socket.broadcast.to(data.id).emit('openEntry', {entry: data.entry});
+  socket.broadcast.to(data.id).emit('openEntry', data);
 };
 
 function onDeleteEntry(socket, data) {
@@ -173,7 +173,7 @@ function onLeaveSession(socket){
       socket.broadcast.to(roomId).emit('updateVotes', rooms[roomId].votes);
     }
 
-    if(rooms[roomId].good){
+    if(roomId && rooms[roomId].good){
       socket.broadcast.to(roomId).emit('updateEntries', _.pick(rooms[roomId], 'good', 'bad', 'improvements'));
     }
   }else{

@@ -1,0 +1,200 @@
+@import 'mixins';
+
+.pivotal
+  height 340px
+  background-size cover
+  background-repeat no-repeat
+  display flex
+  display -webkit-flex
+  align-items center
+  webkit-align-items center
+  h1
+    font-weight 400
+    margin-bottom 24px
+
+.pvtlink
+  background-color #EBEEF0
+  background-image url("../img/poker-link-bg.jpg")
+  background-position center
+  background-repeat no-repeat
+  background-size cover
+
+.pvtlinked
+  background-color #36464E
+  background-image url("../img/poker-linked-bg.jpg")
+  background-position center
+  background-repeat no-repeat
+  background-size cover
+  h1
+    color #FFF
+  .stat
+    h1
+      width 70px
+      color #FFF
+      border 2px solid Green
+      border-radius 50%
+      padding 10px
+      margin 0 auto
+      margin-bottom 12px
+
+.poker
+  margin 88px 0
+
+.team
+  .card
+    .title
+      height 49px
+      padding 15px 24px
+      .columns
+        padding 0
+    .body
+      padding 0
+    .current
+      background-color #F9F9F9
+  .player
+    min-height 74px
+    display flex
+    display -webkit-flex
+    margin 0
+    padding 0 24px
+    .profile
+      display flex
+      display -webkit-flex
+      align-items center
+      webkit-align-items center
+      img
+        min-width 40px
+        height 40px
+        border-radius 50%
+      i
+        width 44px
+        color #CED7DB
+        font-size 48px
+        margin-left -4px
+      p
+        display inline-block
+        margin-bottom 0
+        margin-left 10px
+        overflow hidden
+        white-space nowrap
+        text-overflow ellipsis
+    .vote
+      display flex
+      display -webkit-flex
+      align-items center
+      webkit-align-items center
+      justify-content center
+      webkit-justify-content center
+      i
+        display block
+        font-size 40px
+        margin-top 6px
+      h1
+        color Green
+
+.team .player .profile, .vote
+  padding 0
+
+.pointing
+  .stacked
+    margin-bottom 88px
+    .content
+      h2
+        font-weight 400
+  .points
+    display flex
+    display -webkit-flex
+    flex-wrap wrap
+    -webkit-flex-wrap wrap
+    justify-content center
+    -webkit-justify-content center
+    li
+      div
+      &.card
+        width auto
+        min-width 70px
+        background #FFF
+        margin 10px 4px
+        padding 5px
+        -webkit-transition all 100ms ease-in-out
+        -moz-transition all 100ms ease-in-out
+        -o-transition all 100ms ease-in-out
+        transition all 100ms ease-in-out
+        &:hover
+          -webkit-transform translateY(-8px)
+          -ms-transform translateY(-8px)
+          -o-transform translateY(-8px)
+          transform translateY(-8px)
+        &:active
+          -webkit-transform rotateY(90deg)
+          -ms-transform rotateY(90deg)
+          -o-transform rotateY(90deg)
+          transform rotateY(90deg)
+        .button
+          width 100%
+          background rgba(0,0,0,0.05)
+          margin-bottom 0
+          padding 0
+          i
+            color #A4ABAE
+            font-size 35px
+            margin-top 5px
+        .icon
+          padding 17px 0px
+
+.results
+  .row
+    margin 0
+  .card
+    .body
+      padding-top 0
+    .title
+      height 49px
+      padding 15px 24px
+  .head
+    border-bottom 1px solid #F4F4F4
+    padding 15px 0px
+  li
+    padding-top 15px
+    span
+      display inline-block
+    &:last-child
+      padding-bottom 15px
+  .success
+    color Green
+  .error
+    color Red
+
+.results ul, ul li
+  list-style none
+  margin 0
+
+.share
+  background #EBEEF0
+  padding-top 88px
+  overflow hidden
+  .stacked-inverted
+    .content
+      background #FFF
+  .link
+    input
+      width 98%
+      color #253137
+      overflow hidden
+      white-space nowrap
+      text-overflow ellipsis
+    .button
+      background transparent
+      color #A4ABAE
+      font-size 16px
+      margin-bottom 0
+      margin-top 28px
+      -webkit-transition all 100ms ease-in-out
+      -moz-transition all 100ms ease-in-out
+      -o-transition all 100ms ease-in-out
+      transition all 100ms ease-in-out
+      &:hover
+        background Green
+        color #FFF
+
+

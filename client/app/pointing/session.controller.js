@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pokerestimateApp')
-.controller('SessionCtrl', function (socket, $scope, $location, $routeParams, $modal, userService) {
+.controller('SessionCtrl', function (socket, $scope, $location, $routeParams, $modal, userService, $modalStack) {
   $scope.init = function(){
     $scope.url         = $location.$$absUrl;// Url to share with the team
     $scope.voteValues  = userService.getVoteValues(); //get default points
@@ -15,7 +15,7 @@ angular.module('pokerestimateApp')
     }else{
       //open modal to ask for username and type when user joins
       $scope.userType = "player"; //default option in modal
-      var modalInstance = $modal.open({templateUrl: 'app/templates/modals/username.html', keyboard:false, scope: this});
+      var modalInstance = $modal.open({templateUrl: 'app/templates/modals/username.html', keyboard:false, backdrop: 'static', scope: this, windowClass: 'small'});
       modalInstance.result.then(function (data) {
         $scope.currentUser = {username: data.username, type: data.userType};
         socket.emit('joinSession', {roomId: $scope.sessionId, username: data.username, type: data.userType});
@@ -52,7 +52,7 @@ angular.module('pokerestimateApp')
     },
 
     onError: function(){
-      var modalInstance = $modal.open({templateUrl: 'app/templates/modals/error.html', keyboard:false});
+      var modalInstance = $modal.open({templateUrl: 'app/templates/modals/error.html', keyboard:false, backdrop: 'static', windowClass: 'small'});
       modalInstance.result.then(function () {
         $location.path("/");
       });
@@ -117,6 +117,7 @@ angular.module('pokerestimateApp')
 
   //remove user from room when they leave the page
   $scope.$on('$locationChangeStart', function (event, next, current) {
+    $modalStack.dismissAll();
     socket.emit('leaveSession');
   });
 });
