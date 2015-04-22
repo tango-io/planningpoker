@@ -226,7 +226,7 @@ describe('Controller: RetrospectiveCtrl', function () {
       scope.session = {good: [{text: 'text', username: 'Tester'}], bad: [], improvements: []};
 
       scope.openEntry('good', scope.session.good[0]);
-      expect(socket.emit).toHaveBeenCalledWith('openEntry', {id:'sessionId', entry:{ text:'text', username:'Tester'}});
+      expect(socket.emit).toHaveBeenCalledWith('openEntry', {id:'sessionId', entry:{ text:'text', username:'Tester'}, modalTitle: 'We should do more of...'});
     }));
 
     it('emits close entry after closing modal in open entry function when showForOthers is selected', inject(function ($modal, socket) {
