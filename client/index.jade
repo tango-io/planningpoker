@@ -19,9 +19,33 @@ html.no-js
     meta(property='og:image', content='https://pbs.twimg.com/profile_images/1409762848/tangosource_logo.png')
     meta(property='og:description', content='Best planning poker app')
 
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    title TS Planning Poker | Welcome
+    link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Roboto:400,300,100', type='text/css')
+    link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css')
+    link(rel='apple-touch-icon', sizes='57x57', href='assets/favicons/apple-touch-icon-57x57.png')
+    link(rel='apple-touch-icon', sizes='60x60', href='assets/favicons/apple-touch-icon-60x60.png')
+    link(rel='apple-touch-icon', sizes='72x72', href='assets/favicons/apple-touch-icon-72x72.png')
+    link(rel='apple-touch-icon', sizes='76x76', href='assets/favicons/apple-touch-icon-76x76.png')
+    link(rel='apple-touch-icon', sizes='114x114', href='assets/favicons/apple-touch-icon-114x114.png')
+    link(rel='apple-touch-icon', sizes='120x120', href='assets/favicons/apple-touch-icon-120x120.png')
+    link(rel='apple-touch-icon', sizes='144x144', href='assets/favicons/apple-touch-icon-144x144.png')
+    link(rel='apple-touch-icon', sizes='152x152', href='assets/favicons/apple-touch-icon-152x152.png')
+    link(rel='apple-touch-icon', sizes='180x180', href='assets/favicons/apple-touch-icon-180x180.png')
+    link(rel='icon', type='image/png', href='assets/favicons/favicon-32x32.png', sizes='32x32')
+    link(rel='icon', type='image/png', href='assets/favicons/android-chrome-192x192.png', sizes='192x192')
+    link(rel='icon', type='image/png', href='assets/favicons/favicon-96x96.png', sizes='96x96')
+    link(rel='icon', type='image/png', href='assets/favicons/favicon-16x16.png', sizes='16x16')
+    link(rel='manifest', href='assets/favicons/manifest.json')
+    meta(name='msapplication-TileColor', content='#253137')
+    meta(name='msapplication-TileImage', content='assets/favicons/mstile-144x144.png')
+    meta(name='theme-color', content='#ffffff')
+
     <!-- build:css(client) app/vendor.css -->
     // bower:css
     link(rel='stylesheet', href='bower_components/foundation/css/foundation.css')
+    link(rel='stylesheet', href='bower_components/animate-css/animate.css')
     // endbower
     <!-- endbuild -->
 
@@ -51,9 +75,9 @@ html.no-js
 
     //if lt IE 7
       p.browsehappy
-        | You are using an 
+        | You are using an
         strong outdated
-        |  browser. Please 
+        |  browser. Please
         a(href='http://browsehappy.com/') upgrade your browser
         |  to improve your experience.
 
@@ -88,6 +112,7 @@ html.no-js
     script(src='bower_components/foundation/js/foundation.js')
     script(src='bower_components/zeroclipboard/dist/ZeroClipboard.js')
     script(src='bower_components/ng-clip/src/ngClip.js')
+    script(src='bower_components/wow/dist/wow.js')
     // endbower
     script(src='socket.io-client/socket.io.js')
     <!-- endbuild -->
@@ -96,12 +121,13 @@ html.no-js
     <!-- build:js({.tmp,client}) app/app.js -->
     script(src='app/app.js')
     // injector:js
+    script(src="app/config.js")
     script(src="app/footer/footer.controller.js")
     script(src="app/hideFor/hideFor.directive.js")
     script(src="app/main/main.controller.js")
     script(src="app/ngEnter/ngEnter.directive.js")
+    script(src="app/pointing/session.controller.js")
     script(src="app/retrospective/retrospective.controller.js")
-    script(src="app/session/session.controller.js")
     script(src="app/userService/userService.service.js")
     script(src="app/voteValues/voteValues.controller.js")
     script(src="components/socket/socket.service.js")

@@ -1,13 +1,31 @@
-.footer
-  background: bannerColor
-  border-top 1px solid #E5E5E5
-  padding 35px 0
-  text-align center
-  .social-btn
-    width: 30px
-    height: 10px
-    color: white
-    font-size: 35px
-    margin: 0 5px
-  .social-btn:hover
-    opacity: .8
+@import 'mixins';
+
+footer
+  background-color darkBlue
+  padding 20px 0
+  h6
+    color White
+    font-weight fontRegular
+  .facebook
+    circledBorder 1px solid White
+    color White
+    margin-right 24px
+    padding 10px 12px 10px 13px
+    transition all 100ms ease-in-out
+    &:hover
+      socialHover()
+  .twitter
+    circledBorder 1px solid White
+    color White
+    margin-right 24px
+    padding 10px 9px 10px 8px
+    transition all 100ms ease-in-out
+    &:hover
+      socialHover()
+  .linkedin
+    circledBorder 1px solid White
+    color White
+    padding 10px
+    transition all 100ms ease-in-out
+    &:hover
+      socialHover()

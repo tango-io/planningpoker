@@ -1,3 +1,36 @@
+/* ==========================================================================
+   Colors
+   ========================================================================== */
+darkestBlue = #253137
+darkerBlue =  #36464E
+darkBlue =    #445963
+Blue =        #CED7DB
+lightBlue =   #EBEEF0
+darkerGrey =  #A4ABAE
+darkGrey =    #BDC1C3
+Grey =        #F9F9F9
+White =       #FFFFFF
+Green =       #BFC932
+darkGreen =   #AEB32A
+Red =         #ef4437
+
+
+/* ==========================================================================
+   Font Styles
+   ========================================================================== */
+
+fontFamily =   'Roboto'
+fontLight =    100
+fontRegular =  300
+fontBold =     400
+fontBiggest =  45px
+fontBigger =   34px
+fontBig =      22px
+fontSmall =    16px
+fontSmaller =  14px
+fontSmallest = 12px
+
+
 buttonEvents(color)
   &[disabled]
     background: desaturate(color, 30%)
@@ -9,3 +42,33 @@ buttonEvents(color)
     background: lighten(color, 20%)
   &:focus
     background: lighten(color, 20%)
+
+transition()
+  -webkit-transition arguments
+  -moz-transition    arguments
+  -o-transition      arguments
+  transition         arguments
+
+materialBtn()
+  border-radius 2px
+  font fontBold fontSmaller fontFamily, sans-serif
+  letter-spacing 0.5px
+  margin-bottom 0
+  padding 8px
+  text-transform uppercase
+  transition all 100ms ease-in-out
+
+stackedCards()
+  background-color White
+  border-radius 2px 2px 0 0
+  border 1px solid lightBlue
+  padding 5px 5px 0
+
+circledBorder()
+  border         arguments
+  border-radius  50%
+
+socialHover()
+  background-color  #FFF
+  border  1px solid #FFF
+  color  #445963

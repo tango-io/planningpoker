@@ -1,37 +1,93 @@
-include ../templates/header.jade
+//-include ../templates/header.jade
+header.header
+  .row
+    .large-12.text-center.columns
+      img(src='assets/img/header-id.png', alt='Header BG')
+      h2.hide-for-small-only
+        | Online virtual and co-located agile teams use this application during ther planning/pointing sessiones to effectively communicate points for stories
 #container(ng-init="init()")
-  .row.separator
-    .large-5.columns.join
-      .row.row-with-padding
-        .large-10.large-centered.columns
-          h3 Join Session
-          form(name="joinSessionForm" novalidate)
-            input(type="text" name="username" ng-model="currentUser_.username" placeholder="Enter a username" required)
-            span.error(ng-show="submitted_ && joinSessionForm.username.$invalid") Please enter a username
-            input(type="text" name="sessionId" ng-model="sessionId" placeholder="Enter a session id" required)
-            span.error(ng-show="submitted_ && joinSessionForm.sessionId.$invalid") Please enter a session id
-          .row.collapse
-            .large-8.columns
-              select(ng-model="currentUser_.type")
-                option(value="player") Player
-                option(value="moderator") Scrum Master / Moderator
-            .large-4.columns
-              button.button.showy.postfix(ng-click="joinSession()") Join
-    .large-5.columns.start
-      .row.row-with-padding
-        .large-10.large-centered.columns
-          h3 Start Session
-          form(name="startSessionForm" novalidate)
-            input(type="text" name="username" ng-model="currentUser.username" placeholder="Enter a username" required)
-            span.error(ng-show="submitted && startSessionForm.$invalid") Please enter a username
-            select(ng-model="sessionType")
-              option(value="pointing") Pointing Session
-              option(value="retrospective") Retrospective Session
-          .row.collapse
-            .large-8.columns
+  .session
+      .row
+        .large-6.medium-6.columns
+          form.card.wow.fadeInUp(name="startSessionForm" novalidate, data-wow-delay='0.2s')
+            .title
+              h2 Create a new session
+              h6
+            .body
+              .input-field
+                input#create_username.validate(type='text' name="username" ng-model="currentUser.username" placeholder="Enter a username" required)
+                span.error(ng-show="submitted && startSessionForm.$invalid") Please enter a username
+                //-label(for='create_username') Enter a username
+              select(ng-model="sessionType")
+                option(value='', disabled='', selected='') Type of session
+                option(value='pointing') Pointing Session
+                option(value='retro') Retrospective Session
               select(ng-model="currentUser.type")
+                option(value='', disabled='', selected='') Type of player
                 option(value="player") Player
                 option(value="moderator") Scrum Master / Moderator
-            .large-4.columns
-              button.button.showy.postfix(ng-click="startSession()") Start
+              .text-right
+                button.hilightbtn(ng-click="startSession()") START
+        .large-6.medium-6.columns
+          form.card.wow.fadeInUp(name="joinSessionForm" novalidate, data-wow-delay='0.3s')
+            .title
+              h2 Join a session
+              h6
+            .body
+              .input-field
+                input#join_username.validate(type='text' name="username" ng-model="currentUser_.username" placeholder="Enter a username" required)
+                span.error(ng-show="submitted_ && joinSessionForm.username.$invalid") Please enter a username
+                //-label(for='join_username') Enter a username
+              .input-field
+                input#join_id.validate(type='text' name="sessionId" ng-model="sessionId" placeholder="Enter a session id" required)
+                span.error(ng-show="submitted_ && joinSessionForm.sessionId.$invalid") Please enter a session id
+                //-label(for='join_id') Enter a session ID
+              select(ng-model="currentUser_.type")
+                option(value='', disabled='', selected='') Type of player
+                option(value="player") Player
+                option(value="moderator") Scrum Master / Moderator
+              .text-right
+                button.hilightbtn(ng-click="joinSession()") JOIN
+    //.stats
+      .row
+        .large-12.text-center.columns
+          h1.headline.subdued.wow.fadeIn(data-wow-delay='0.1s') Something about stats
+        .large-4.medium-4.text-center.columns
+          .stacked-inverted.wow.fadeInUp(data-wow-delay='0.2s')
+            .content
+              h6 Pointing sessions
+              h1.display 1,239,090
+        .large-4.medium-4.text-center.columns
+          .stacked-inverted.wow.fadeInUp(data-wow-delay='0.3s')
+            .content
+              h6 Pointed stories
+              h1.display 5,032,739
+        .large-4.medium-4.text-center.columns
+          .stacked-inverted.wow.fadeInUp(data-wow-delay='0.4s')
+            .content
+              h6 Votes casted
+              h1.display 12,002,243
+
+    .faq
+      .row
+        .large-12.text-center.columns
+          h1.headline.subdued.wow.fadeIn(data-wow-delay='0.1s') Information about the app
+          img.wow.fadeInUp(data-wow-delay='0.1s', src='assets/img/about-img.jpg', alt='Planning poker chips')
+        .question.large-6.large-text-left.medium-6.text-center.columns
+          h2.subdued.wow.fadeIn(data-wow-delay='0.3s') What is planning poker?
+          p.wow.fadeIn(data-wow-delay='0.3s')
+            | Locavore tattooed deep v chillwave paleo, gastropub Kickstarter chia. Keytar forage 90's lomo, put a bird on it meditation hoodie chia.
+        .question.large-6.large-text-left.medium-6.text-center.columns
+          h2.subdued.wow.fadeIn(data-wow-delay='0.4s') How does it work?
+          p.wow.fadeIn(data-wow-delay='0.4s')
+            | Tattooed fingerstache PBR&B, drinking vinegar seitan freegan mixtape wayfarers Helvetica typewriter swag. Four loko listicle heirloom hashtag Pinterest.
+        .question.large-6.large-text-left.medium-6.text-center.columns
+          h2.subdued.wow.fadeIn(data-wow-delay='0.5s') Who should use it?
+          p.wow.fadeIn(data-wow-delay='0.5s')
+            | Cronut 3 wolf moon ennui, hella banh mi Bushwick polaroid scenester migas blog pork belly hoodie.
+        .question.large-6.large-text-left.medium-6.text-center.columns
+          h2.subdued.wow.fadeIn(data-wow-delay='0.6s') Why should I use it?
+          p.wow.fadeIn(data-wow-delay='0.6s')
+            | Fap DIY biodiesel Kickstarter Truffaut, mixtape beard dreamcatcher photo booth bicycle rights next level disrupt. Lomo cold-pressed VHS.
+
 include ../templates/footer.jade

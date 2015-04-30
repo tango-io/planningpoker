@@ -56,7 +56,7 @@ describe('Retrospective View', function() {
           browser.waitForAngular();
           page.usernameModalInput.sendKeys('Cersei');
           page.modalBtn.click();
-          expect(page.goodLinkList.first().getText()).toEqual('awesome!(Arya)');
+          expect(page.goodLinkList.first().getText()).toEqual('Arya');
           browser.driver.close().then(function () {
             browser.switchTo().window(appWindow);
           });
@@ -80,6 +80,34 @@ describe('Retrospective View', function() {
           page.modalBtn.click();
           expect(page.userRow.getText()).toEqual("Arya");
           expect(page.firstModerator.getText()).toEqual("Cersei");
+          browser.driver.close().then(function () {
+            browser.switchTo().window(appWindow);
+          });
+        });
+      });
+    });
+  });
+
+  it('can close modal if user does not enter username', function(){
+    browser.getCurrentUrl().then(function(url){
+      browser.driver.executeScript('window.open();');
+      var appWindow = browser.getWindowHandle();
+      browser.getAllWindowHandles().then(function (handles) {
+        var newWindowHandle = handles[1];
+        browser.switchTo(newWindowHandle).window(newWindowHandle).then(function () {
+          browser.driver.executeScript('window.focus();');
+          browser.get(url);
+
+          expect(page.usernameModalInput.isDisplayed()).toBe(true);
+
+          browser.actions().mouseMove(page.closeBg).click();
+
+          expect(page.usernameModalInput.isDisplayed()).toBe(true);
+          expect(page.modalBtn.isEnabled()).toBe(false);
+
+          page.usernameModalInput.sendKeys('Cersei');
+          expect(page.modalBtn.isEnabled()).toBe(true);
+
           browser.driver.close().then(function () {
             browser.switchTo().window(appWindow);
           });
@@ -112,6 +140,15 @@ describe('Retrospective View', function() {
     page.startBtn.click();
     browser.sleep(1000);
     expect(page.moderatorsList.count()).toBe(1);
+  });
+
+  it('closes modal changing of route', function(){
+    page.addGoodBtn.click();
+    page.newGoodEntry.sendKeys('awesome!');
+    browser.actions().sendKeys(protractor.Key.ENTER).perform();
+
+    browser.navigate().back();
+    expect(page.modal.isPresent()).toBe(false);
   });
 
   it('s able to add entries in all categories', function() {
@@ -211,6 +248,57 @@ describe('Retrospective View', function() {
     it('s not able to reveal entries', function() {
       expect(page.revealBtn.isPresent()).toBe(false);
     });
+
+    it('s not able to check show for others option', function() {
+      expect(page.showForOthers.isPresent()).toBe(false);
+    });
+
+    it('does not show for others opening an entry', function(done){
+      var appWindow, newWindowHandle;
+
+      browser.get('/');
+      browser.waitForAngular();
+      page.usernameInput.sendKeys('Arya');
+      page.moderatorOpt.click();
+      page.retrospectiveOpt.click();
+      page.startBtn.click();
+
+      page.addGoodBtn.click();
+      page.newGoodEntry.sendKeys('awesome!');
+      browser.actions().sendKeys(protractor.Key.ENTER).perform();
+      page.revealBtn.click();
+
+      browser.getCurrentUrl().then(function(url){
+        browser.driver.executeScript('window.open();');
+        appWindow = browser.getWindowHandle();
+
+        browser.ignoreSynchronization = true
+
+        browser.getAllWindowHandles().then(function (handles) {
+          browser.switchTo().window(handles[1]).then(function() {
+            browser.get(url);
+            page.usernameModalInput.sendKeys('Cersei');
+            page.modalBtn.click();
+
+            browser.sleep(2000);
+            page.goodLinkList.first().click();
+              expect(page.modal.isPresent()).toBe(true);
+
+            browser.driver.switchTo().window(handles[0]).then(function(){
+              expect(page.modal.isPresent()).toBe(false);
+
+              browser.driver.switchTo().window(handles[1]).then(function(){
+                browser.driver.close().then(function() {
+                  browser.switchTo().window(appWindow).then(function(){
+                    done();
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
   });
 
   describe('Session View for moderators', function() {
@@ -242,7 +330,7 @@ describe('Retrospective View', function() {
 
       page.goodLinkList.first().click();
       expect(page.modal.isPresent()).toBe(true);
-      expect(page.showEntry.getAttribute('value')).toBe('awesome!');
+      expect(page.showEntry.getText()).toBe('awesome!');
       expect(page.nextBtn.isPresent()).toBe(true);
       expect(page.previousBtn.isPresent()).toBe(true);
       expect(page.readBtn.isPresent()).toBe(true);
@@ -251,7 +339,7 @@ describe('Retrospective View', function() {
 
       page.impLinkList.first().click();
       expect(page.modal.isPresent()).toBe(true);
-      expect(page.showEntry.getAttribute('value')).toBe('it will be better next time!');
+      expect(page.showEntry.getText()).toBe('it will be better next time!');
       expect(page.nextBtn.isPresent()).toBe(true);
       expect(page.previousBtn.isPresent()).toBe(true);
       expect(page.readBtn.isPresent()).toBe(true);
@@ -260,7 +348,7 @@ describe('Retrospective View', function() {
 
       page.badLinkList.first().click();
       expect(page.modal.isPresent()).toBe(true);
-      expect(page.showEntry.getAttribute('value')).toBe('sad entry!');
+      expect(page.showEntry.getText()).toBe('sad entry!');
       expect(page.nextBtn.isPresent()).toBe(true);
       expect(page.previousBtn.isPresent()).toBe(true);
       expect(page.readBtn.isPresent()).toBe(true);
@@ -277,11 +365,11 @@ describe('Retrospective View', function() {
       page.revealBtn.click();
 
       page.goodLinkList.first().click();
-      expect(page.showEntry.getAttribute('value')).toBe('awesome!');
+      expect(page.showEntry.getText()).toBe('awesome!');
       page.nextBtn.click();
-      expect(page.showEntry.getAttribute('value')).toBe('second entry!');
+      expect(page.showEntry.getText()).toBe('second entry!');
       page.previousBtn.click();
-      expect(page.showEntry.getAttribute('value')).toBe('awesome!');
+      expect(page.showEntry.getText()).toBe('awesome!');
     });
 
     it('s able to mark or unmark entry as read', function() {
@@ -293,19 +381,156 @@ describe('Retrospective View', function() {
       page.revealBtn.click();
 
       page.goodLinkList.first().click();
-      expect(page.showEntry.getAttribute('value')).toBe('awesome!');
+      expect(page.showEntry.getText()).toBe('awesome!');
 
       page.readBtn.click();
       page.closeBtn.click();
       browser.sleep(1000);
 
-      expect(page.goodCheck.first().isDisplayed()).toBe(true);
+      expect(page.goodCheck.count()).toBe(1);
 
       page.goodLinkList.first().click();
       page.unReadBtn.click();
       page.closeBtn.click();
 
-      expect(page.goodCheck.first().isDisplayed()).toBe(false);
+      expect(page.goodCheck.count()).toBe(0);
+    });
+
+    it('should be able to edit entries', function(done) {
+      var appWindow, newWindowHandle;
+
+      page.addGoodBtn.click();
+      page.newGoodEntry.sendKeys('first awesome!');
+      browser.actions().sendKeys(protractor.Key.ENTER).perform();
+
+      browser.getCurrentUrl().then(function(url){
+        browser.driver.executeScript('window.open();');
+        appWindow = browser.getWindowHandle();
+
+        browser.getAllWindowHandles().then(function (handles) {
+          newWindowHandle = handles[1];
+          browser.switchTo(newWindowHandle).window(newWindowHandle).then(function () {
+            browser.driver.executeScript('window.focus();');
+            browser.get(url);
+            page.usernameModalInput.sendKeys('Cersei');
+            page.moderatorModalOpt.click();
+            page.modalBtn.click();
+            browser.sleep(1000);
+            browser.getAllWindowHandles().then(function (handles) {
+              browser.driver.switchTo().window(handles[0]).then(function(){
+                browser.driver.executeScript('window.focus();');
+                page.goodEdit.first().click();
+                page.editEntry.clear();
+                page.editEntry.sendKeys('changed');
+                page.okBtn.click();
+
+                browser.driver.switchTo().window(handles[1]).then(function(){
+                  browser.driver.executeScript('window.focus();');
+                  expect(page.goodList.first().getText()).toBe('');
+                  browser.driver.close().then(function () {
+                    browser.switchTo().window(appWindow);
+                    done();
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('s able to view entries in review mode when show for others is selected', function(done){
+      var appWindow, newWindowHandle;
+
+      page.addGoodBtn.click();
+      page.newGoodEntry.sendKeys('awesome!');
+      browser.actions().sendKeys(protractor.Key.ENTER).perform();
+
+      page.newGoodEntry.sendKeys('second awesome!');
+      browser.actions().sendKeys(protractor.Key.ENTER).perform();
+
+      browser.getCurrentUrl().then(function(url){
+        browser.driver.executeScript('window.open();');
+        appWindow = browser.getWindowHandle();
+
+        browser.ignoreSynchronization = true
+
+        browser.getAllWindowHandles().then(function (handles) {
+          browser.switchTo().window(handles[1]).then(function() {
+            browser.get(url);
+            page.usernameModalInput.sendKeys('Cersei');
+            page.modalBtn.click();
+
+            browser.driver.switchTo().window(handles[0]).then(function(){
+              browser.sleep(1000)
+              page.showForOthers.click();
+              page.revealBtn.click();
+              page.goodLinkList.first().click();
+
+              browser.driver.switchTo().window(handles[1]).then(function(){
+                browser.sleep(1000);
+                expect(page.modal.isPresent()).toBe(true);
+                expect(page.showEntry.getText()).toBe('awesome!');
+
+                browser.driver.switchTo().window(handles[0]).then(function(){
+                  page.closeBtn.click();
+                  browser.sleep(3000);
+                  page.goodLinkList.first().click();
+                  page.nextBtn.click();
+                  browser.sleep(3000);
+                  expect(page.showEntry.getText()).toBe('second awesome!');
+
+                  browser.driver.switchTo().window(handles[1]).then(function(){
+                    browser.sleep(1000);
+                    expect(page.showEntry.getText()).toBe('second awesome!');
+                    browser.driver.close().then(function() {
+                      browser.switchTo().window(appWindow).then(function(){
+                        done();
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+
+    it('does not show for others if options is not selected', function(done){
+      var appWindow, newWindowHandle;
+
+      page.addGoodBtn.click();
+      page.newGoodEntry.sendKeys('awesome!');
+      browser.actions().sendKeys(protractor.Key.ENTER).perform();
+
+      browser.getCurrentUrl().then(function(url){
+        browser.driver.executeScript('window.open();');
+        appWindow = browser.getWindowHandle();
+
+        browser.getAllWindowHandles().then(function (handles) {
+          browser.switchTo().window(handles[1]).then(function() {
+            browser.get(url);
+            page.usernameModalInput.sendKeys('Cersei');
+            page.modalBtn.click();
+
+            browser.driver.switchTo().window(handles[0]).then(function(){
+              page.revealBtn.click();
+              page.goodLinkList.first().click();
+
+              browser.driver.switchTo().window(handles[1]).then(function(){
+                expect(page.modal.isPresent()).toBe(false);
+
+                browser.driver.close().then(function() {
+                  browser.switchTo().window(appWindow).then(function(){
+                    done();
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
     });
   });
 
@@ -359,49 +584,6 @@ describe('Retrospective View', function() {
                     expect(page.goodList.count()).toBe(2);
                     expect(page.badList.count()).toBe(2);
                     expect(page.impList.count()).toBe(2);
-                    done();
-                  });
-                });
-              });
-            });
-          });
-        });
-      });
-    });
-
-    it('should be able to edit entries', function(done) {
-      var appWindow, newWindowHandle;
-
-      page.addGoodBtn.click();
-      page.newGoodEntry.sendKeys('first awesome!');
-      browser.actions().sendKeys(protractor.Key.ENTER).perform();
-
-      browser.getCurrentUrl().then(function(url){
-        browser.driver.executeScript('window.open();');
-        appWindow = browser.getWindowHandle();
-
-        browser.getAllWindowHandles().then(function (handles) {
-          newWindowHandle = handles[1];
-          browser.switchTo(newWindowHandle).window(newWindowHandle).then(function () {
-            browser.driver.executeScript('window.focus();');
-            browser.get(url);
-            page.usernameModalInput.sendKeys('Cersei');
-            page.moderatorModalOpt.click();
-            page.modalBtn.click();
-            browser.sleep(1000);
-            browser.getAllWindowHandles().then(function (handles) {
-              browser.driver.switchTo().window(handles[0]).then(function(){
-                browser.driver.executeScript('window.focus();');
-                page.goodEdit.first().click();
-                page.editEntry.clear();
-                page.editEntry.sendKeys('changed');
-                page.okBtn.click();
-
-                browser.driver.switchTo().window(handles[1]).then(function(){
-                  browser.driver.executeScript('window.focus();');
-                  expect(page.goodList.first().getText()).toBe('________ (Arya)');
-                  browser.driver.close().then(function () {
-                    browser.switchTo().window(appWindow);
                     done();
                   });
                 });

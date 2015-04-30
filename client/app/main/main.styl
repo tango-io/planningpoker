@@ -1,21 +1,40 @@
-#banner
-    background bannerColor
-    padding 17px 15px 17px 15px
-    text-align center
-    border-bottom: 5px solid highlight2
-#banner h1
-    font-size 60px
-    letter-spacing -1px
-    line-height 1
-    color: white
-.row.separator:after
-  content: ""
-  display: inline-block
-  height: 300px
-  width: 1px
-  background: steadyGray
-  margin-top: 25px;
-  position: absolute
-  left: 50%
-body
-  color: route66
+@import 'mixins.styl';
+
+.header
+  height 600px
+  background-image url("../assets/img/header-bg.jpg")
+  background-color #253137
+  background-size cover
+  background-repeat none
+  display flex
+  display -webkit-flex
+  & > .row
+    display flex
+    display -webkit-flex
+    align-items center
+    webkit-align-items center
+    img
+      width 62%
+    h2
+      color #FFF
+      margin 70px 0 90px
+
+.session
+  margin -74px 0 88px
+  overflow hidden
+
+.stats
+  overflow hidden
+
+.faq
+  background-color #EBEEF0
+  padding 88px 0
+  img
+    width 700px
+  .question
+    margin-bottom 24px
+    p
+      color #253137
+      letter-spacing 1px
+
+

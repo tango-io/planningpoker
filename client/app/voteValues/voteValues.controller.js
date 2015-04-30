@@ -14,6 +14,8 @@ angular.module('pokerestimateApp')
         {label: ':/', value: '?'},
         {label: 'Break', value: 'need a break'}
       ];
+
+      $scope.newVote = { label: null , value: null };
     };
 
     $scope.go = function(){
@@ -21,12 +23,12 @@ angular.module('pokerestimateApp')
      socket.emit('newSession', $scope.voteValues);
     };
 
-    $scope.removeValue = function(value){
-      $scope.voteValues = _.reject($scope.voteValues, {value: value});
+    $scope.removeValue = function(vote){
+      $scope.voteValues = _.without($scope.voteValues, vote);
     };
 
     $scope.addValue= function(value){
       $scope.voteValues.push(value);
-      $scope.newVote = {};
+      $scope.newVote = { label: null , value: null };
     };
   });

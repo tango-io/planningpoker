@@ -1,11 +1,11 @@
 'use strict';
 
 var Footer = function() {
-  this.footer = element(by.css('.footer'));
+  this.footer = element(by.css('footer'));
 
-  this.twitterBtn = this.footer.element(by.css('.icon-bar a:first-child'));
-  this.fbBtn = this.footer.element(by.css('.icon-bar a:nth-child(2)'));
-  this.linkedInBtn = this.footer.element(by.css('.icon-bar a:last-child'));
+  this.twitterBtn = this.footer.element(by.css('.twitter'));
+  this.fbBtn = this.footer.element(by.css('.facebook'));
+  this.linkedInBtn = this.footer.element(by.css('.linkedin'));
 
   this.twitterText = element(by.css('.action-information'));
   this.twitterShareText = element(by.css('textarea#status'));

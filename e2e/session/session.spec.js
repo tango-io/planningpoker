@@ -83,24 +83,53 @@ describe('Session View', function() {
     });
   });
 
+  it('can close modal if user does not enter username', function(){
+    browser.getCurrentUrl().then(function(url){
+      browser.driver.executeScript('window.open();');
+      var appWindow = browser.getWindowHandle();
+      browser.getAllWindowHandles().then(function (handles) {
+        var newWindowHandle = handles[1];
+        browser.switchTo(newWindowHandle).window(newWindowHandle).then(function () {
+          browser.driver.executeScript('window.focus();');
+          browser.get(url);
+
+          expect(page.usernameModalInput.isDisplayed()).toBe(true);
+
+          browser.actions().mouseMove(page.modalBg).click();
+
+          expect(page.usernameModalInput.isDisplayed()).toBe(true);
+          expect(page.modalBtn.isEnabled()).toBe(false);
+
+          page.usernameModalInput.sendKeys('Cersei');
+          expect(page.modalBtn.isEnabled()).toBe(true);
+
+          browser.driver.close().then(function () {
+            browser.switchTo().window(appWindow);
+          });
+        });
+      });
+    });
+  });
+
   describe('Session View for players', function() {
-    it('s able to vote', function() {
+   it('s able to vote', function() {
       page.numbers.click();
-      expect(page.userRow.getText()).toEqual('Arya 0');
+      expect(page.userRow.element(by.css('.profile')).getText()).toEqual('Arya');
+      expect(page.userRow.element(by.css('.vote')).getText()).toEqual('0');
       expect(page.statics.isDisplayed()).toBe(true);
       expect(page.staticsList.count()).toBe(1);
-      expect(page.staticsRow.getText()).toEqual("0 1");
+      expect(page.staticsRow.getText()).toEqual("0\n1");
     });
 
     it('s not able to write description, clear or show votes', function() {
       page.numbers.click();
       expect(page.clearBtn.isPresent()).toBe(false);
-      expect(page.descriptionInput.isEnabled()).toBe(false);
+      expect(page.descriptionInput.isPresent()).toBe(false);
     });
 
     it('s not able to vote after show votes', function() {
       page.numbers.click();
-      expect(page.number.isEnabled()).toBe(false);
+      expect(page.number.getAttribute('disabled')).toBe('true');
     });
   });
 
@@ -117,7 +146,7 @@ describe('Session View', function() {
 
       expect(page.clearBtn.isPresent()).toBe(true);
       expect(page.numbersList.isPresent()).toBe(false);
-      expect(page.descriptionInput.isEnabled()).toBe(true);
+      expect(page.descriptionInput.isPresent()).toBe(true);
       expect(page.firstModerator.getText()).toBe('Arya');
     });
 

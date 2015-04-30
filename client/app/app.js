@@ -7,9 +7,10 @@ angular.module('pokerestimateApp', [
   'ngRoute',
   'btford.socket-io',
   'mm.foundation',
-  'ngClipboard'
+  'ngClipboard',
+  'config'
 ])
-.config(function ($routeProvider, ngClipProvider) {
+.config(function ($routeProvider, ngClipProvider, ENV) {
   ngClipProvider.setPath("bower_components/zeroclipboard/dist/ZeroClipboard.swf");
 
   $routeProvider
@@ -18,7 +19,7 @@ angular.module('pokerestimateApp', [
     controller: 'MainCtrl'
   })
   .when('/sessions/:id', {
-    templateUrl: 'app/session/session.html'
+    templateUrl: 'app/pointing/session.html'
   })
   .when('/retrospectives/:id', {
     templateUrl: 'app/retrospective/retrospective.html'
@@ -26,4 +27,17 @@ angular.module('pokerestimateApp', [
   .when('/voteValues', {
     templateUrl: 'app/voteValues/voteValues.html'
   });
+
+  if(ENV.name !== 'test'){
+    $(document).ready(function() {
+      new WOW({ callback: animationCB }).init();
+    });
+  }
 });
+
+function animationCB(box){
+  setTimeout(function(){
+    $(box).removeClass('fadeInUp');
+  }, 2000);
+};
+

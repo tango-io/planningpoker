@@ -1,35 +1,35 @@
 include ../templates/header.jade
-#container(ng-controller="VoteValuesCtrl" ng-init="init()")
-  .vote-values-container
-    .row.row-with-padding
-      .large-10.large-centered.columns
-        .row
-          .large-5.columns.large-centered
-            table
-              thead
-                tr
-                  th Point Name
-                  th Point Value
-                  th
-              tbody
-                tr(ng-repeat="vote in voteValues")
-                  td
-                    input(type="text" ng-model="vote.label")
-                  td
-                    input(type="text" ng-model="vote.value")
-                  td
-                    button.button.tiny
-                      i.fa.fa-trash(ng-click="removeValue(vote.value)")
-                tr
-                  td
-                    input(type="text" ng-model="newVote.label")
-                  td
-                    input(type="text" ng-model="newVote.value")
-                  td
-                    button.button.tiny
-                      i.fa.fa-plus(ng-click="addValue(newVote)")
-    .row
-      .large-2.columns.large-offset-8
-        button.button.showy(ng-click="go()") Go
+
+.values(ng-controller="VoteValuesCtrl" ng-init="init()")
+  .row
+    .large-6.large-centered.medium-8.medium-centered.columns
+      .card.wow.fadeInUp
+        .title
+          .row
+            .large-5.small-5.columns
+              h6.subdued Point name
+            .large-5.small-5.end.columns
+              h6.subdued Point value
+        .body
+          .row(ng-repeat="vote in voteValues")
+            .large-5.small-5.columns
+              input(type='text', placeholder='{{vote.label}}' ng-model="vote.label")
+            .large-5.small-5.columns
+              input(type='text', placeholder='{{vote.value}}' ng-model="vote.value")
+            .large-2.small-2.text-center.columns
+              button.inkbtn
+                i.fa.fa-trash(ng-click="removeValue(vote)")
+          .row
+            .large-5.small-5.columns
+              input(type='text', placeholder='label' ng-model="newVote.label")
+            .large-5.small-5.columns
+              input(type='text', placeholder='value' ng-model="newVote.value")
+            .large-2.small-2.text-center.columns
+              button.inkbtn
+                i.fa.fa-plus(ng-click="addValue(newVote)")
+
+  .row.wow.fadeInUp(data-wow-delay='0.7s')
+    .large-2.columns.large-offset-8
+      button.defaultbtn(ng-click="go()") START
 
 include ../templates/footer.jade

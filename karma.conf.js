@@ -23,6 +23,7 @@ module.exports = function(config) {
       'client/bower_components/angular-foundation/mm-foundation.js',
       'client/bower_components/ng-clip/src/ngClip.js',
       'client/bower_components/zeroclipboard/dist/ZeroClipboard.js',
+      'client/bower_components/wow/dist/wow.js',
       'client/app/app.js',
       'client/app/**/*.js',
       'client/components/**/*.js',
