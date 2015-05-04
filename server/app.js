@@ -18,9 +18,6 @@ var socketio = require('socket.io')(server, {
   path: '/socket.io-client'
 });
 
-socketio.set('heartbeat interval', 500);
-socketio.set('heartbeat timeout', 5000);
-
 require('./config/socketio')(socketio);
 require('./config/express')(app);
 require('./routes')(app);
