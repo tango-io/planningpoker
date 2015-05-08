@@ -320,4 +320,16 @@ describe('Controller: RetrospectiveCtrl', function () {
     expect(scope.currentEntry).toBe(scope.session.good[0])
   });
 
+  it('sets the modal title', function(){
+    scope.openEntry('good', {text: "good entry"});
+    expect(scope.modalTitle).toBe('We should start doing...');
+
+    scope.openEntry('bad', {text: "good entry"});
+    expect(scope.modalTitle).toBe('We should stop doing...');
+
+    scope.openEntry('improvements', {text: "good entry"});
+    expect(scope.modalTitle).toBe('We should continue doing...');
+
+  });
+
 });

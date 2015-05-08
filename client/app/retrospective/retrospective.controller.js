@@ -77,13 +77,13 @@ angular.module('pokerestimateApp')
     $scope.modalTitle = "";
     switch(type){
       case 'good':
-        $scope.modalTitle = "We should do more of...";
+        $scope.modalTitle = "We should start doing...";
         break;
       case 'bad':
-        $scope.modalTitle = "We should do less of...";
+        $scope.modalTitle = "We should stop doing...";
         break;
       case 'improvements':
-        $scope.modalTitle = "We should keep doing...";
+        $scope.modalTitle = "We should continue doing";
         break;
     };
 
