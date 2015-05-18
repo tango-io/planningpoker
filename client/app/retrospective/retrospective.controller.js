@@ -83,7 +83,7 @@ angular.module('pokerestimateApp')
         $scope.modalTitle = "We should stop doing...";
         break;
       case 'improvements':
-        $scope.modalTitle = "We should continue doing";
+        $scope.modalTitle = "We should continue doing...";
         break;
     };
 

@@ -26,7 +26,7 @@ div(ng-controller="RetrospectiveCtrl" ng-init="init()")
 
       .section.large-3.columns(data-equalizer-watch='')
         .title
-          h2.subdued Start doing
+          h2.subdued Start doing...
           a.inkbtn.button(ng-click="toggleInputMode('good')" ng-hide="reviewMode")
             i.fa(ng-class="{'fa-plus': !inputMode.good, 'fa-close': inputMode.good}")
 
@@ -54,10 +54,10 @@ div(ng-controller="RetrospectiveCtrl" ng-init="init()")
 
       .section.large-3.columns(data-equalizer-watch='')
         .title
-          h2.subdued Stop doing
+          h2.subdued Stop doing...
           a.inkbtn.button(ng-click="toggleInputMode('bad')" ng-hide="reviewMode")
             i.fa(ng-class="{'fa-plus': !inputMode.bad, 'fa-close': inputMode.bad}")
-        textarea(placeholder='What should  we be stop doing?' ng-model="newEntry.bad" ng-enter="add('bad')" ng-show="inputMode.bad && !reviewMode")
+        textarea(placeholder='What should we stop doing?' ng-model="newEntry.bad" ng-enter="add('bad')" ng-show="inputMode.bad && !reviewMode")
         ul.list
           li.user.reveal(ng-repeat="entry in session.bad")
             div(ng-if="reviewMode")
@@ -81,7 +81,7 @@ div(ng-controller="RetrospectiveCtrl" ng-init="init()")
 
       .section.large-3.columns(data-equalizer-watch='')
         .title
-          h2.subdued Continue doing
+          h2.subdued Continue doing...
           a.inkbtn.button(ng-click="toggleInputMode('improvements')" ng-hide="reviewMode")
             i.fa(ng-class="{'fa-plus': !inputMode.improvements, 'fa-close': inputMode.improvements}")
         textarea(placeholder='What should we continue doing?' ng-model="newEntry.improvements" ng-enter="add('improvements')" ng-show="inputMode.improvements && !reviewMode")

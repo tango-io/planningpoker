@@ -36,9 +36,9 @@ var MainPage = function() {
 
   this.retrospectiveOpt = element(by.cssContainingText('form[name="startSessionForm"] option', 'Retrospective Session'));
 
-  this.goodColumn = element(by.cssContainingText('.retro .columns h2', 'More of...'));
-  this.badColumn = element(by.cssContainingText('.retro .columns h2', 'Less of...'));
-  this.improvementsColumn = element(by.cssContainingText('.retro .columns h2', 'Just as...'));
+  this.goodColumn = element(by.cssContainingText('.retro .columns h2', 'Start doing...'));
+  this.badColumn = element(by.cssContainingText('.retro .columns h2', 'Stop doing...'));
+  this.improvementsColumn = element(by.cssContainingText('.retro .columns h2', 'Continue doing...'));
 
   this.addGoodBtn = element(by.css('[ng-click="toggleInputMode(\'good\')"]'));
   this.addBadBtn = element(by.css('[ng-click="toggleInputMode(\'bad\')"]'));
