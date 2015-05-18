@@ -26,11 +26,11 @@ div(ng-controller="RetrospectiveCtrl" ng-init="init()")
 
       .section.large-3.columns(data-equalizer-watch='')
         .title
-          h2.subdued More of...
+          h2.subdued Start doing...
           a.inkbtn.button(ng-click="toggleInputMode('good')" ng-hide="reviewMode")
             i.fa(ng-class="{'fa-plus': !inputMode.good, 'fa-close': inputMode.good}")
 
-        textarea(placeholder='We should be doing more of?' ng-model="newEntry.good" ng-enter="add('good')" ng-show="inputMode.good && !reviewMode")
+        textarea(placeholder='What should we start doing?' ng-model="newEntry.good" ng-enter="add('good')" ng-show="inputMode.good && !reviewMode")
         ul.list
           li.user.reveal(ng-repeat="entry in session.good")
             div(ng-if="reviewMode")
@@ -54,10 +54,10 @@ div(ng-controller="RetrospectiveCtrl" ng-init="init()")
 
       .section.large-3.columns(data-equalizer-watch='')
         .title
-          h2.subdued Less of...
+          h2.subdued Stop doing...
           a.inkbtn.button(ng-click="toggleInputMode('bad')" ng-hide="reviewMode")
             i.fa(ng-class="{'fa-plus': !inputMode.bad, 'fa-close': inputMode.bad}")
-        textarea(placeholder='We should be doing less of?' ng-model="newEntry.bad" ng-enter="add('bad')" ng-show="inputMode.bad && !reviewMode")
+        textarea(placeholder='What should we stop doing?' ng-model="newEntry.bad" ng-enter="add('bad')" ng-show="inputMode.bad && !reviewMode")
         ul.list
           li.user.reveal(ng-repeat="entry in session.bad")
             div(ng-if="reviewMode")
@@ -81,10 +81,10 @@ div(ng-controller="RetrospectiveCtrl" ng-init="init()")
 
       .section.large-3.columns(data-equalizer-watch='')
         .title
-          h2.subdued Just as...
+          h2.subdued Continue doing...
           a.inkbtn.button(ng-click="toggleInputMode('improvements')" ng-hide="reviewMode")
             i.fa(ng-class="{'fa-plus': !inputMode.improvements, 'fa-close': inputMode.improvements}")
-        textarea(placeholder='We should be doing just as?' ng-model="newEntry.improvements" ng-enter="add('improvements')" ng-show="inputMode.improvements && !reviewMode")
+        textarea(placeholder='What should we continue doing?' ng-model="newEntry.improvements" ng-enter="add('improvements')" ng-show="inputMode.improvements && !reviewMode")
         ul.list
           li.user.reveal(ng-repeat="entry in session.improvements")
             div(ng-if="reviewMode")
