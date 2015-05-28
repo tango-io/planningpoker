@@ -112,9 +112,9 @@ To run unit server tests
 ```sh
 $ grunt test:server
 ```
-##Contribution Guilde lines
+##Contribution Guide lines
 
-Want to contribuite? Great!!
+Want to contribute? Great!!
 
 Please fork the project and make a pull request
 to our repository.
